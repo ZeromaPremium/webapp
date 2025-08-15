@@ -1,0 +1,1938 @@
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeroma Premium | Premium Educational Courses</title>
+    <meta name="description" content="Zeroma Premium - Your trusted partner in premium educational experiences. Quality courses at unbeatable prices.">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    
+    <!-- Font Awesome for Stars -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Lazy Loading -->
+    <script src="https://cdn.jsdelivr.net/npm/lozad@1.16.0/dist/lozad.min.js"></script>
+    
+    <!-- Custom Tailwind Configuration -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cream-50': '#F6EEE3',
+                        'cream-100': '#F4F0E0',
+                        'cream-200': '#F5F5F4',
+                        'cream-300': '#EBE8E2',
+                        'cream-400': '#E7E0D3',
+                        'cream-500': '#E8DACC',
+                        'warm-50': '#FFD08E',
+                        'warm-100': '#FFA874',
+                        'warm-200': '#FA7C5A',
+                        'warm-300': '#E3534C',
+                        'warm-400': '#A8234C',
+                        'warm-500': '#681740'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                        'poppins': ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom CSS Variables for Theme */
+        :root {
+            --bg-primary: linear-gradient(135deg, #F6EEE3 0%, #F4F0E0 50%, #F5F5F4 100%);
+            --bg-secondary: #ffffff;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --accent-primary: linear-gradient(135deg, #FFA874, #FA7C5A);
+            --accent-secondary: linear-gradient(135deg, #E3534C, #A8234C);
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --card-border: rgba(250, 124, 90, 0.2);
+            --shadow-color: rgba(250, 124, 90, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: linear-gradient(135deg, #0f172a 0%, #681740 50%, #0f172a 100%);
+            --bg-secondary: rgba(15, 23, 42, 0.8);
+            --text-primary: #ffffff;
+            --text-secondary: #d1d5db;
+            --accent-primary: linear-gradient(135deg, #FFA874, #FA7C5A, #E3534C);
+            --accent-secondary: linear-gradient(135deg, #E3534C, #A8234C);
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --card-border: rgba(250, 124, 90, 0.2);
+            --shadow-color: rgba(250, 124, 90, 0.1);
+        }
+
+        /* Custom Animations */
+        @keyframes logoGlow {
+            0% { text-shadow: 0 0 10px currentColor; }
+            100% { text-shadow: 0 0 30px currentColor, 0 0 40px currentColor; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(25px); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(-40px) rotate(0deg); }
+            75% { transform: translateY(-20px) rotate(-5deg); }
+        }
+
+        @keyframes popupSlideIn {
+            from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes backdropFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes underlineGlow {
+            0% {
+                box-shadow: 0 0 10px rgba(250, 124, 90, 0.5);
+                width: 120px;
+            }
+            100% {
+                box-shadow: 0 0 30px rgba(250, 124, 90, 0.8);
+                width: 140px;
+            }
+        }
+
+        /* Animation Classes */
+        .animate-logo-glow { animation: logoGlow 2s ease-in-out infinite alternate; }
+        .animate-fade-in { animation: fadeIn 1s ease-out forwards; }
+        .animate-wave { animation: wave 8s ease-in-out infinite; }
+        .animate-float { animation: float 15s infinite ease-in-out; }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Custom Styles */
+        .text-gradient {
+            background: var(--accent-primary);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card-glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 25px 60px var(--shadow-color);
+        }
+
+        .btn-gradient {
+            background: var(--accent-primary);
+            transition: all 0.3s ease;
+        }
+
+        .btn-gradient:hover {
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px var(--shadow-color);
+        }
+
+        /* Enhanced Navigation Link Styles */
+        .nav-link {
+            position: relative;
+            color: var(--text-primary);
+            font-weight: 900;
+            padding: 12px 20px;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 208, 142, 0.2), rgba(255, 168, 116, 0.2));
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(135deg, #FFA874, #FA7C5A);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .nav-link:hover {
+            color: #FA7C5A;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 124, 90, 0.15);
+        }
+
+        .nav-link:hover::before {
+            width: 100%;
+        }
+
+        .nav-link:hover::after {
+            width: 80%;
+        }
+
+        /* Dark theme navigation */
+        [data-theme="dark"] .nav-link {
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .nav-link::before {
+            background: linear-gradient(135deg, rgba(255, 168, 116, 0.3), rgba(250, 124, 90, 0.3));
+        }
+
+        [data-theme="dark"] .nav-link:hover {
+            color: #FFA874;
+        }
+
+        /* Mobile Navigation Link Styles */
+        .mobile-nav-link {
+            position: relative;
+            color: var(--text-primary);
+            font-weight: 500;
+            padding: 12px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            overflow: hidden;
+        }
+
+        .mobile-nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 208, 142, 0.2), rgba(255, 168, 116, 0.2));
+            transition: all 0.3s ease;
+            z-index: -1;
+        }
+
+        .mobile-nav-link:hover {
+            color: #FA7C5A;
+            transform: translateX(8px);
+        }
+
+        .mobile-nav-link:hover::before {
+            left: 0;
+        }
+
+        /* Theme Toggle Button Styles */
+        .theme-toggle {
+            position: relative;
+            padding: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #374151, #111827);
+            color: #ffffff;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(12deg);
+            box-shadow: 0 0 20px rgba(55, 65, 81, 0.5);
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #0f172a;
+        }
+
+        [data-theme="dark"] .theme-toggle:hover {
+            box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+        }
+
+        /* Auth Button Styles */
+        .auth-btn {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn {
+            border: 2px solid #FA7C5A;
+            color: #FA7C5A;
+        }
+
+        .login-btn:hover {
+            background: #FA7C5A;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 124, 90, 0.25);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 120px 0 60px;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Page Title */
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .page-title h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .page-title h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(135deg, #FFA874, #FA7C5A);
+            border-radius: 2px;
+            animation: underlineGlow 2s ease-in-out infinite alternate;
+        }
+
+        .page-title p {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-top: 30px;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            margin-bottom: 60px;
+            animation: fadeIn 1s ease-out 0.3s both;
+            position: relative;
+            z-index: 10;
+        }
+
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-dropdown {
+            position: relative;
+            min-width: 200px;
+            z-index: 999;
+        }
+
+        .dropdown-button {
+            width: 100%;
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .dropdown-button:hover {
+            border-color: #FA7C5A;
+            box-shadow: 0 8px 25px rgba(250, 124, 90, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .dropdown-button.active {
+            border-color: #FA7C5A;
+            color: #FA7C5A;
+            box-shadow: 0 8px 25px rgba(250, 124, 90, 0.3);
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .dropdown-arrow.rotated {
+            transform: rotate(180deg);
+        }
+
+        /* Desktop Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            margin-top: 5px;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            color: #FA7C5A;
+            padding-left: 25px;
+        }
+
+        .dropdown-item.selected {
+            background: linear-gradient(135deg, rgba(255, 168, 116, 0.1), rgba(250, 124, 90, 0.1));
+            color: #FA7C5A;
+            font-weight: 600;
+        }
+
+        /* Mobile Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            display: none;
+            animation: backdropFadeIn 0.3s ease-out;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-content {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: popupSlideIn 0.3s ease-out;
+            position: relative;
+            max-height: 80vh;
+            overflow: hidden;
+        }
+
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .popup-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .popup-close {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #f8fafc;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .popup-close:hover {
+            background: #e2e8f0;
+            color: #374151;
+        }
+
+        .popup-items {
+            padding: 15px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .popup-item {
+            padding: 15px 25px;
+            font-size: 1rem;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .popup-item:last-child {
+            border-bottom: none;
+        }
+
+        .popup-item:hover {
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            color: #FA7C5A;
+        }
+
+        .popup-item.selected {
+            background: linear-gradient(135deg, rgba(255, 168, 116, 0.1), rgba(250, 124, 90, 0.1));
+            color: #FA7C5A;
+            font-weight: 600;
+        }
+
+        .popup-item.selected::after {
+            content: '✓';
+            color: #FA7C5A;
+            font-weight: bold;
+        }
+
+        /* Courses Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.4s ease;
+            border: 1px solid rgba(250, 124, 90, 0.1);
+            position: relative;
+            animation: fadeIn 0.8s ease-out;
+            z-index: 1;
+        }
+
+        .course-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+        }
+
+        .course-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #FFA874, #FA7C5A);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .course-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .course-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .course-card:hover .course-image {
+            transform: scale(1.1);
+        }
+
+        .course-content {
+            padding: 30px;
+        }
+
+        .course-category {
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(255, 208, 142, 0.2), rgba(255, 168, 116, 0.2));
+            color: #FA7C5A;
+            font-size: 0.875rem;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover .course-category {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(250, 124, 90, 0.3);
+        }
+
+        .course-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 15px;
+            line-height: 1.3;
+            transition: color 0.3s ease;
+        }
+
+        .course-card:hover .course-title {
+            color: #FA7C5A;
+        }
+
+        .course-description {
+            font-size: 1rem;
+            color: #6b7280;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .course-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.3s ease;
+        }
+
+        .course-card:hover .meta-item {
+            color: #FA7C5A;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            color: #9ca3af;
+        }
+
+        .course-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .course-pricing {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .course-price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .course-original-price {
+            font-size: 1rem;
+            color: #9ca3af;
+            text-decoration: line-through;
+        }
+
+        .enroll-btn {
+            background: linear-gradient(135deg, #FFA874, #FA7C5A);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(250, 124, 90, 0.3);
+        }
+
+        .enroll-btn:hover {
+            background: linear-gradient(135deg, #FA7C5A, #E3534C);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(250, 124, 90, 0.4);
+        }
+
+        .rating-stars {
+            color: #fbbf24;
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 60px 0;
+            font-size: 1.25rem;
+            color: #6b7280;
+        }
+
+        /* Lazy Loading */
+        .lozad {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .lozad.loaded {
+            opacity: 1;
+        }
+
+        /* Focus States */
+        *:focus {
+            outline: 2px solid #FA7C5A;
+            outline-offset: 2px;
+        }
+
+        /* Hide elements initially for animations */
+        .fade-in-element {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in-element.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .filter-dropdown {
+                width: 100%;
+                max-width: 300px;
+                position: relative;
+                margin-bottom: 16px;
+                z-index: 1;
+            }
+
+            .dropdown-button {
+                position: relative;
+                z-index: 2;
+            }
+
+            /* Hide desktop dropdown menu on mobile */
+            .dropdown-menu {
+                display: none !important;
+            }
+
+            .page-title h1 {
+                font-size: 2.5rem;
+            }
+            
+            .courses-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            .course-meta {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+            
+            .course-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title h1 {
+                font-size: 2rem;
+            }
+            
+            .course-card {
+                margin: 0 10px;
+            }
+            
+            .course-content {
+                padding: 20px;
+            }
+            
+            .course-title {
+                font-size: 1.3rem;
+            }
+            
+            .course-price {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Dark theme styles */
+        [data-theme="dark"] body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .dropdown-button {
+            background: var(--card-bg);
+            border-color: var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .dropdown-menu {
+            background: var(--card-bg);
+            border-color: var(--card-border);
+        }
+
+        [data-theme="dark"] .course-card {
+            background: var(--card-bg);
+            border-color: var(--card-border);
+        }
+
+        [data-theme="dark"] .course-title {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .course-description {
+            color: var(--text-secondary);
+        }
+
+        [data-theme="dark"] .popup-content {
+            background: var(--card-bg);
+        }
+
+        [data-theme="dark"] .popup-title {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .popup-item {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body class="font-inter overflow-x-hidden">
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50 transition-all duration-300" id="header">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-warm-100 to-warm-200 rounded-xl flex items-center justify-center">
+                        <i data-lucide="graduation-cap" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold font-poppins text-gradient animate-logo-glow">
+                        Zeroma Premium
+                    </h1>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-2" id="desktopNav">
+                    <a href="#home" class="nav-link">Home</a>
+                    <a href="#courses" class="nav-link">Course</a>
+                    <a href="#class" class="nav-link">Class</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                    <a href="#login" class="nav-link">Login</a>
+                </nav>
+
+                <!-- Theme Toggle & Mobile Menu -->
+                <div class="flex items-center space-x-4">
+                    <button id="themeToggle" class="p-3 rounded-full bg-gray-200 hover:bg-gray-300 transition-all duration-300 transform hover:scale-110">
+                        <i data-lucide="moon" class="w-5 h-5"></i>
+                    </button>
+
+                    <!-- Mobile Menu Toggle -->
+                    <button id="mobileMenuToggle" class="md:hidden p-2 rounded-lg transition-all duration-300 hover:bg-gray-100">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden mt-4 p-4 rounded-xl card-glass shadow-xl animate-fade-in hidden">
+                <nav class="flex flex-col space-y-2">
+                    <a href="#home" class="mobile-nav-link">Home</a>
+                    <a href="#courses" class="mobile-nav-link">Course</a>
+                    <a href="#class" class="mobile-nav-link">Class</a>
+                    <a href="#about" class="mobile-nav-link">About</a>
+                    <a href="#contact" class="mobile-nav-link">Contact</a>
+                    <a href="#login" class="mobile-nav-link">Login</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen bg-gradient-to-br from-cream-50 via-cream-100 to-cream-200 relative overflow-hidden pt-20">
+        <!-- Floating Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-r from-warm-100 to-warm-200 rounded-full opacity-10 animate-float"></div>
+            <div class="absolute top-40 right-20 w-20 h-20 bg-gradient-to-r from-warm-200 to-warm-300 rounded-full opacity-15 animate-float" style="animation-delay: 2s;"></div>
+            <div class="absolute bottom-40 left-1/4 w-16 h-16 bg-gradient-to-r from-warm-300 to-warm-400 rounded-full opacity-20 animate-float" style="animation-delay: 4s;"></div>
+        </div>
+
+        <div class="container mx-auto px-6 relative z-10">
+            <div class="flex flex-col lg:flex-row items-center min-h-screen py-20">
+                <!-- Content -->
+                <div class="lg:w-1/2 mb-12 lg:mb-0 fade-in-element">
+                    <h1 class="text-5xl lg:text-7xl font-bold font-poppins mb-6 leading-tight">
+                        Premium <span class="text-gradient">Educational</span> Experience
+                    </h1>
+                    <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+                        Transform your learning journey with Zeroma Premium's cutting-edge courses. 
+                        Quality education at unbeatable prices with personalized support.
+                    </p>
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-6">
+                        <button onclick="scrollToSection('courses')" class="px-8 py-4 rounded-full font-semibold text-white btn-gradient shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+                            Explore Courses
+                        </button>
+                        <button onclick="window.open('https://t.me/MYThymM', '_blank')" class="px-8 py-4 rounded-full font-semibold border-2 border-warm-200 text-warm-300 hover:bg-warm-200 hover:text-white transition-all duration-300">
+                            Contact Us
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Hero Image/Graphic -->
+                <div class="lg:w-1/2 fade-in-element">
+                    <div class="relative">
+                        <div class="w-80 h-80 mx-auto bg-gradient-to-r from-warm-100 to-warm-200 rounded-full opacity-20 animate-pulse"></div>
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="text-center">
+                                <i data-lucide="book-open" class="w-32 h-32 text-warm-300 mx-auto mb-4"></i>
+                                <h3 class="text-2xl font-bold text-warm-400">Learn. Grow. Excel.</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section id="courses" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 fade-in-element">
+                <h2 class="text-4xl lg:text-5xl font-bold font-poppins mb-6 text-gray-800">
+                    Premium <span class="text-gradient">Courses</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Scroll on every filter-selection pop-up to explore all Grade/Subject/Course options!
+                </p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section mb-16 fade-in-element">
+                <div class="flex justify-center gap-6 flex-wrap">
+                    <!-- Grade Level Dropdown -->
+                    <div class="filter-dropdown" id="gradeDropdownBox">
+                        <button class="dropdown-button" onclick="toggleDropdown('grade')">
+                            <span id="gradeSelected">All Grade/Level</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="gradeDropdown">
+                            <div class="dropdown-item" onclick="selectGrade('All Grade/Level')">All Grade/Level</div>
+                            <div class="dropdown-item" onclick="selectGrade('HSC 27')">HSC 27</div>
+                            <div class="dropdown-item" onclick="selectGrade('HSC 26')">HSC 26</div>
+                            <div class="dropdown-item" onclick="selectGrade('Admission 25')">Admission 25</div>
+                            <div class="dropdown-item" onclick="selectGrade('Admission 24')">Admission 24</div>
+                        </div>
+                    </div>
+
+                    <!-- Course Type Dropdown -->
+                    <div class="filter-dropdown" id="courseDropdownBox">
+                        <button class="dropdown-button" onclick="toggleDropdown('course')">
+                            <span id="courseSelected">All Course</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="courseDropdown">
+                            <div class="dropdown-item" onclick="selectCourse('All Course')">All Course</div>
+                            <div class="dropdown-item" onclick="selectCourse('ACS')">ACS</div>
+                            <div class="dropdown-item" onclick="selectCourse('RTDS')">RTDS Live</div>
+                            <div class="dropdown-item" onclick="selectCourse('Battle of Biology')">Battle of Biology</div>
+                            <div class="dropdown-item" onclick="selectCourse('Bondi Pathshala')">Bondi Pathshala</div>
+                            <div class="dropdown-item" onclick="selectCourse('CPS')">CPS</div>
+                            <div class="dropdown-item" onclick="selectCourse('Physics Hunters')">Physics Hunters</div>
+                            <div class="dropdown-item" onclick="selectCourse('Biology Haters')">Biology Haters</div>
+                            <div class="dropdown-item" onclick="selectCourse('Alchemy')">Alchemy by Shaown R.</div>
+                        </div>
+                    </div>
+
+                    <!-- Subject Type Dropdown -->
+                    <div class="filter-dropdown" id="subjectDropdownBox">
+                        <button class="dropdown-button" onclick="toggleDropdown('subject')">
+                            <span id="subjectSelected">All Subject</span>
+                            <span class="dropdown-arrow">▼</span>
+                        </button>
+                        <div class="dropdown-menu" id="subjectDropdown">
+                            <div class="dropdown-item" onclick="selectSubject('All Subject')">All Subject</div>
+                            <div class="dropdown-item" onclick="selectSubject('Physics')">Physics</div>
+                            <div class="dropdown-item" onclick="selectSubject('Chemistry')">Chemistry</div>
+                            <div class="dropdown-item" onclick="selectSubject('Mathematics')">Mathematics</div>
+                            <div class="dropdown-item" onclick="selectSubject('ICT')">ICT</div>
+                            <div class="dropdown-item" onclick="selectSubject('Bangla')">Bangla</div>
+                            <div class="dropdown-item" onclick="selectSubject('Biology')">Biology</div>
+                            <div class="dropdown-item" onclick="selectSubject('English')">English</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Courses Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="coursesGrid">
+                <div class="text-center py-12 col-span-full">
+                    <div class="inline-block w-8 h-8 border-4 border-warm-200 border-t-warm-400 rounded-full animate-spin"></div>
+                    <p class="mt-4 text-gray-600">Loading premium courses...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Popup Overlays -->
+        <div class="popup-overlay fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="gradePopup">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl w-full max-w-md">
+                    <div class="flex items-center justify-between p-6 border-b">
+                        <h3 class="text-lg font-semibold">Select Grade/Level</h3>
+                        <button onclick="closePopup('grade')" class="text-gray-400 hover:text-gray-600">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 max-h-80 overflow-y-auto">
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectGradeFromPopup('All Grade/Level')">All Grade/Level</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectGradeFromPopup('HSC 27')">HSC 27</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectGradeFromPopup('HSC 26')">HSC 26</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectGradeFromPopup('Admission 25')">Admission 25</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectGradeFromPopup('Admission 24')">Admission 24</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-overlay fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="coursePopup">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl w-full max-w-md">
+                    <div class="flex items-center justify-between p-6 border-b">
+                        <h3 class="text-lg font-semibold">Select Course</h3>
+                        <button onclick="closePopup('course')" class="text-gray-400 hover:text-gray-600">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 max-h-80 overflow-y-auto">
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('All Course')">All Course</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('ACS')">ACS</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('RTDS')">RTDS Live</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('Bondi Pathshala')">Bondi Pathshala</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('CPS')">CPS</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('Battle of Biology')">Battle of Biology</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('Physics Hunters')">Physics Hunters</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('Biology Haters')">Biology Haters</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectCourseFromPopup('Alchemy')">Alchemy by Shaown R.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="popup-overlay fixed inset-0 bg-black bg-opacity-50 z-50 hidden" id="subjectPopup">
+            <div class="flex items-center justify-center min-h-screen p-4">
+                <div class="bg-white rounded-2xl w-full max-w-md">
+                    <div class="flex items-center justify-between p-6 border-b">
+                        <h3 class="text-lg font-semibold">Select Subject</h3>
+                        <button onclick="closePopup('subject')" class="text-gray-400 hover:text-gray-600">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 max-h-80 overflow-y-auto">
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('All Subject')">All Subject</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('Physics')">Physics</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('Chemistry')">Chemistry</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('Mathematics')">Mathematics</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('ICT')">ICT</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('Bangla')">Bangla</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('Biology')">Biology</div>
+                        <div class="popup-item py-3 px-4 hover:bg-gray-50 cursor-pointer rounded" onclick="selectSubjectFromPopup('English')">English</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-gradient-to-r from-cream-50 to-cream-200">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12 fade-in-element">
+                <h2 class="text-4xl font-bold font-poppins mb-6 text-gray-800">
+                    About <span class="text-gradient">Zeroma Premium</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Your trusted partner in premium digital educational experiences. We provide quality courses 
+                    at unbeatable prices with innovative teaching methods and personalized student support.
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in-element">
+                <div class="text-center p-6 card-glass rounded-2xl hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="w-16 h-16 bg-gradient-to-r from-warm-100 to-warm-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="trophy" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Premium Quality</h3>
+                    <p class="text-gray-600">Top-tier educational content designed by industry experts and experienced educators.</p>
+                </div>
+                
+                <div class="text-center p-6 card-glass rounded-2xl hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="w-16 h-16 bg-gradient-to-r from-warm-200 to-warm-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="users" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Expert Support</h3>
+                    <p class="text-gray-600">24/7 support from qualified instructors to help you succeed in your learning journey.</p>
+                </div>
+                
+                <div class="text-center p-6 card-glass rounded-2xl hover:transform hover:scale-105 transition-all duration-300">
+                    <div class="w-16 h-16 bg-gradient-to-r from-warm-300 to-warm-400 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="star" class="w-8 h-8 text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Proven Results</h3>
+                    <p class="text-gray-600">Thousands of successful students who achieved their academic and career goals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-white">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-12 fade-in-element">
+                <h2 class="text-4xl font-bold font-poppins mb-6 text-gray-800">
+                    Get in <span class="text-gradient">Touch</span>
+                </h2>
+                <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+                    Ready to start your premium learning journey? Contact us on Telegram for instant support and course enrollment.
+                </p>
+            </div>
+
+            <div class="max-w-md mx-auto fade-in-element">
+                <div class="text-center p-8 card-glass rounded-2xl">
+                    <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i data-lucide="message-circle" class="w-10 h-10 text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Contact on Telegram</h3>
+                    <p class="text-gray-600 mb-6">
+                        Get instant responses to your queries and course enrollment assistance.
+                    </p>
+                    <button onclick="window.open('https://t.me/MYThymM', '_blank')" 
+                            class="px-8 py-4 rounded-full font-semibold text-white bg-blue-500 hover:bg-blue-600 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                        <i data-lucide="external-link" class="w-5 h-5 inline mr-2"></i>
+                        Open Telegram Chat
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer with Particles -->
+    <footer class="relative overflow-hidden bg-gradient-to-br from-gray-900 via-warm-500 to-gray-900">
+        <!-- Floating Particles -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none" id="footerParticles">
+            <!-- Particles will be generated by JavaScript -->
+        </div>
+
+        <div class="relative z-10 container mx-auto px-6 py-12">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-3 mb-6">
+                    <div class="w-12 h-12 bg-gradient-to-r from-warm-100 to-warm-200 rounded-xl flex items-center justify-center">
+                        <i data-lucide="graduation-cap" class="w-7 h-7 text-white"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white font-poppins">
+                        Zeroma Premium
+                    </h3>
+                </div>
+                
+                <p class="text-gray-300 text-lg mb-8 max-w-2xl mx-auto">
+                    Empowering students with premium educational experiences since 2024. 
+                    Quality courses, expert support, and proven results.
+                </p>
+
+                <div class="flex justify-center space-x-6 mb-8">
+                    <button onclick="window.open('https://t.me/MYThymM', '_blank')" 
+                            class="p-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white transition-all duration-300 transform hover:scale-110">
+                        <i data-lucide="message-circle" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-3 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300 transform hover:scale-110">
+                        <i data-lucide="facebook" class="w-6 h-6"></i>
+                    </button>
+                    <button class="p-3 rounded-full bg-gray-700 hover:bg-gray-600 text-white transition-all duration-300 transform hover:scale-110">
+                        <i data-lucide="twitter" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <div class="border-t border-gray-700 pt-8">
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
+                        <p class="text-gray-400 text-sm">
+                            &copy; 2024 Zeroma Premium. All rights reserved.
+                        </p>
+                        <div class="flex items-center space-x-2 text-gray-400 text-sm">
+                            <span>Made with</span>
+                            <i data-lucide="heart" class="w-4 h-4 text-red-400"></i>
+                            <span>by Zeroma Team</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+        // Global Variables
+        let isDark = false;
+        let isScrolled = false;
+        let mockCourses = [];
+        let filteredCourses = [];
+        let selectedGrades = ['All Grade/Level']; // Array for multiple selection
+        let selectedCourse = 'All Course'; // Single selection
+        let selectedSubjects = ['All Subject']; // Array for multiple selection
+        let observer;
+
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const header = document.getElementById('header');
+        const coursesGrid = document.getElementById('coursesGrid');
+
+        // Initialize App
+        function initApp() {
+            // Initialize theme from localStorage
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                toggleTheme();
+            }
+
+            // Load courses data
+            loadCourses();
+
+            // Generate footer particles
+            generateFooterParticles();
+
+            // Initialize lazy loading
+            initLazyLoading();
+
+            // Initialize scroll animations
+            initScrollAnimations();
+
+            // Initialize event listeners
+            initEventListeners();
+        }
+
+        // Load courses from JSON
+        async function loadCourses() {
+            try {
+                const response = await fetch('courses.json');
+                mockCourses = await response.json();
+                filteredCourses = [...mockCourses];
+                
+                // Simulate loading delay
+                setTimeout(() => {
+                    renderCourses();
+                }, 1000);
+            } catch (error) {
+                console.error('Error loading courses:', error);
+                coursesGrid.innerHTML = '<div class="loading">Error loading courses. Please try again later.</div>';
+            }
+        }
+
+        // Initialize Lazy Loading
+        function initLazyLoading() {
+            if (typeof lozad !== 'undefined') {
+                observer = lozad('.lozad', {
+                    loaded: function(el) {
+                        el.classList.add('loaded');
+                    }
+                });
+                observer.observe();
+            }
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            isDark = !isDark;
+            document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            
+            // Update theme toggle icon
+            const icon = themeToggle.querySelector('i');
+            if (icon) {
+                icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+        }
+
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            
+            if (isOpen) {
+                mobileMenu.classList.add('hidden');
+                mobileMenuToggle.querySelector('i').setAttribute('data-lucide', 'menu');
+            } else {
+                mobileMenu.classList.remove('hidden');
+                mobileMenuToggle.querySelector('i').setAttribute('data-lucide', 'x');
+            }
+            
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // Header Scroll Effect
+        function handleScroll() {
+            const scrollY = window.scrollY;
+            const newIsScrolled = scrollY > 50;
+            
+            if (newIsScrolled !== isScrolled) {
+                isScrolled = newIsScrolled;
+                
+                if (isScrolled) {
+                    header.className = `fixed w-full top-0 z-50 transition-all duration-300 ${
+                        isDark 
+                            ? 'bg-slate-900/95 backdrop-blur-xl border-b border-warm-300/20 shadow-2xl shadow-warm-300/10'
+                            : 'bg-white/95 backdrop-blur-xl border-b border-warm-200/50 shadow-xl'
+                    }`;
+                } else {
+                    header.className = 'fixed w-full top-0 z-50 transition-all duration-300 bg-transparent';
+                }
+            }
+        }
+
+        // Check if device is mobile
+        function isMobile() {
+            return window.innerWidth <= 768;
+        }
+
+        // Function to toggle dropdown - modified for mobile popup
+        function toggleDropdown(type) {
+            if (isMobile()) {
+                const popup = document.getElementById(type + 'Popup');
+                popup.classList.add('active');
+                updatePopupSelections(type);
+            } else {
+                const dropdown = document.getElementById(type + 'Dropdown');
+                const button = dropdown.previousElementSibling;
+                const arrow = button.querySelector('.dropdown-arrow');
+
+                // Close other dropdowns
+                const dropdownTypes = ['grade', 'course', 'subject'];
+                dropdownTypes.forEach(otherType => {
+                    if (otherType !== type) {
+                        const otherDropdown = document.getElementById(otherType + 'Dropdown');
+                        if (otherDropdown) {
+                            const otherButton = otherDropdown.previousElementSibling;
+                            const otherArrow = otherButton.querySelector('.dropdown-arrow');
+                            otherDropdown.classList.remove('active');
+                            otherButton.classList.remove('active');
+                            otherArrow.classList.remove('rotated');
+                        }
+                    }
+                });
+
+                // Toggle current
+                dropdown.classList.toggle('active');
+                button.classList.toggle('active');
+                arrow.classList.toggle('rotated');
+            }
+        }
+
+        // Function to close popup
+        function closePopup(type) {
+            const popup = document.getElementById(type + 'Popup');
+            popup.classList.remove('active');
+        }
+
+        // Function to update popup selections
+        function updatePopupSelections(type) {
+            const popup = document.getElementById(type + 'Popup');
+            const items = popup.querySelectorAll('.popup-item');
+            let currentSelections;
+
+            if (type === 'grade') currentSelections = selectedGrades;
+            else if (type === 'course') currentSelections = [selectedCourse];
+            else if (type === 'subject') currentSelections = selectedSubjects;
+
+            items.forEach(item => {
+                item.classList.remove('selected');
+                if (currentSelections.includes(item.textContent)) {
+                    item.classList.add('selected');
+                }
+            });
+        }
+
+        // Selection functions for mobile popups (Multiple selection for grade/subject)
+        function selectGradeFromPopup(grade) {
+            if (grade === 'All Grade/Level') {
+                selectedGrades = ['All Grade/Level'];
+            } else {
+                if (selectedGrades.includes('All Grade/Level')) {
+                    selectedGrades = selectedGrades.filter(g => g !== 'All Grade/Level');
+                }
+                if (selectedGrades.includes(grade)) {
+                    selectedGrades = selectedGrades.filter(g => g !== grade);
+                    if (selectedGrades.length === 0) {
+                        selectedGrades = ['All Grade/Level'];
+                    }
+                } else {
+                    selectedGrades.push(grade);
+                }
+            }
+            updateGradeDisplay();
+            closePopup('grade');
+            filterCourses();
+        }
+
+        function selectCourseFromPopup(course) {
+            selectedCourse = course;
+            document.getElementById('courseSelected').textContent = course;
+            closePopup('course');
+            filterCourses();
+        }
+
+        function selectSubjectFromPopup(subject) {
+            if (subject === 'All Subject') {
+                selectedSubjects = ['All Subject'];
+            } else {
+                if (selectedSubjects.includes('All Subject')) {
+                    selectedSubjects = selectedSubjects.filter(s => s !== 'All Subject');
+                }
+                if (selectedSubjects.includes(subject)) {
+                    selectedSubjects = selectedSubjects.filter(s => s !== subject);
+                    if (selectedSubjects.length === 0) {
+                        selectedSubjects = ['All Subject'];
+                    }
+                } else {
+                    selectedSubjects.push(subject);
+                }
+            }
+            updateSubjectDisplay();
+            closePopup('subject');
+            filterCourses();
+        }
+
+        // Desktop selection functions (Multiple selection for grade/subject)
+        function selectGrade(grade) {
+            if (grade === 'All Grade/Level') {
+                selectedGrades = ['All Grade/Level'];
+            } else {
+                if (selectedGrades.includes('All Grade/Level')) {
+                    selectedGrades = selectedGrades.filter(g => g !== 'All Grade/Level');
+                }
+                if (selectedGrades.includes(grade)) {
+                    selectedGrades = selectedGrades.filter(g => g !== grade);
+                    if (selectedGrades.length === 0) {
+                        selectedGrades = ['All Grade/Level'];
+                    }
+                } else {
+                    selectedGrades.push(grade);
+                }
+            }
+            updateGradeDisplay();
+            closeDropdown('gradeDropdown');
+            updateSelectedDropdownItems('#gradeDropdown');
+            filterCourses();
+        }
+
+        function selectCourse(course) {
+            selectedCourse = course;
+            document.getElementById('courseSelected').textContent = course;
+            closeDropdown('courseDropdown');
+            updateSelectedDropdownItem('#courseDropdown', course);
+            filterCourses();
+        }
+
+        function selectSubject(subject) {
+            if (subject === 'All Subject') {
+                selectedSubjects = ['All Subject'];
+            } else {
+                if (selectedSubjects.includes('All Subject')) {
+                    selectedSubjects = selectedSubjects.filter(s => s !== 'All Subject');
+                }
+                if (selectedSubjects.includes(subject)) {
+                    selectedSubjects = selectedSubjects.filter(s => s !== subject);
+                    if (selectedSubjects.length === 0) {
+                        selectedSubjects = ['All Subject'];
+                    }
+                } else {
+                    selectedSubjects.push(subject);
+                }
+            }
+            updateSubjectDisplay();
+            closeDropdown('subjectDropdown');
+            updateSelectedDropdownItems('#subjectDropdown');
+            filterCourses();
+        }
+
+        // Helper functions to update display
+        function updateGradeDisplay() {
+            const displayText = selectedGrades.includes('All Grade/Level') ? 'All Grade/Level' : selectedGrades.join(', ');
+            document.getElementById('gradeSelected').textContent = displayText;
+        }
+
+        function updateSubjectDisplay() {
+            const displayText = selectedSubjects.includes('All Subject') ? 'All Subject' : selectedSubjects.join(', ');
+            document.getElementById('subjectSelected').textContent = displayText;
+        }
+
+        // Utility functions
+        function closeDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            if (!dropdown) return;
+            dropdown.classList.remove('active');
+            const button = dropdown.previousElementSibling;
+            button?.classList.remove('active');
+            button?.querySelector('.dropdown-arrow')?.classList.remove('rotated');
+        }
+
+        function updateSelectedDropdownItem(selector, value) {
+            const items = document.querySelectorAll(`${selector} .dropdown-item`);
+            items.forEach(item => {
+                item.classList.remove('selected');
+                if (item.textContent === value) {
+                    item.classList.add('selected');
+                }
+            });
+        }
+
+        function updateSelectedDropdownItems(selector) {
+            const items = document.querySelectorAll(`${selector} .dropdown-item`);
+            items.forEach(item => {
+                item.classList.remove('selected');
+                let currentSelections;
+                if (selector.includes('grade')) currentSelections = selectedGrades;
+                else if (selector.includes('subject')) currentSelections = selectedSubjects;
+
+                if (currentSelections && currentSelections.includes(item.textContent)) {
+                    item.classList.add('selected');
+                }
+            });
+        }
+
+        // Filter courses function (Handle arrays properly)
+        function filterCourses() {
+            let filtered = [...mockCourses];
+
+            // Grade filtering (multi) - Handle both array and string grades
+            if (!selectedGrades.includes('All Grade/Level')) {
+                filtered = filtered.filter(course => {
+                    if (Array.isArray(course.grade)) {
+                        return course.grade.some(grade => selectedGrades.includes(grade));
+                    } else {
+                        return selectedGrades.includes(course.grade);
+                    }
+                });
+            }
+
+            // CourseType filtering (single-select)
+            if (selectedCourse !== 'All Course') {
+                filtered = filtered.filter(course => course.courseType === selectedCourse);
+            }
+
+            // Subject filtering (multi) - Handle both array and string subjects
+            if (!selectedSubjects.includes('All Subject')) {
+                filtered = filtered.filter(course => {
+                    if (Array.isArray(course.subject)) {
+                        return course.subject.some(subject => selectedSubjects.includes(subject));
+                    } else {
+                        return selectedSubjects.includes(course.subject);
+                    }
+                });
+            }
+
+            filteredCourses = filtered;
+            renderCourses();
+        }
+
+        // Function to render stars
+        function renderStars(rating) {
+            const stars = [];
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 !== 0;
+
+            for (let i = 0; i < fullStars; i++) {
+                stars.push('<i class="fas fa-star rating-stars"></i>');
+            }
+
+            if (hasHalfStar) {
+                stars.push('<i class="fas fa-star-half-alt rating-stars"></i>');
+            }
+
+            const emptyStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < emptyStars; i++) {
+                stars.push('<i class="far fa-star text-gray-300"></i>');
+            }
+
+            return stars.join('');
+        }
+
+        // Function to create course card with lazy loading
+        function createCourseCard(course) {
+            // Handle subject display
+            let subjectDisplay = '';
+            if (Array.isArray(course.subject)) {
+                subjectDisplay = course.subject.join(', ');
+            } else {
+                subjectDisplay = course.subject;
+            }
+
+            // Handle grade display
+            let gradeDisplay = '';
+            if (Array.isArray(course.grade)) {
+                gradeDisplay = course.grade.join(', ');
+            } else {
+                gradeDisplay = course.grade;
+            }
+
+            return `
+                <div class="course-card">
+                    <img 
+                        class="course-image lozad" 
+                        data-src="${course.image}" 
+                        alt="${course.title}"
+                        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 200'%3E%3Crect width='1000' height='200' fill='%23f3f4f6'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' fill='%239ca3af' font-family='Arial, sans-serif' font-size='16'%3ELoading...%3C/text%3E%3C/svg%3E"
+                    />
+                    <div class="course-content">
+                        <div class="course-category">${course.category}</div>
+                        <h3 class="course-title">${course.title}</h3>
+                        <p class="course-description">${course.description}</p>
+                        <div class="course-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-clock meta-icon"></i>
+                                <span>${course.duration}</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-users meta-icon"></i>
+                                <span>${course.students} students</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-graduation-cap meta-icon"></i>
+                                <span>${gradeDisplay}</span>
+                            </div>
+                            <div class="meta-item">
+                                ${renderStars(course.rating)}
+                                <span>${course.rating}</span>
+                            </div>
+                        </div>
+                        <div class="course-footer">
+                            <div class="course-pricing">
+                                <span class="course-price">৳${course.price}</span>
+                                <span class="course-original-price">৳${course.originalPrice}</span>
+                            </div>
+                            <button class="enroll-btn" onclick="enrollInCourse(${course.id})">
+                                Enroll Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to render courses
+        function renderCourses() {
+            if (filteredCourses.length === 0) {
+                coursesGrid.innerHTML = '<div class="loading">No courses found for the selected filters.</div>';
+                return;
+            }
+
+            const coursesHTML = filteredCourses.map(course => createCourseCard(course)).join('');
+            coursesGrid.innerHTML = coursesHTML;
+            
+            // Re-initialize lazy loading for new images
+            if (observer) {
+                observer.observe();
+            }
+        }
+
+        // Function to handle course enrollment
+        function enrollInCourse(courseId) {
+            const course = mockCourses.find(c => c.id === courseId);
+            if (course) {
+                alert(`Thank you for your interest in ${course.title}! Contact us on Telegram for enrollment.`);
+                window.open('https://t.me/MYThymM', '_blank');
+            }
+        }
+
+        // Function to handle smooth scrolling
+        function smoothScroll(target) {
+            const element = document.querySelector(target);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Smooth scroll to section
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        }
+
+        // Generate Footer Particles
+        function generateFooterParticles() {
+            const container = document.getElementById('footerParticles');
+            if (!container) return;
+            
+            const particles = 25;
+            
+            for (let i = 0; i < particles; i++) {
+                const particle = document.createElement('div');
+                const colors = ['bg-warm-100', 'bg-warm-200', 'bg-warm-300', 'bg-warm-50'];
+                
+                particle.className = `absolute w-1 h-1 rounded-full animate-float opacity-30 ${colors[i % colors.length]}`;
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                particle.style.animationDuration = `${Math.random() * 3 + 4}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // Scroll Animations
+        function initScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const scrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, observerOptions);
+
+            // Observe fade-in elements
+            document.querySelectorAll('.fade-in-element').forEach(element => {
+                scrollObserver.observe(element);
+            });
+        }
+
+        // Event Listeners
+        function initEventListeners() {
+            // Theme toggle
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+            
+            // Mobile menu toggle
+            if (mobileMenuToggle) {
+                mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+            }
+            
+            // Scroll handling
+            window.addEventListener('scroll', handleScroll);
+            
+            // Smooth scrolling for nav links
+            document.querySelectorAll('a[href^="#"]').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const target = link.getAttribute('href').substring(1);
+                    scrollToSection(target);
+                    
+                    // Close mobile menu if open
+                    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                        toggleMobileMenu();
+                    }
+                });
+            });
+
+            // Close mobile menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (mobileMenu && mobileMenuToggle) {
+                    if (!mobileMenu.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                }
+            });
+
+            // Close dropdowns when clicking outside (desktop only)
+            document.addEventListener('click', function(e) {
+                if (!isMobile()) {
+                    const dropdowns = document.querySelectorAll('.filter-dropdown');
+                    dropdowns.forEach(dropdown => {
+                        if (!dropdown.contains(e.target)) {
+                            const menu = dropdown.querySelector('.dropdown-menu');
+                            const button = dropdown.querySelector('.dropdown-button');
+                            const arrow = dropdown.querySelector('.dropdown-arrow');
+                            if (menu && button && arrow) {
+                                menu.classList.remove('active');
+                                button.classList.remove('active');
+                                arrow.classList.remove('rotated');
+                            }
+                        }
+                    });
+                }
+            });
+
+            // Close popups when clicking outside (mobile only)
+            document.addEventListener('click', function(e) {
+                if (isMobile()) {
+                    const gradePopup = document.getElementById('gradePopup');
+                    const coursePopup = document.getElementById('coursePopup');
+                    const subjectPopup = document.getElementById('subjectPopup');
+
+                    if (gradePopup && gradePopup.classList.contains('active') && e.target === gradePopup) {
+                        closePopup('grade');
+                    }
+                    if (coursePopup && coursePopup.classList.contains('active') && e.target === coursePopup) {
+                        closePopup('course');
+                    }
+                    if (subjectPopup && subjectPopup.classList.contains('active') && e.target === subjectPopup) {
+                        closePopup('subject');
+                    }
+                }
+            });
+
+            // Initialize dropdown selections
+            setTimeout(() => {
+                updateSelectedDropdownItems('#gradeDropdown');
+                updateSelectedDropdownItems('#subjectDropdown');
+                
+                // Initialize course dropdown
+                document.querySelectorAll('#courseDropdown .dropdown-item').forEach(item => {
+                    if (item.textContent === 'All Course') {
+                        item.classList.add('selected');
+                    }
+                });
+            }, 100);
+        }
+
+        // Make functions available globally
+        window.toggleDropdown = toggleDropdown;
+        window.closePopup = closePopup;
+        window.selectGrade = selectGrade;
+        window.selectCourse = selectCourse;
+        window.selectSubject = selectSubject;
+        window.selectGradeFromPopup = selectGradeFromPopup;
+        window.selectCourseFromPopup = selectCourseFromPopup;
+        window.selectSubjectFromPopup = selectSubjectFromPopup;
+        window.enrollInCourse = enrollInCourse;
+        window.scrollToSection = scrollToSection;
+
+        // Start the app
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // Window resize handling
+        window.addEventListener('resize', function() {
+            // Re-initialize lazy loading observer on resize
+            if (observer) {
+                observer.observe();
+            }
+        });
+    </script>
+</body>
+</html>
