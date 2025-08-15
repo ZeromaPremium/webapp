@@ -1536,7 +1536,7 @@
       "Admission 24"
     ],
     "courseType": "Physics Hunters",
-    "price": 150,
+    "price": 500,
     "originalPrice": 3500,
     "duration": "6 months ",
     "students": 3000,
@@ -1558,7 +1558,7 @@
       "Admission 25"
     ],
     "courseType": "Battle of Biology",
-    "price": 150,
+    "price": 500,
     "originalPrice": 6000,
     "duration": "6 months ",
     "students": 700,
@@ -1581,7 +1581,7 @@
       "Admission 25"
     ],
     "courseType": "RTDS",
-    "price": 150,
+    "price": 500,
     "originalPrice": 10000,
     "duration": "9 months ",
     "students": 1110,
@@ -1603,7 +1603,7 @@
       "Admission 25"
     ],
     "courseType": "ACS",
-    "price": 150,
+    "price": 500,
     "originalPrice": 5000,
     "duration": "5 months ",
     "students": 400,
@@ -1624,7 +1624,7 @@
       "Admission 25"
     ],
     "courseType": "ACS",
-    "price": 250,
+    "price": 500,
     "originalPrice": 5000,
     "duration": "5 months ",
     "students": 3000,
@@ -1646,7 +1646,7 @@
       "Admission 25"
     ],
     "courseType": "ACS",
-    "price": 150,
+    "price": 500,
     "originalPrice": 5000,
     "duration": "6 months ",
     "students": 900,
@@ -1670,7 +1670,7 @@
       "Admission 25"
     ],
     "courseType": "Bondi Pathshala",
-    "price": 150,
+    "price": 450,
     "originalPrice": 4250,
     "duration": "6 months ",
     "students": 200,
@@ -1692,7 +1692,7 @@
       "Admission 25"
     ],
     "courseType": "Bondi Pathshala",
-    "price": 250,
+    "price": 500,
     "originalPrice": 6000,
     "duration": "6 months ",
     "students": 500,
@@ -1712,7 +1712,7 @@
       "Admission 25"
     ],
     "courseType": "Bondi Pathshala",
-    "price": 100,
+    "price": 400,
     "originalPrice": 2000,
     "duration": "4 months ",
     "students": 300,
@@ -1732,7 +1732,7 @@
       "Admission 25"
     ],
     "courseType": "Bondi Pathshala",
-    "price": 100,
+    "price": 400,
     "originalPrice": 2000,
     "duration": "6 months ",
     "students": 300,
@@ -1752,7 +1752,7 @@
       "Admission 25"
     ],
     "courseType": "Bondi Pathshala",
-    "price": 100,
+    "price": 400,
     "originalPrice": 2000,
     "duration": "5 months ",
     "students": 300,
@@ -1771,7 +1771,7 @@
       "Admission 25"
     ],
     "courseType": "Bondi Pathshala",
-    "price": 100,
+    "price": 300,
     "originalPrice": 1000,
     "duration": "4 months ",
     "students": 300,
@@ -1793,7 +1793,7 @@
       "Admission 25"
     ],
     "courseType": "Bondi Pathshala",
-    "price": 150,
+    "price": 500,
     "originalPrice": 5000,
     "duration": "6 months ",
     "students": 600,
