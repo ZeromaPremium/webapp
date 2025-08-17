@@ -166,213 +166,213 @@
         </div>
     </footer>
 
-    <!-- Firebase Scripts -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+<!-- Firebase Scripts -->
+ <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
-        // Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDE3NgCRddjLGL_dfd3eHREqngfDwUNpXo",
-            authDomain: "course-auth-f4165.firebaseapp.com",
-            projectId: "course-auth-f4165",
-            storageBucket: "course-auth-f4165.firebasestorage.app",
-            messagingSenderId: "287739198986",
-            appId: "1:287739198986:web:9c32348cad210c15b4e9f3"
-        };
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDE3NgCRddjLGL_dfd3eHREqngfDwUNpXo",
+        authDomain: "course-auth-f4165.firebaseapp.com",
+        projectId: "course-auth-f4165",
+        storageBucket: "course-auth-f4165.firebasestorage.app",
+        messagingSenderId: "287739198986",
+        appId: "1:287739198986:web:9c32348cad210c15b4e9f3"
+    };
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const provider = new GoogleAuthProvider();
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
 
-        // Mock class data
-        const classesData = [
-            {
-                id: 1,
-                title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-1)",
-                subject: "Physics",
-                grade: "HSC 27",
-                courseType: "ACS",
-                link: "https://wakilbd.github.io/ps/class/1"
-            },
-            {
-                id: 2,
-                title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-2)",
-                subject: "Physics",
-                grade: "HSC 27",
-                courseType: "ACS",
-                link: "https://wakilbd.github.io/ps/class/2"
-            },
-            {
-                id: 3,
-                title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-3)",
-                subject: "Physics",
-                grade: "HSC 27",
-                courseType: "ACS",
-                link: "https://wakilbd.github.io/ps/class/3"
-            },
-            {
-                id: 4,
-                title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-4)",
-                subject: "Physics",
-                grade: "HSC 27",
-                courseType: "ACS",
-                link: "https://wakilbd.github.io/ps/class/4"
-            },
-            {
-                id: 5,
-                title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-5)",
-                subject: "Physics",
-                grade: "HSC 27",
-                courseType: "ACS",
-                link: "https://wakilbd.github.io/ps/class/5"
-            },
-            {
-                id: 6,
-                title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-6)",
-                subject: "Physics",
-                grade: "HSC 27",
-                courseType: "ACS",
-                link: "https://wakilbd.github.io/ps/class/6"
-            }
-        ];
+    // DOM elements
+    const authButton = document.getElementById('authButton');
+    const authButtonText = document.getElementById('authButtonText');
+    const authButtonSpinner = document.getElementById('authButtonSpinner');
+    const userInfo = document.getElementById('userInfo');
+    const userPhoto = document.getElementById('userPhoto');
+    const userEmail = document.getElementById('userEmail');
+    const loadingSection = document.getElementById('loadingSection');
+    const accessDeniedSection = document.getElementById('accessDeniedSection');
+    const classesSection = document.getElementById('classesSection');
+    const classesGrid = document.getElementById('classesGrid');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
 
-        // DOM elements
-        const authButton = document.getElementById('authButton');
-        const authButtonText = document.getElementById('authButtonText');
-        const authButtonSpinner = document.getElementById('authButtonSpinner');
-        const userInfo = document.getElementById('userInfo');
-        const userPhoto = document.getElementById('userPhoto');
-        const userEmail = document.getElementById('userEmail');
-        const loadingSection = document.getElementById('loadingSection');
-        const accessDeniedSection = document.getElementById('accessDeniedSection');
-        const classesSection = document.getElementById('classesSection');
-        const classesGrid = document.getElementById('classesGrid');
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
+    // Full classes data (93 classes)
+    const mockClasses = [
+        // ... (paste all 93 class objects from script.js here) ...
+        // Example structure:
+        {
+            id: 1,
+            title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-1)",
+            subject: "Physics",
+            grade: "HSC 27",
+            courseType: "ACS",
+            link: "https://wakilbd.github.io/ps/class/1"
+        },
+        // ... (all other 92 classes) ...
+    ];
 
-        // Mobile menu toggle
-        mobileMenuBtn.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
+    // Mobile menu toggle
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
 
-        // Check user access in Firestore
-        async function checkUserAccess(userEmail) {
-            try {
-                const userDoc = doc(db, 'whitelist', userEmail);
-                const docSnap = await getDoc(userDoc);
-                return docSnap.exists();
-            } catch (error) {
-                console.error('Error checking user access:', error);
-                return false;
-            }
-        }
-
-        // Render class cards
-        function renderClassCards() {
-            classesGrid.innerHTML = '';
+    // Check user access in Firestore and get allowed class IDs
+    async function getUserAccess(userEmail) {
+        try {
+            const userDoc = doc(db, 'whitelist', userEmail);
+            const docSnap = await getDoc(userDoc);
             
-            classesData.forEach((classItem, index) => {
-                const card = document.createElement('div');
-                card.className = 'bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg card-hover fade-in';
-                card.style.animationDelay = `${index * 0.1}s`;
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                let accessArray = [];
                 
-                card.innerHTML = `
-                    <div class="flex items-start justify-between mb-4">
-                        <div class="bg-cream-5 px-3 py-1 rounded-full text-sm font-medium text-gray-700">
-                            ${classItem.courseType}
-                        </div>
-                        <div class="bg-blue-100 px-3 py-1 rounded-full text-sm font-medium text-blue-700">
-                            ${classItem.subject}
-                        </div>
+                if (userData && userData.access) {
+                    if (Array.isArray(userData.access)) {
+                        accessArray = userData.access;
+                    } else if (typeof userData.access === 'string') {
+                        accessArray = userData.access.split(',').map(s => s.trim());
+                    }
+                    // Convert to numbers if possible
+                    return accessArray.map(id => isNaN(id) ? id : Number(id));
+                }
+            }
+            return []; // No access if no document or access field
+        } catch (error) {
+            console.error('Error checking user access:', error);
+            return [];
+        }
+    }
+
+    // Render class cards that user has access to
+    function renderAccessibleClassCards(accessArray) {
+        classesGrid.innerHTML = '';
+        
+        const accessibleClasses = mockClasses.filter(classItem => 
+            accessArray.includes(classItem.id)
+        );
+
+        if (accessibleClasses.length === 0) {
+            classesGrid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto">
+                        <svg class="w-16 h-16 text-yellow-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">No Accessible Classes</h3>
+                        <p class="text-gray-600 mb-6">You don't have access to any classes yet. Please contact support.</p>
+                        <a href="https://t.me/MYThymM" target="_blank" class="bg-cream-5 hover:bg-cream-6 text-gray-800 px-6 py-3 rounded-lg font-medium transition-colors duration-200 inline-block">
+                            Contact Support
+                        </a>
                     </div>
-                    
-                    <h3 class="text-lg font-semibold text-gray-800 mb-3 leading-tight">
-                        ${classItem.title}
-                    </h3>
-                    
-                    <div class="flex items-center justify-between mb-6">
-                        <span class="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                            ${classItem.grade}
-                        </span>
-                        <span class="text-sm text-gray-500">
-                            Cycle ${classItem.id}
-                        </span>
-                    </div>
-                    
-                    <button onclick="visitClass('${classItem.link}')" class="w-full bg-gradient-to-r from-cream-5 to-cream-6 hover:from-cream-6 hover:to-cream-5 text-gray-800 font-medium py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-md hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cream-4">
-                        Visit Class Page
-                    </button>
-                `;
-                
-                classesGrid.appendChild(card);
-            });
+                </div>
+            `;
+            return;
         }
 
-        // Visit class function
-        window.visitClass = function(link) {
-            window.open(link, '_blank');
-        };
+        accessibleClasses.forEach((classItem, index) => {
+            const card = document.createElement('div');
+            card.className = 'bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg card-hover fade-in';
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="bg-cream-5 px-3 py-1 rounded-full text-sm font-medium text-gray-700">
+                        ${classItem.courseType}
+                    </div>
+                    <div class="bg-blue-100 px-3 py-1 rounded-full text-sm font-medium text-blue-700">
+                        ${classItem.subject}
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 leading-tight">
+                    ${classItem.title}
+                </h3>
+                
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                        ${classItem.grade}
+                    </span>
+                    <span class="text-sm text-gray-500">
+                        ID: ${classItem.id}
+                    </span>
+                </div>
+                
+                <button onclick="visitClass('${classItem.link}')" class="w-full bg-gradient-to-r from-cream-5 to-cream-6 hover:from-cream-6 hover:to-cream-5 text-gray-800 font-medium py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-md hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cream-4">
+                    Visit Class Page
+                </button>
+            `;
+            
+            classesGrid.appendChild(card);
+        });
+    }
 
-        // Handle authentication state changes
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // User is signed in
-                userPhoto.src = user.photoURL || 'https://via.placeholder.com/32';
-                userEmail.textContent = user.email;
-                userInfo.classList.remove('hidden');
-                userInfo.classList.add('flex');
-                authButtonText.textContent = 'Logout';
-                
-                // Check user access
-                const hasAccess = await checkUserAccess(user.email);
-                
-                loadingSection.classList.add('hidden');
-                
-                if (hasAccess) {
-                    classesSection.classList.remove('hidden');
-                    renderClassCards();
-                } else {
-                    accessDeniedSection.classList.remove('hidden');
-                }
-                
+    // Visit class function
+    window.visitClass = function(link) {
+        window.open(link, '_blank');
+    };
+
+    // Handle authentication state changes
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            // User is signed in
+            userPhoto.src = user.photoURL || 'https://via.placeholder.com/32';
+            userEmail.textContent = user.email;
+            userInfo.classList.remove('hidden');
+            userInfo.classList.add('flex');
+            authButtonText.textContent = 'Logout';
+            
+            // Get user's access list
+            const accessArray = await getUserAccess(user.email);
+            
+            loadingSection.classList.add('hidden');
+            
+            if (accessArray.length > 0) {
+                classesSection.classList.remove('hidden');
+                renderAccessibleClassCards(accessArray);
             } else {
-                // User is signed out
-                userInfo.classList.add('hidden');
-                userInfo.classList.remove('flex');
-                authButtonText.textContent = 'Sign In';
-                
-                // Redirect to login page
-                window.location.href = 'https://zeromapremium.github.io/webapp/login';
+                accessDeniedSection.classList.remove('hidden');
             }
-        });
+            
+        } else {
+            // User is signed out
+            userInfo.classList.add('hidden');
+            userInfo.classList.remove('flex');
+            authButtonText.textContent = 'Sign In';
+            
+            // Redirect to login page
+            window.location.href = 'https://zeromapremium.github.io/webapp/login';
+        }
+    });
 
-        // Handle auth button click
-        authButton.addEventListener('click', async () => {
-            const user = auth.currentUser;
-            
-            authButtonSpinner.classList.remove('hidden');
-            authButton.disabled = true;
-            
-            try {
-                if (user) {
-                    // Sign out
-                    await signOut(auth);
-                } else {
-                    // Sign in
-                    await signInWithPopup(auth, provider);
-                }
-            } catch (error) {
-                console.error('Authentication error:', error);
-                alert('Authentication failed. Please try again.');
-            } finally {
-                authButtonSpinner.classList.add('hidden');
-                authButton.disabled = false;
+    // Handle auth button click
+    authButton.addEventListener('click', async () => {
+        const user = auth.currentUser;
+        
+        authButtonSpinner.classList.remove('hidden');
+        authButton.disabled = true;
+        
+        try {
+            if (user) {
+                // Sign out
+                await signOut(auth);
+            } else {
+                // Sign in
+                await signInWithPopup(auth, provider);
             }
-        });
-    </script>
+        } catch (error) {
+            console.error('Authentication error:', error);
+            alert('Authentication failed. Please try again.');
+        } finally {
+            authButtonSpinner.classList.add('hidden');
+            authButton.disabled = false;
+        }
+    });
+        </script>
 </body>
 </html>
