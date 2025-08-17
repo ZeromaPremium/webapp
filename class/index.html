@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium's Class Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'custom-cream': '#F4F0E0',
+                        'custom-light': '#F5F5F4',
+                        'custom-beige': '#F6EEE3',
+                        'custom-warm': '#EBE8E2',
+                        'custom-tan': '#E7E0D3',
+                        'custom-sand': '#E8DACC',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                        'display': ['Playfair Display', 'serif'],
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'slide-in': 'slideIn 0.5s ease-out',
+                        'fade-in': 'fadeIn 0.6s ease-out',
+                        'scale-in': 'scaleIn 0.4s ease-out',
+                        'cursorBlink': 'cursorBlink 1s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateX(-100%)', opacity: '0' },
+                            '100%': { transform: 'translateX(0)', opacity: '1' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.9)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' },
+                        },
+                        cursorBlink: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+        
+        .course-card {
+            @apply bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:scale-105 border border-custom-warm/20;
+        }
+        
+        .course-image {
+            @apply w-full h-48 object-cover;
+        }
+        
+        .course-content {
+            @apply p-6;
+        }
+        
+        .course-category {
+            @apply inline-block px-3 py-1 bg-custom-sand text-amber-800 text-xs font-semibold rounded-full mb-3;
+        }
+        
+        .course-title {
+            @apply text-lg font-display font-semibold text-gray-800 mb-3 line-clamp-2;
+        }
+        
+        .course-meta {
+            @apply flex flex-wrap gap-2 mb-4;
+        }
+        
+        .meta-item {
+            @apply flex items-center gap-1 text-sm text-gray-600;
+        }
+        
+        .meta-icon {
+            @apply w-4 h-4 text-amber-600;
+        }
+        
+        .enroll-btn {
+            @apply w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white py-3 px-6 rounded-xl font-semibold hover:from-amber-700 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:translateY(-1px);
+        }
+        
+        .loading {
+            @apply flex items-center justify-center py-20 text-gray-600 text-lg;
+        }
+        
+        /* Dropdown Styles */
+        .filter-dropdown {
+            @apply relative;
+        }
+        
+        .dropdown-button {
+            @apply flex items-center justify-between w-full px-4 py-3 bg-white border border-custom-warm rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent hover:bg-custom-light transition-all duration-200;
+        }
+        
+        .dropdown-button.active {
+            @apply ring-2 ring-amber-500 border-transparent bg-custom-light;
+        }
+        
+        .dropdown-arrow {
+            @apply transform transition-transform duration-200;
+        }
+        
+        .dropdown-arrow.rotated {
+            @apply rotate-180;
+        }
+        
+        .dropdown-menu {
+            @apply absolute top-full left-0 w-full mt-2 bg-white border border-custom-warm rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto opacity-0 transform scale-95 transition-all duration-200 pointer-events-none;
+        }
+        
+        .dropdown-menu.active {
+            @apply opacity-100 scale-100 pointer-events-auto;
+        }
+        
+        .dropdown-item {
+            @apply px-4 py-3 hover:bg-custom-light cursor-pointer transition-colors duration-150 border-b border-custom-warm/30 last:border-b-0;
+        }
+        
+        .dropdown-item.selected {
+            @apply bg-amber-50 text-amber-800 font-medium;
+        }
+        
+        /* Mobile Popup Styles */
+        .mobile-popup {
+            @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 opacity-0 pointer-events-none transition-all duration-300;
+        }
+        
+        .mobile-popup.active {
+            @apply opacity-100 pointer-events-auto;
+        }
+        
+        .popup-content {
+            @apply bg-white rounded-2xl p-6 max-w-sm w-full mx-4 max-h-96 overflow-y-auto transform scale-95 transition-transform duration-300;
+        }
+        
+        .mobile-popup.active .popup-content {
+            @apply scale-100;
+        }
+        
+        .popup-item {
+            @apply px-4 py-3 hover:bg-custom-light cursor-pointer transition-colors duration-150 rounded-lg mb-2 border border-transparent;
+        }
+        
+        .popup-item.selected {
+            @apply bg-amber-50 text-amber-800 font-medium border-amber-200;
+        }
+        
+        /* Responsive Grid */
+        .courses-grid {
+            @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6;
+        }
+        
+        /* Custom Scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #d97706;
+            border-radius: 3px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #b45309;
+        }
+        
+        /* Animation Classes */
+        .fade-in-element {
+            @apply opacity-0 transform translate-y-8 transition-all duration-700;
+        }
+        
+        .fade-in-element.visible {
+            @apply opacity-100 translate-y-0;
+        }
+        
+        /* Header Glass Effect */
+        .glass-effect {
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #d97706, #ea580c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body class="bg-custom-cream min-h-screen">
+    <!-- Header -->
+    <header id="header" class="fixed w-full top-0 z-50 transition-all duration-300 bg-transparent">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-graduation-cap text-white text-lg"></i>
+                </div>
+                <span class="text-xl font-display font-bold text-gray-800">Premium's Portal</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="https://zeromapremium.github.io/webapp" class="text-gray-700 hover:text-amber-600 transition-colors font-medium">Home</a>
+                <a href="https://zeromapremium.github.io/webapp/class" class="text-amber-600 font-semibold">Class Portal</a>
+                <a href="https://zeromapremium.github.io/webapp/login" class="login-btn bg-gradient-to-r from-amber-600 to-orange-600 text-white px-6 py-2 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-medium">Sign In</a>
+                <a href="https://t.me/MYThymM" target="_blank" class="text-gray-700 hover:text-amber-600 transition-colors font-medium">Contact</a>
+                <button id="themeToggle" class="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                    <i data-lucide="moon" class="w-5 h-5"></i>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobileMenuToggle" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </nav>
+        
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="md:hidden hidden bg-white/95 glass-effect border-t border-custom-warm/20">
+            <div class="container mx-auto px-4 py-4 space-y-4">
+                <a href="https://zeromapremium.github.io/webapp" class="block text-gray-700 hover:text-amber-600 transition-colors font-medium">Home</a>
+                <a href="https://zeromapremium.github.io/webapp/class" class="block text-amber-600 font-semibold">Class Portal</a>
+                <a href="https://zeromapremium.github.io/webapp/login" class="login-btn block bg-gradient-to-r from-amber-600 to-orange-600 text-white px-6 py-2 rounded-xl hover:from-amber-700 hover:to-orange-700 transition-all duration-300 font-medium text-center">Sign In</a>
+                <a href="https://t.me/MYThymM" target="_blank" class="block text-gray-700 hover:text-amber-600 transition-colors font-medium">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-20">
+        <!-- Hero Section -->
+        <section class="relative py-20 bg-gradient-to-br from-custom-cream via-custom-light to-custom-beige overflow-hidden">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23f59e0b" fill-opacity="0.03"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-30"></div>
+            
+            <div class="container mx-auto px-4 text-center relative z-10">
+                <div class="max-w-4xl mx-auto">
+                    <h1 class="text-4xl md:text-6xl font-display font-bold mb-6 text-gray-800">
+                        <span id="typingText" class="gradient-text"></span>
+                        <span id="cursor" class="text-amber-600">|</span>
+                    </h1>
+                    <p class="text-xl md:text-2xl text-gray-600 mb-8 font-light">
+                        Access your exclusive classes with premium content and expert instructors
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <button class="login-btn bg-gradient-to-r from-amber-600 to-orange-600 text-white px-8 py-4 rounded-2xl font-semibold hover:from-amber-700 hover:to-orange-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:translateY(-2px)">
+                            Get Started
+                        </button>
+                        <a href="https://t.me/MYThymM" target="_blank" class="border-2 border-amber-600 text-amber-600 px-8 py-4 rounded-2xl font-semibold hover:bg-amber-600 hover:text-white transition-all duration-300">
+                            Contact Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="py-12 bg-white/50">
+            <div class="container mx-auto px-4">
+                <div class="max-w-6xl mx-auto">
+                    <h2 class="text-3xl font-display font-bold text-center mb-8 text-gray-800">Find Your Perfect Class</h2>
+                    
+                    <!-- Desktop Filters -->
+                    <div class="hidden md:grid md:grid-cols-3 gap-6 mb-8">
+                        <!-- Grade Filter -->
+                        <div class="filter-dropdown">
+                            <button class="dropdown-button" onclick="toggleDropdown('grade')">
+                                <span id="gradeSelected">All Grade/Level</span>
+                                <i data-lucide="chevron-down" class="dropdown-arrow w-4 h-4"></i>
+                            </button>
+                            <div id="gradeDropdown" class="dropdown-menu custom-scrollbar">
+                                <div class="dropdown-item" onclick="selectGrade('All Grade/Level')">All Grade/Level</div>
+                                <div class="dropdown-item" onclick="selectGrade('HSC 27')">HSC 27</div>
+                                <div class="dropdown-item" onclick="selectGrade('HSC 26')">HSC 26</div>
+                                <div class="dropdown-item" onclick="selectGrade('Admission 25')">Admission 25</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Course Filter -->
+                        <div class="filter-dropdown">
+                            <button class="dropdown-button" onclick="toggleDropdown('course')">
+                                <span id="courseSelected">All Course</span>
+                                <i data-lucide="chevron-down" class="dropdown-arrow w-4 h-4"></i>
+                            </button>
+                            <div id="courseDropdown" class="dropdown-menu custom-scrollbar">
+                                <div class="dropdown-item" onclick="selectCourse('All Course')">All Course</div>
+                                <div class="dropdown-item" onclick="selectCourse('ACS')">ACS</div>
+                                <div class="dropdown-item" onclick="selectCourse('Biology Haters')">Biology Haters</div>
+                                <div class="dropdown-item" onclick="selectCourse('Physics Hunters')">Physics Hunters</div>
+                                <div class="dropdown-item" onclick="selectCourse('Battle of Biology')">Battle of Biology</div>
+                                <div class="dropdown-item" onclick="selectCourse('RTDS')">RTDS</div>
+                                <div class="dropdown-item" onclick="selectCourse('Bondi Pathshala')">Bondi Pathshala</div>
+                                <div class="dropdown-item" onclick="selectCourse('Alchemy')">Alchemy</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Subject Filter -->
+                        <div class="filter-dropdown">
+                            <button class="dropdown-button" onclick="toggleDropdown('subject')">
+                                <span id="subjectSelected">All Subject</span>
+                                <i data-lucide="chevron-down" class="dropdown-arrow w-4 h-4"></i>
+                            </button>
+                            <div id="subjectDropdown" class="dropdown-menu custom-scrollbar">
+                                <div class="dropdown-item" onclick="selectSubject('All Subject')">All Subject</div>
+                                <div class="dropdown-item" onclick="selectSubject('Physics')">Physics</div>
+                                <div class="dropdown-item" onclick="selectSubject('Mathematics')">Mathematics</div>
+                                <div class="dropdown-item" onclick="selectSubject('Chemistry')">Chemistry</div>
+                                <div class="dropdown-item" onclick="selectSubject('Biology')">Biology</div>
+                                <div class="dropdown-item" onclick="selectSubject('ICT')">ICT</div>
+                                <div class="dropdown-item" onclick="selectSubject('Bangla')">Bangla</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mobile Filters -->
+                    <div class="md:hidden grid grid-cols-1 gap-4 mb-8">
+                        <button class="dropdown-button" onclick="toggleDropdown('grade')">
+                            <span id="gradeSelectedMobile">All Grade/Level</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                        <button class="dropdown-button" onclick="toggleDropdown('course')">
+                            <span id="courseSelectedMobile">All Course</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                        <button class="dropdown-button" onclick="toggleDropdown('subject')">
+                            <span id="subjectSelectedMobile">All Subject</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Classes Grid -->
+        <section class="py-12 bg-custom-light/30">
+            <div class="container mx-auto px-4">
+                <div id="coursesGrid" class="courses-grid">
+                    <div class="loading">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600 mr-3"></div>
+                        Loading classes...
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gradient-to-br from-gray-900 to-gray-800 text-white py-16 relative overflow-hidden">
+        <div id="footerParticles" class="absolute inset-0"></div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-r from-amber-600 to-orange-600 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-graduation-cap text-white text-xl"></i>
+                        </div>
+                        <span class="text-2xl font-display font-bold">Premium's Portal</span>
+                    </div>
+                    <p class="text-gray-300 mb-6 max-w-md">
+                        Your gateway to premium education with expert instructors and comprehensive course materials.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="https://zeromapremium.github.io/webapp" class="text-gray-300 hover:text-amber-400 transition-colors">Home</a></li>
+                        <li><a href="https://zeromapremium.github.io/webapp/class" class="text-gray-300 hover:text-amber-400 transition-colors">Class Portal</a></li>
+                        <li><a href="https://zeromapremium.github.io/webapp/login" class="text-gray-300 hover:text-amber-400 transition-colors">Sign In</a></li>
+                        <li><a href="https://t.me/MYThymM" target="_blank" class="text-gray-300 hover:text-amber-400 transition-colors">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Contact Info</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-3 group cursor-pointer">
+                            <i data-lucide="mail" class="w-5 h-5 text-amber-400"></i>
+                            <span class="text-gray-300 group-hover:text-amber-400 transition-colors">help.infodesk.premium@gmail.com</span>
+                        </div>
+                        <div class="flex items-center space-x-3 group cursor-pointer">
+                            <i data-lucide="phone" class="w-5 h-5 text-amber-400"></i>
+                            <span class="text-gray-300 group-hover:text-amber-400 transition-colors">+880 1234-567890</span>
+                        </div>
+                        <div class="flex items-center space-x-3 group cursor-pointer">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-amber-400"></i>
+                            <span class="text-gray-300 group-hover:text-amber-400 transition-colors">Dhaka, Bangladesh</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-12 pt-8 text-center">
+                <p class="text-gray-400">&copy; 2024 Premium's Class Portal. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Popups -->
+    <div id="gradePopup" class="mobile-popup">
+        <div class="popup-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Select Grade/Level</h3>
+                <button onclick="closePopup('grade')" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-2">
+                <div class="popup-item" onclick="selectGradeFromPopup('All Grade/Level')">All Grade/Level</div>
+                <div class="popup-item" onclick="selectGradeFromPopup('HSC 27')">HSC 27</div>
+                <div class="popup-item" onclick="selectGradeFromPopup('HSC 26')">HSC 26</div>
+                <div class="popup-item" onclick="selectGradeFromPopup('Admission 25')">Admission 25</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="coursePopup" class="mobile-popup">
+        <div class="popup-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Select Course</h3>
+                <button onclick="closePopup('course')" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-2">
+                <div class="popup-item" onclick="selectCourseFromPopup('All Course')">All Course</div>
+                <div class="popup-item" onclick="selectCourseFromPopup('ACS')">ACS</div>
+                <div class="popup-item" onclick="selectCourseFromPopup('Biology Haters')">Biology Haters</div>
+                <div class="popup-item" onclick="selectCourseFromPopup('Physics Hunters')">Physics Hunters</div>
+                <div class="popup-item" onclick="selectCourseFromPopup('Battle of Biology')">Battle of Biology</div>
+                <div class="popup-item" onclick="selectCourseFromPopup('RTDS')">RTDS</div>
+                <div class="popup-item" onclick="selectCourseFromPopup('Bondi Pathshala')">Bondi Pathshala</div>
+                <div class="popup-item" onclick="selectCourseFromPopup('Alchemy')">Alchemy</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="subjectPopup" class="mobile-popup">
+        <div class="popup-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Select Subject</h3>
+                <button onclick="closePopup('subject')" class="p-2 hover:bg-gray-100 rounded-lg">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="space-y-2">
+                <div class="popup-item" onclick="selectSubjectFromPopup('All Subject')">All Subject</div>
+                <div class="popup-item" onclick="selectSubjectFromPopup('Physics')">Physics</div>
+                <div class="popup-item" onclick="selectSubjectFromPopup('Mathematics')">Mathematics</div>
+                <div class="popup-item" onclick="selectSubjectFromPopup('Chemistry')">Chemistry</div>
+                <div class="popup-item" onclick="selectSubjectFromPopup('Biology')">Biology</div>
+                <div class="popup-item" onclick="selectSubjectFromPopup('ICT')">ICT</div>
+                <div class="popup-item" onclick="selectSubjectFromPopup('Bangla')">Bangla</div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
