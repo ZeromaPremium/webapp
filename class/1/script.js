@@ -11,39 +11,35 @@ let isMuted = false;
 let currentSpeed = 1;
 let securityCheckInterval;
 
-// MAXIMUM SECURITY - Block ALL YouTube functionality
-const YOUTUBE_LOCK_CONFIG = {
-    // Ultra-secure iframe parameters
+// BALANCED SECURITY - Block YouTube but allow custom controls
+const YOUTUBE_SECURITY_CONFIG = {
     playerVars: {
-        'autoplay': 1,
-        'controls': 0,           // DISABLE all native controls
-        'disablekb': 1,         // DISABLE all keyboard shortcuts
-        'enablejsapi': 1,       // Enable ONLY our API control
-        'fs': 0,                // DISABLE native fullscreen completely
-        'iv_load_policy': 3,    // DISABLE annotations/cards
-        'modestbranding': 1,    // REMOVE YouTube branding
-        'playsinline': 1,       // Force inline play
-        'rel': 0,               // NO related videos
-        'showinfo': 0,          // NO video info
-        'cc_load_policy': 0,    // NO captions UI
-        'loop': 0,              // NO loop UI
-        'origin': window.location.origin,
-        'widget_referrer': window.location.origin,
-        'start': 0,
-        'end': 0,
-        'listType': null,
-        'list': null
+        'autoplay': 0,
+        'controls': 0,           // Disable native controls
+        'disablekb': 1,         // Disable keyboard shortcuts  
+        'enablejsapi': 1,       // Enable our API control
+        'fs': 0,                // Disable native fullscreen
+        'iv_load_policy': 3,    // Disable annotations
+        'modestbranding': 1,    // Remove YouTube branding
+        'playsinline': 1,       // Inline playback
+        'rel': 0,               // No related videos
+        'showinfo': 0,          // No video info
+        'cc_load_policy': 0,    // No captions UI
+        'loop': 0,
+        'origin': window.location.origin
     }
 };
 
 // Initialize YouTube API
 function onYouTubeIframeAPIReady() {
-    console.log('YouTube API Ready - MAXIMUM SECURITY MODE');
+    console.log('YouTube API Ready - BALANCED SECURITY MODE');
 }
 
-// Initialize application with enhanced security
+// Initialize application
 document.addEventListener('DOMContentLoaded', function() {
-    implementMaximumSecurity();
+    console.log('Initializing ZeroMA Premium Video Player...');
+    
+    implementBalancedSecurity();
     initializeEventListeners();
     handleMobileMenu();
     
@@ -60,54 +56,50 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+    
+    console.log('ZeroMA Premium Video Player initialized successfully!');
 });
 
-// CRITICAL: Implement maximum security to prevent ALL YouTube access
-function implementMaximumSecurity() {
-    // 1. Block ALL potential YouTube keyboard shortcuts
+// CRITICAL: Implement balanced security - Block YouTube but allow our controls
+function implementBalancedSecurity() {
+    console.log('Implementing balanced security...');
+    
+    // Only block YouTube-specific keyboard shortcuts when video is playing
     document.addEventListener('keydown', function(e) {
         if (isVideoPlaying) {
-            // Block EVERYTHING except our custom handlers
-            e.preventDefault();
-            e.stopImmediatePropagation();
+            // Block YouTube shortcuts but allow our custom handlers
+            const youtubeShortcuts = ['KeyK', 'KeyJ', 'KeyL', 'KeyT', 'KeyI', 'KeyC', 'Digit0', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', 'Home', 'End', 'Period', 'Comma', 'Slash'];
             
-            // Only allow OUR custom keyboard controls
-            handleSecureKeyboard(e);
-            return false;
-        }
-    }, true); // Use capture to intercept early
-
-    // 2. Block ALL mouse interactions on video areas
-    document.addEventListener('click', function(e) {
-        if (e.target.matches('iframe[src*="youtube"]') || 
-            e.target.closest('.youtube-locked iframe')) {
-            e.preventDefault();
-            e.stopImmediatePropagation();
-            return false;
+            if (youtubeShortcuts.includes(e.code)) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                return false;
+            }
+            
+            // Allow our custom keyboard controls
+            handleCustomKeyboard(e);
         }
     }, true);
 
-    // 3. Block ALL context menus on video
+    // Block context menu ONLY on iframe
     document.addEventListener('contextmenu', function(e) {
-        if (e.target.closest('.youtube-locked') || 
-            e.target.matches('iframe[src*="youtube"]')) {
+        if (e.target.matches('iframe[src*="youtube"]')) {
             e.preventDefault();
             e.stopImmediatePropagation();
             return false;
         }
     }, true);
 
-    // 4. Block double-click (prevents YouTube fullscreen)
+    // Block double-click ONLY on iframe (prevents YouTube fullscreen)
     document.addEventListener('dblclick', function(e) {
-        if (e.target.closest('.youtube-locked') || 
-            e.target.matches('iframe[src*="youtube"]')) {
+        if (e.target.matches('iframe[src*="youtube"]')) {
             e.preventDefault();
             e.stopImmediatePropagation();
             return false;
         }
     }, true);
 
-    // 5. Block drag operations
+    // Block drag operations on video areas
     document.addEventListener('dragstart', function(e) {
         if (e.target.closest('.youtube-locked')) {
             e.preventDefault();
@@ -115,53 +107,34 @@ function implementMaximumSecurity() {
         }
     });
 
-    // 6. Block text selection on video areas
+    // Block text selection on iframe only
     document.addEventListener('selectstart', function(e) {
-        if (e.target.closest('.youtube-locked')) {
+        if (e.target.matches('iframe[src*="youtube"]')) {
             e.preventDefault();
             return false;
         }
     });
 
-    // 7. Monitor and block YouTube messages
-    window.addEventListener('message', function(e) {
-        if (e.origin.includes('youtube.com') || e.origin.includes('googlevideo.com')) {
-            // Block any potential redirection attempts
-            if (e.data && (typeof e.data === 'string' || typeof e.data === 'object')) {
-                e.stopImmediatePropagation();
-                return false;
-            }
-        }
-    });
-
-    // 8. Prevent navigation to YouTube
-    let originalLocation = window.location.href;
-    setInterval(() => {
-        if (window.location.href !== originalLocation && 
-            (window.location.href.includes('youtube.com') || 
-             window.location.href.includes('youtu.be'))) {
-            window.location.href = originalLocation;
-        }
-    }, 100);
+    console.log('Balanced security implemented successfully!');
 }
 
-// Secure keyboard handler - only our functions work
-function handleSecureKeyboard(e) {
+// Handle custom keyboard shortcuts
+function handleCustomKeyboard(e) {
     if (!isPlayerReady || !player) return;
     
-    const allowedKeys = {
-        'Space': () => togglePlayPause(),
-        'ArrowLeft': () => seekRelative(-10),
-        'ArrowRight': () => seekRelative(10),
-        'ArrowUp': () => adjustVolume(10),
-        'ArrowDown': () => adjustVolume(-10),
-        'KeyM': () => toggleMute(),
-        'KeyF': () => toggleSecureFullscreen(),
-        'Escape': () => { if (isVideoPlaying) closeVideo(); }
+    const customKeys = {
+        'Space': () => { e.preventDefault(); togglePlayPause(); },
+        'ArrowLeft': () => { e.preventDefault(); seekRelative(-10); },
+        'ArrowRight': () => { e.preventDefault(); seekRelative(10); },
+        'ArrowUp': () => { e.preventDefault(); adjustVolume(10); },
+        'ArrowDown': () => { e.preventDefault(); adjustVolume(-10); },
+        'KeyM': () => { e.preventDefault(); toggleMute(); },
+        'KeyF': () => { e.preventDefault(); toggleSecureFullscreen(); },
+        'Escape': () => { e.preventDefault(); if (isVideoPlaying) closeVideo(); }
     };
 
-    if (allowedKeys[e.code]) {
-        allowedKeys[e.code]();
+    if (customKeys[e.code]) {
+        customKeys[e.code]();
     }
 }
 
@@ -175,25 +148,42 @@ function adjustVolume(change) {
     currentVolume = newVolume;
     
     // Update sliders
-    const volumeSlider = document.getElementById('volumeSlider');
-    const mobileVolumeSlider = document.getElementById('mobileVolumeSlider');
-    if (volumeSlider) volumeSlider.value = newVolume;
-    if (mobileVolumeSlider) mobileVolumeSlider.value = newVolume;
-    
-    // Update mute state
+    updateVolumeSliders(newVolume);
     updateVolumeIcons(newVolume === 0);
 }
 
-// Initialize event listeners
+// Initialize event listeners for UI elements
 function initializeEventListeners() {
-    // Watch buttons
-    document.querySelectorAll('.watch-btn').forEach(button => {
-        button.addEventListener('click', handleWatchClick);
+    console.log('Setting up event listeners...');
+    
+    // Watch buttons - CRITICAL: These must work!
+    document.querySelectorAll('.watch-btn').forEach((button, index) => {
+        console.log(`Setting up watch button ${index + 1}`);
+        button.addEventListener('click', function(e) {
+            console.log('Watch button clicked!', e.target);
+            handleWatchClick(e);
+        });
     });
 
     // Close video buttons
-    document.getElementById('closeVideoBtn')?.addEventListener('click', closeVideo);
-    document.getElementById('closeMobileVideoBtn')?.addEventListener('click', closeVideo);
+    const closeBtn = document.getElementById('closeVideoBtn');
+    const closeMobileBtn = document.getElementById('closeMobileVideoBtn');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            console.log('Desktop close button clicked');
+            closeVideo();
+        });
+    }
+    
+    if (closeMobileBtn) {
+        closeMobileBtn.addEventListener('click', function() {
+            console.log('Mobile close button clicked');
+            closeVideo();
+        });
+    }
+    
+    console.log('Event listeners set up successfully!');
 }
 
 // Handle mobile menu
@@ -201,14 +191,23 @@ function handleMobileMenu() {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const mobileMenu = document.querySelector('.mobile-menu');
 
-    mobileMenuBtn?.addEventListener('click', function() {
-        mobileMenu.classList.toggle('hidden');
-    });
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
 }
 
 // Handle watch button click
 function handleWatchClick(event) {
+    console.log('Processing watch button click...');
+    
     const card = event.target.closest('.video-card');
+    if (!card) {
+        console.error('Could not find video card');
+        return;
+    }
+    
     const videoData = {
         id: card.dataset.videoId,
         title: card.dataset.title,
@@ -216,11 +215,14 @@ function handleWatchClick(event) {
         description: card.dataset.description
     };
 
+    console.log('Opening video:', videoData);
     openVideo(videoData);
 }
 
-// Open video with maximum security
+// Open video with security
 function openVideo(videoData) {
+    console.log('Opening video in', isMobile ? 'mobile' : 'desktop', 'mode');
+    
     currentVideoData = videoData;
     isVideoPlaying = true;
 
@@ -231,11 +233,18 @@ function openVideo(videoData) {
     }
 }
 
-// Open mobile video with enhanced security
+// Open mobile video
 function openMobileVideo(videoData) {
+    console.log('Setting up mobile video player...');
+    
     const modal = document.getElementById('mobileVideoModal');
     const title = document.getElementById('mobileVideoTitle');
     const description = document.getElementById('mobileVideoDescription');
+
+    if (!modal || !title || !description) {
+        console.error('Mobile video elements not found');
+        return;
+    }
 
     title.textContent = videoData.title;
     description.textContent = videoData.description;
@@ -249,31 +258,36 @@ function openMobileVideo(videoData) {
         player = null;
     }
 
-    // Create ultra-secure player
-    player = new YT.Player('mobileVideoPlayer', {
-        height: '100%',
-        width: '100%',
-        videoId: videoData.id,
-        playerVars: YOUTUBE_LOCK_CONFIG.playerVars,
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange,
-            'onError': onPlayerError
-        }
-    });
-
-    // Apply security immediately and repeatedly
-    setTimeout(() => lockDownYouTube('mobile'), 500);
-    setTimeout(() => lockDownYouTube('mobile'), 1000);
-    setTimeout(() => lockDownYouTube('mobile'), 2000);
+    // Create player
+    setTimeout(() => {
+        console.log('Creating mobile YouTube player...');
+        player = new YT.Player('mobileVideoPlayer', {
+            height: '100%',
+            width: '100%',
+            videoId: videoData.id,
+            playerVars: YOUTUBE_SECURITY_CONFIG.playerVars,
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }, 100);
 }
 
-// Open desktop video with enhanced security
+// Open desktop video
 function openDesktopVideo(videoData) {
+    console.log('Setting up desktop video player...');
+    
     const container = document.getElementById('videoPlayerContainer');
     const title = document.getElementById('videoTitle');
     const description = document.getElementById('videoDescription');
     const cardsGrid = document.getElementById('cardsGrid');
+
+    if (!container || !title || !description || !cardsGrid) {
+        console.error('Desktop video elements not found');
+        return;
+    }
 
     title.textContent = videoData.title;
     description.textContent = videoData.description;
@@ -292,86 +306,56 @@ function openDesktopVideo(videoData) {
         player = null;
     }
 
-    // Create ultra-secure player
-    player = new YT.Player('videoPlayer', {
-        height: '100%',
-        width: '100%',
-        videoId: videoData.id,
-        playerVars: YOUTUBE_LOCK_CONFIG.playerVars,
-        events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange,
-            'onError': onPlayerError
-        }
-    });
-
-    // Apply security immediately and repeatedly
-    setTimeout(() => lockDownYouTube('desktop'), 500);
-    setTimeout(() => lockDownYouTube('desktop'), 1000);
-    setTimeout(() => lockDownYouTube('desktop'), 2000);
+    // Create player
+    setTimeout(() => {
+        console.log('Creating desktop YouTube player...');
+        player = new YT.Player('videoPlayer', {
+            height: '100%',
+            width: '100%',
+            videoId: videoData.id,
+            playerVars: YOUTUBE_SECURITY_CONFIG.playerVars,
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }, 100);
 
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// CRITICAL: Maximum YouTube lockdown
-function lockDownYouTube(mode) {
+// Apply security after player loads
+function applySecurityMeasures(mode) {
     const iframeSelector = mode === 'mobile' ? '#mobileVideoPlayer iframe' : '#videoPlayer iframe';
     const iframe = document.querySelector(iframeSelector);
     
     if (iframe) {
-        // DISABLE ALL pointer events on iframe
-        iframe.style.pointerEvents = 'none !important';
-        iframe.style.userSelect = 'none !important';
-        iframe.style.webkitUserSelect = 'none !important';
-        iframe.style.mozUserSelect = 'none !important';
-        iframe.style.msUserSelect = 'none !important';
-        iframe.style.webkitTouchCallout = 'none !important';
-        iframe.style.webkitTapHighlightColor = 'transparent !important';
+        console.log('Applying security to iframe...');
         
-        // Remove ALL possible event handlers
+        // Disable ONLY iframe interactions, NOT our controls
+        iframe.style.pointerEvents = 'none';
+        iframe.style.userSelect = 'none';
+        
+        // Remove event handlers from iframe
         iframe.onclick = null;
         iframe.ondblclick = null;
         iframe.oncontextmenu = null;
-        iframe.onmousedown = null;
-        iframe.onmouseup = null;
-        iframe.ontouchstart = null;
-        iframe.ontouchend = null;
-        iframe.onkeydown = null;
-        iframe.onkeyup = null;
-        iframe.onkeypress = null;
         
-        // Add restrictive sandbox
+        // Add sandbox for extra security
         iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
         iframe.removeAttribute('allowfullscreen');
         
-        // Create invisible overlay to block ALL interactions
-        let overlay = document.querySelector(mode === 'mobile' ? '#mobileSecurityOverlay' : '#securityOverlay');
-        if (!overlay) {
-            overlay = document.createElement('div');
-            overlay.id = mode === 'mobile' ? 'mobileSecurityOverlay' : 'securityOverlay';
-            overlay.style.cssText = `
-                position: absolute !important;
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: transparent !important;
-                z-index: 45 !important;
-                pointer-events: none !important;
-                user-select: none !important;
-            `;
-            iframe.parentNode.appendChild(overlay);
-        }
+        console.log('Security applied successfully');
     }
 }
 
 // YouTube player event handlers
 function onPlayerReady(event) {
     isPlayerReady = true;
-    console.log('Player ready - MAXIMUM SECURITY ACTIVE');
+    console.log('YouTube player ready!');
     
-    // Force highest quality
+    // Set quality
     const qualities = player.getAvailableQualityLevels();
     if (qualities.includes('hd1080')) {
         player.setPlaybackQuality('hd1080');
@@ -384,36 +368,35 @@ function onPlayerReady(event) {
     if (updateInterval) clearInterval(updateInterval);
     updateInterval = setInterval(updateProgress, 1000);
     player.setVolume(currentVolume);
+    
+    // Set up custom controls
     initializeCustomControls();
     
-    // Start continuous security monitoring
-    if (securityCheckInterval) clearInterval(securityCheckInterval);
-    securityCheckInterval = setInterval(() => {
-        lockDownYouTube(isMobile ? 'mobile' : 'desktop');
-    }, 1000);
+    // Apply security measures
+    setTimeout(() => {
+        applySecurityMeasures(isMobile ? 'mobile' : 'desktop');
+    }, 500);
+    
+    console.log('Player setup complete!');
 }
 
 function onPlayerStateChange(event) {
     updatePlayPauseIcons(event.data === YT.PlayerState.PLAYING);
-    
-    // Reapply security on state change
-    setTimeout(() => {
-        lockDownYouTube(isMobile ? 'mobile' : 'desktop');
-    }, 100);
 }
 
 function onPlayerError(event) {
-    console.error('Player Error:', event.data);
+    console.error('YouTube Player Error:', event.data);
+    alert('Video failed to load. Please try another video.');
 }
 
 // Update play/pause icons
 function updatePlayPauseIcons(isPlaying) {
-    const elements = [
+    const icons = [
         { play: 'playIcon', pause: 'pauseIcon' },
         { play: 'mobilePlayIcon', pause: 'mobilePauseIcon' }
     ];
     
-    elements.forEach(({play, pause}) => {
+    icons.forEach(({play, pause}) => {
         const playEl = document.getElementById(play);
         const pauseEl = document.getElementById(pause);
         
@@ -431,69 +414,73 @@ function updatePlayPauseIcons(isPlaying) {
 
 // Initialize custom controls
 function initializeCustomControls() {
+    console.log('Setting up custom controls...');
+    
     initializeDesktopControls();
     initializeMobileControls();
+    
+    console.log('Custom controls ready!');
 }
 
 function initializeDesktopControls() {
     // Play/Pause
-    addSecureListener('playPauseBtn', 'click', togglePlayPause);
+    addListener('playPauseBtn', 'click', togglePlayPause);
     
     // Seek buttons
-    addSecureListener('rewindBtn', 'click', () => seekRelative(-10));
-    addSecureListener('forwardBtn', 'click', () => seekRelative(10));
+    addListener('rewindBtn', 'click', () => seekRelative(-10));
+    addListener('forwardBtn', 'click', () => seekRelative(10));
     
     // Volume controls
-    addSecureListener('volumeBtn', 'click', toggleMute);
-    addSecureListener('volumeSlider', 'input', handleVolumeChange);
+    addListener('volumeBtn', 'click', toggleMute);
+    addListener('volumeSlider', 'input', handleVolumeChange);
     
     // Progress bar
-    addSecureListener('progressBar', 'click', handleProgressClick);
+    addListener('progressBar', 'click', handleProgressClick);
     
-    // Fullscreen (secure)
-    addSecureListener('fullscreenBtn', 'click', toggleSecureFullscreen);
+    // Fullscreen
+    addListener('fullscreenBtn', 'click', toggleSecureFullscreen);
     
     // Speed and quality
-    addSecureListener('speedBtn', 'click', () => toggleMenu('speedMenu'));
-    addSecureListener('qualityBtn', 'click', () => toggleMenu('qualityMenu'));
+    addListener('speedBtn', 'click', () => toggleMenu('speedMenu'));
+    addListener('qualityBtn', 'click', () => toggleMenu('qualityMenu'));
     
     // Speed options
     document.querySelectorAll('.speed-option').forEach(option => {
-        addSecureListener(option, 'click', handleSpeedChange);
+        addListener(option, 'click', handleSpeedChange);
     });
     
     // Quality options
     document.querySelectorAll('.quality-option').forEach(option => {
-        addSecureListener(option, 'click', handleQualityChange);
+        addListener(option, 'click', handleQualityChange);
     });
 }
 
 function initializeMobileControls() {
     // Mobile controls
-    addSecureListener('mobilePlayPauseBtn', 'click', togglePlayPause);
-    addSecureListener('mobileRewindBtn', 'click', () => seekRelative(-10));
-    addSecureListener('mobileForwardBtn', 'click', () => seekRelative(10));
-    addSecureListener('mobileVolumeBtn', 'click', toggleMute);
-    addSecureListener('mobileVolumeSlider', 'input', handleVolumeChange);
-    addSecureListener('mobileProgressBar', 'click', handleMobileProgressClick);
-    addSecureListener('mobileFullscreenBtn', 'click', toggleSecureFullscreen);
-    addSecureListener('mobileSpeedBtn', 'click', () => toggleMenu('mobileSpeedMenu'));
-    addSecureListener('mobileQualityBtn', 'click', () => toggleMenu('mobileQualityMenu'));
+    addListener('mobilePlayPauseBtn', 'click', togglePlayPause);
+    addListener('mobileRewindBtn', 'click', () => seekRelative(-10));
+    addListener('mobileForwardBtn', 'click', () => seekRelative(10));
+    addListener('mobileVolumeBtn', 'click', toggleMute);
+    addListener('mobileVolumeSlider', 'input', handleVolumeChange);
+    addListener('mobileProgressBar', 'click', handleProgressClick);
+    addListener('mobileFullscreenBtn', 'click', toggleSecureFullscreen);
+    addListener('mobileSpeedBtn', 'click', () => toggleMenu('mobileSpeedMenu'));
+    addListener('mobileQualityBtn', 'click', () => toggleMenu('mobileQualityMenu'));
     
     // Mobile options
     document.querySelectorAll('.mobile-speed-option').forEach(option => {
-        addSecureListener(option, 'click', handleMobileSpeedChange);
+        addListener(option, 'click', handleMobileSpeedChange);
     });
     document.querySelectorAll('.mobile-quality-option').forEach(option => {
-        addSecureListener(option, 'click', handleMobileQualityChange);
+        addListener(option, 'click', handleMobileQualityChange);
     });
     
     // Close menus when clicking outside
     document.addEventListener('click', closeMenusOnOutsideClick);
 }
 
-// Secure event listener helper
-function addSecureListener(elementOrId, event, handler) {
+// Helper function to add event listeners
+function addListener(elementOrId, event, handler) {
     const element = typeof elementOrId === 'string' 
         ? document.getElementById(elementOrId) 
         : elementOrId;
@@ -501,11 +488,16 @@ function addSecureListener(elementOrId, event, handler) {
     if (element) {
         element.removeEventListener(event, handler);
         element.addEventListener(event, handler);
+        console.log(`Event listener added for ${typeof elementOrId === 'string' ? elementOrId : 'element'}:${event}`);
+    } else {
+        console.warn(`Element not found: ${elementOrId}`);
     }
 }
 
 // Close video and cleanup
 function closeVideo() {
+    console.log('Closing video...');
+    
     isVideoPlaying = false;
     currentVideoData = null;
     isPlayerReady = false;
@@ -539,12 +531,15 @@ function closeVideo() {
         player.destroy();
         player = null;
     }
+    
+    console.log('Video closed successfully');
 }
 
 // Custom control functions
 function togglePlayPause() {
     if (!isPlayerReady || !player) return;
     
+    console.log('Toggling play/pause...');
     const state = player.getPlayerState();
     if (state === YT.PlayerState.PLAYING) {
         player.pauseVideo();
@@ -556,6 +551,7 @@ function togglePlayPause() {
 function seekRelative(seconds) {
     if (!isPlayerReady || !player) return;
     
+    console.log(`Seeking ${seconds} seconds...`);
     const currentTime = player.getCurrentTime();
     const duration = player.getDuration();
     const newTime = Math.max(0, Math.min(duration, currentTime + seconds));
@@ -565,6 +561,7 @@ function seekRelative(seconds) {
 function toggleMute() {
     if (!isPlayerReady || !player) return;
     
+    console.log('Toggling mute...');
     if (isMuted) {
         player.unMute();
         player.setVolume(currentVolume);
@@ -636,10 +633,7 @@ function toggleSecureFullscreen() {
     if (document.fullscreenElement) {
         document.exitFullscreen();
     } else if (element) {
-        element.requestFullscreen().then(() => {
-            // Maintain security in fullscreen
-            setTimeout(() => lockDownYouTube(isMobile ? 'mobile' : 'desktop'), 500);
-        });
+        element.requestFullscreen();
     }
 }
 
@@ -723,10 +717,6 @@ function handleProgressClick(event) {
     player.seekTo(newTime, true);
 }
 
-function handleMobileProgressClick(event) {
-    handleProgressClick(event);
-}
-
 // Update progress and time displays
 function updateProgress() {
     if (!isPlayerReady || !player) return;
@@ -786,5 +776,5 @@ function formatTime(seconds) {
         : `${m}:${s.toString().padStart(2, '0')}`;
 }
 
-console.log('ZeroMA Premium - MAXIMUM SECURITY VIDEO PLAYER LOADED');
-console.log('ALL YouTube functions BLOCKED - Only custom controls work!');
+console.log('ZeroMA Premium - BALANCED SECURITY VIDEO PLAYER LOADED');
+console.log('✅ Custom controls enabled, ❌ YouTube functions blocked');
