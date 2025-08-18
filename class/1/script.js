@@ -14,7 +14,7 @@ let currentSpeed = 1;
 const YOUTUBE_SECURITY_CONFIG = {
     // Maximum security parameters for YouTube iframe
     playerVars: {
-        'autoplay': 0,
+        'autoplay': 1,
         'controls': 0,           // Disable all native controls
         'disablekb': 1,         // Disable keyboard shortcuts
         'enablejsapi': 1,       // Enable API control
