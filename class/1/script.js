@@ -131,14 +131,18 @@ function openMobileVideo(videoData) {
         width: '100%',
         videoId: videoData.id,
         playerVars: {
-            'autoplay': 0,
-            'controls': 0,
-            'showinfo': 0,
-            'rel': 0,
-            'modestbranding': 1,
-            'iv_load_policy': 3,
-            'fs': 1,
-            'quality': 'hd1080'
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'enablejsapi': 1,
+                    'fs': 1,
+                    'iv_load_policy': 3,
+                    'modestbranding': 1,
+                    'playsinline': 1,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'quality': 'hd1080', // Force HD quality
+                    'vq': 'hd1080' // Video quality parameter
         },
         events: {
             'onReady': onPlayerReady,
@@ -180,14 +184,18 @@ function openDesktopVideo(videoData) {
         width: '100%',
         videoId: videoData.id,
         playerVars: {
-            'autoplay': 0,
-            'controls': 0,
-            'showinfo': 0,
-            'rel': 0,
-            'modestbranding': 1,
-            'iv_load_policy': 3,
-            'fs': 1,
-            'quality': 'hd1080'
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'enablejsapi': 1,
+                    'fs': 1,
+                    'iv_load_policy': 3,
+                    'modestbranding': 1,
+                    'playsinline': 1,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'quality': 'hd1080', // Force HD quality
+                    'vq': 'hd1080' // Video quality parameter
         },
         events: {
             'onReady': onPlayerReady,
