@@ -720,20 +720,34 @@ function handleVolumeChange(event) {
 
 // ENHANCED: Secure fullscreen with proper element targeting
 function toggleSecureFullscreen() {
-    const element = isMobile 
-        ? document.getElementById('mobileVideoModal')
-        : document.getElementById('videoPlayerWrapper');
-    
-    console.log('Toggling secure fullscreen for:', element);
+    console.log('Toggling secure fullscreen...');
     
     if (document.fullscreenElement) {
         document.exitFullscreen().catch(err => {
             console.warn('Exit fullscreen failed:', err);
         });
-    } else if (element && element.requestFullscreen) {
-        element.requestFullscreen().catch(err => {
-            console.warn('Request fullscreen failed:', err);
-        });
+    } else {
+        let element;
+        
+        if (isMobile) {
+            // For mobile: target only the video container, not the entire modal
+            element = document.querySelector('#mobileVideoModal .youtube-locked');
+        } else {
+            // For desktop: target the video wrapper
+            element = document.getElementById('videoPlayerWrapper');
+        }
+        
+        console.log('Requesting fullscreen for:', element);
+        
+        if (element && element.requestFullscreen) {
+            element.requestFullscreen().catch(err => {
+                console.warn('Request fullscreen failed:', err);
+                // Fallback: try webkit fullscreen
+                if (element.webkitRequestFullscreen) {
+                    element.webkitRequestFullscreen();
+                }
+            });
+        }
     }
 }
 
