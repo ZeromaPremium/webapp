@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeroma Premium - Class Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'cream-1': '#F4F0E0',
+                        'cream-2': '#F5F5F4', 
+                        'cream-3': '#F6EEE3',
+                        'cream-4': '#EBE8E2',
+                        'cream-5': '#E7E0D3',
+                        'cream-6': '#E8DACC'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'system-ui', 'sans-serif'],
+                        'poppins': ['Poppins', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .glass-effect {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #8B5A3C;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen font-inter" style="background: linear-gradient(135deg, #F4F0E0 0%, #F6EEE3 50%, #E8DACC 100%);">
+    
+    <!-- Navbar -->
+    <nav class="glass-effect border-b border-cream-4/30 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="https://zeromapremium.github.io/webapp/class"><h1 class="text-2xl font-bold font-poppins text-gray-800">Zeroma Premium</h1></a>
+                </div>
+                
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="https://zeromapremium.github.io/webapp" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200">Home</a>
+                        <a href="https://zeromapremium.github.io/webapp/class" class="bg-cream-6 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium">Class Portal</a>
+                        <a href="https://t.me/MYThymM" target="_blank" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200">Contact</a>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div id="userInfo" class="hidden items-center space-x-3">
+                        <img id="userPhoto" class="w-8 h-8 rounded-full border-2 border-cream-6" alt="User">
+                        <span id="userEmailElement" class="text-sm text-gray-700 hidden sm:block"></span>
+                    </div>
+                    
+                    <button id="authButton" class="bg-cream-5 hover:bg-cream-6 text-gray-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:shadow-md">
+                        <span id="authButtonText">Sign In</span>
+                        <div id="authButtonSpinner" class="loading-spinner hidden inline-block ml-2"></div>
+                    </button>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button id="mobileMenuBtn" class="text-gray-700 hover:text-gray-900 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div id="mobileMenu" class="md:hidden hidden border-t border-cream-4/30">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-cream-1/80">
+                <a href="https://zeromapremium.github.io/webapp" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Home</a>
+                <a href="https://zeromapremium.github.io/webapp/class" class="bg-cream-6 text-gray-800 block px-3 py-2 rounded-md text-base font-medium">Class Portal</a>
+                <a href="https://t.me/MYThymM" target="_blank" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Loading State -->
+        <div id="loadingSection" class="text-center py-20">
+            <div class="loading-spinner mx-auto mb-4"></div>
+            <p class="text-gray-600 text-lg">Loading your classes...</p>
+        </div>
+
+        <!-- Access Denied State -->
+        <div id="accessDeniedSection" class="hidden text-center py-20">
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-12 max-w-md mx-auto shadow-lg">
+                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                    </svg>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-800 mb-3">Access Restricted</h3>
+                <p class="text-gray-600 mb-6">You don't have access to view the class portal. Please contact support for assistance.</p>
+                <a href="https://t.me/MYThymM" target="_blank" class="bg-cream-5 hover:bg-cream-6 text-gray-800 px-6 py-3 rounded-lg font-medium transition-colors duration-200 inline-block">
+                    Contact Support
+                </a>
+            </div>
+        </div>
+
+        <!-- Classes Grid -->
+        <div id="classesSection" class="hidden">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-gray-800 mb-4 font-poppins">Your Classes</h2>
+                <p class="text-gray-600 text-lg max-w-2xl mx-auto">Access your enrolled courses and continue your learning journey</p>
+            </div>
+
+            <div id="classesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Class cards will be dynamically inserted here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white/60 backdrop-blur-sm border-t border-cream-4/30 mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4 font-poppins">Zeroma Premium</h3>
+                <p class="text-gray-600 mb-6">Excellence in Education</p>
+                <div class="flex justify-center space-x-6">
+                    <a href="https://zeromapremium.github.io/webapp" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Home</a>
+                    <a href="https://zeromapremium.github.io/webapp/class" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Classes</a>
+                    <a href="https://t.me/MYThymM" target="_blank" class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Contact</a>
+                </div>
+                <div class="mt-8 pt-8 border-t border-cream-4/30">
+                    <p class="text-sm text-gray-500">&copy; 2024 Zeroma Premium. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<!-- Firebase Scripts -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
+
+    // Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyDE3NgCRddjLGL_dfd3eHREqngfDwUNpXo",
+        authDomain: "course-auth-f4165.firebaseapp.com",
+        projectId: "course-auth-f4165",
+        storageBucket: "course-auth-f4165.firebasestorage.app",
+        messagingSenderId: "287739198986",
+        appId: "1:287739198986:web:9c32348cad210c15b4e9f3"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    // DOM elements
+    const authButton = document.getElementById('authButton');
+    const authButtonText = document.getElementById('authButtonText');
+    const authButtonSpinner = document.getElementById('authButtonSpinner');
+    const userInfo = document.getElementById('userInfo');
+    const userPhoto = document.getElementById('userPhoto');
+    const userEmailElement = document.getElementById('userEmailElement');
+    const loadingSection = document.getElementById('loadingSection');
+    const accessDeniedSection = document.getElementById('accessDeniedSection');
+    const classesSection = document.getElementById('classesSection');
+    const classesGrid = document.getElementById('classesGrid');
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    // Full classes data (93 classes)
+    const mockClasses = [
+    {
+        id: 1,
+        title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-1)",
+        subject: "Physics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 2,
+        title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-2)",
+        subject: "Physics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 3,
+        title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-3)",
+        subject: "Physics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 4,
+        title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-4)",
+        subject: "Physics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 5,
+        title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-5)",
+        subject: "Physics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 6,
+        title: "ACS Physics HSC 27 By Apurbo Mashrur Apar (Cycle-6)",
+        subject: "Physics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 7,
+        title: "ACS Physics HSC 27 By Apurbo Mashrur Apar ALL CYCLE",
+        subject: "Physics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 8,
+        title: "ACS HSC 27 Higher Math Academic (Cycle-1)",
+        subject: "Mathematics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: "https://zeromapremium.github.io/webapp/class/1/"
+    },
+    {
+        id: 9,
+        title: "ACS HSC 27 Higher Math Academic (Cycle-2)",
+        subject: "Mathematics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 10,
+        title: "ACS HSC 27 Higher Math Academic (Cycle-3)",
+        subject: "Mathematics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 11,
+        title: "ACS HSC 27 Higher Math Academic (Cycle-4)",
+        subject: "Mathematics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 12,
+        title: "ACS HSC 27 Higher Math Academic (Cycle-5)",
+        subject: "Mathematics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 13,
+        title: "ACS HSC 27 Higher Math Academic (Cycle-6)",
+        subject: "Mathematics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 14,
+        title: "ACS HSC 27 Higher Math Academic ALL CYCLE Combo",
+        subject: "Mathematics",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 15,
+        title: "ACS HSC 27 Chemistry by Mottasin Pahlovi (Cycle-1)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 16,
+        title: "ACS HSC 27 Chemistry by Mottasin Pahlovi (Cycle-2)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 17,
+        title: "ACS HSC 27 Chemistry by Mottasin Pahlovi (Cycle-3)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 18,
+        title: "ACS HSC 27 Chemistry by Mottasin Pahlovi (Cycle-4)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 19,
+        title: "ACS HSC 27 Chemistry by Mottasin Pahlovi (Cycle-5)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 20,
+        title: "ACS HSC 27 Chemistry by Mottasin Pahlovi ALL CYCLE Combo",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 21,
+        title: "HSC-27 ACS Chemistry powered by ChemShifu (Cycle-1)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 22,
+        title: "HSC-27 ACS Chemistry powered by ChemShifu (Cycle-2)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 23,
+        title: "HSC-27 ACS Chemistry powered by ChemShifu (Cycle-3)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 24,
+        title: "HSC-27 ACS Chemistry powered by ChemShifu (Cycle-4)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 25,
+        title: "HSC-27 ACS Chemistry powered by ChemShifu (Cycle-5)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 26,
+        title: "HSC-27 ACS Chemistry powered by ChemShifu ALL CYCLE Combo",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 27,
+        title: "ACS HSC 27 Basic to Advance Chemistry by Hemel (Cycle-1)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 28,
+        title: "ACS HSC 27 Basic to Advance Chemistry by Hemel (Cycle-2)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 29,
+        title: "ACS HSC 27 Basic to Advance Chemistry by Hemel (Cycle-3)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 30,
+        title: "ACS HSC 27 Basic to Advance Chemistry by Hemel (Cycle-4)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 31,
+        title: "ACS HSC 27 Basic to Advance Chemistry by Hemel (Cycle-5)",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 32,
+        title: "ACS HSC 27 Basic to Advance Chemistry by Hemel ALL CYCLE Combo",
+        subject: "Chemistry",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 33,
+        title: "ACS ICT BATCH DECODER HSC 27",
+        subject: "ICT",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 34,
+        title: "ACS Biology Cycle for HSC 27 by DMC Dreamers(Cycle-1)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 35,
+        title: "ACS Biology Cycle for HSC 27 by DMC Dreamers(Cycle-2)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 36,
+        title: "ACS Biology Cycle for HSC 27 by DMC Dreamers(Cycle-3)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 37,
+        title: "ACS Biology Cycle for HSC 27 by DMC Dreamers(Cycle-4)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 38,
+        title: "ACS Biology Cycle for HSC 27 by DMC Dreamers(Cycle-5)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 39,
+        title: "ACS Biology Cycle for HSC 27 by DMC Dreamers(Cycle-6)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 40,
+        title: "ACS Biology Cycle for HSC 27 by DMC Dreamers ALL CYCLE Combo",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 41,
+        title: "ACS - College Biology Course by BioMission (Cycle-1)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 42,
+        title: "ACS - College Biology Course by BioMission (Cycle-2)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 43,
+        title: "ACS - College Biology Course by BioMission (Cycle-3)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 44,
+        title: "ACS - College Biology Course by BioMission (Cycle-4)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 45,
+        title: "ACS - College Biology Course by BioMission (Cycle-5)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 46,
+        title: "ACS - College Biology Course by BioMission (Cycle-6)",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 47,
+        title: "ACS - College Biology Course by BioMission ALL CYCLE Combo",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 48,
+        title: "BIOLOGY HATERS BIOLOGY Cycle -1",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 49,
+        title: "BIOLOGY HATERS BIOLOGY Cycle -2",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 50,
+        title: "BIOLOGY HATERS BIOLOGY Cycle -3",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 51,
+        title: "BIOLOGY HATERS BIOLOGY Cycle -4",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 52,
+        title: "BIOLOGY HATERS BIOLOGY Cycle -5",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 53,
+        title: "BIOLOGY HATERS BIOLOGY Cycle -6",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 54,
+        title: "BIOLOGY HATERS BIOLOGY ALL Cycle Combo",
+        subject: "Biology",
+        grade: "HSC 27",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 55,
+        title: "HSC'26 ( বাংলা ১ম পত্র সম্পূর্ণ)- ACS",
+        subject: "Bangla",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 56,
+        title: "ACS Higher Math 1st Paper (HSC 26) (Cycle-1)",
+        subject: "Mathematics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 57,
+        title: "ACS Higher Math 1st Paper (HSC 26) (Cycle-2)",
+        subject: "Mathematics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 58,
+        title: "ACS Higher Math 1st Paper (HSC 26) (Cycle-3)",
+        subject: "Mathematics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 59,
+        title: "ACS Higher Math 2nd Paper (HSC 26) (Cycle-4)",
+        subject: "Mathematics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 60,
+        title: "ACS Higher Math 2nd Paper (HSC 26) (Cycle-5)",
+        subject: "Mathematics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 61,
+        title: "ACS Higher Math 2nd Paper (HSC 26) (Cycle-6)",
+        subject: "Mathematics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 62,
+        title: "ACS Higher Math 1st  & 2nd Paper (HSC 26) ALL CYCLE COMBO",
+        subject: "Mathematics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 63,
+        title: "ACS Physics HSC 26 By Apurbo Mashrur Apar (Cycle-1)",
+        subject: "Physics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 64,
+        title: "ACS Physics HSC 26 By Apurbo Mashrur Apar (Cycle-2)",
+        subject: "Physics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 65,
+        title: "ACS Physics HSC 26 By Apurbo Mashrur Apar (Cycle-3)",
+        subject: "Physics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 66,
+        title: "ACS Physics HSC 26 By Apurbo Mashrur Apar (Cycle-4)",
+        subject: "Physics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 67,
+        title: "ACS Physics HSC 26 By Apurbo Mashrur Apar (Cycle-5)",
+        subject: "Physics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 68,
+        title: "ACS Physics HSC 26 By Apurbo Mashrur Apar (Cycle-6)",
+        subject: "Physics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 69,
+        title: "ACS Physics HSC 26 By Apurbo Mashrur Apar ALL CYCLE",
+        subject: "Physics",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 70,
+        title: "ACS HSC 26 Chemistry (Cycle-1)",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 71,
+        title: "ACS HSC 26 Chemistry (Cycle-2)",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 72,
+        title: "ACS HSC 26 Chemistry (Cycle-3)",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 73,
+        title: "ACS HSC 26 Chemistry (Cycle-4)",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 74,
+        title: "ACS HSC 26 Chemistry (Cycle-5)",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 75,
+        title: "ACS HSC 26 Chemistry ALL CYCLE Combo",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 76,
+        title: "HSC 2026 ACS Biology ALL CYCLE",
+        subject: "Biology",
+        grade: "HSC 26",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 77,
+        title: "HSC 2026 BH TROOPS 1ST Paper ",
+        subject: "Biology",
+        grade: "HSC 26",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 78,
+        title: "HSC 2026 BH TROOPS 2ND Paper ",
+        subject: "Biology",
+        grade: "HSC 26",
+        courseType: "Biology Haters",
+        link: ""
+    },
+    {
+        id: 79,
+        title: "HSC 2026 Shoawn Reza 1st  Paper",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "Alchemy",
+        link: ""
+    },
+    {
+        id: 80,
+        title: "HSC 2026 Shoawn Reza 2nd Paper",
+        subject: "Chemistry",
+        grade: "HSC 26",
+        courseType: "Alchemy",
+        link: ""
+    },
+    {
+        id: 81,
+        title: "প্রত্যাবর্তন ৪.০  সম্পূর্ণ - Admission 2024/25",
+        subject: "Physics",
+        grade: "Admission 25",
+        courseType: "Physics Hunters",
+        link: ""
+    },
+    {
+        id: 82,
+        title: "ALPHA 6 Medical Admission Full Course",
+        subject: "Biology",
+        grade: "Admission 25",
+        courseType: "Battle of Biology",
+        link: ""
+    },
+    {
+        id: 83,
+        title: "দুরন্ত প্রয়াস 5.0s Restart ( 2nd Timer Medical Batch )",
+        subject: "Physics",
+        grade: "Admission 25",
+        courseType: "RTDS",
+        link: ""
+    },
+    {
+        id: 84,
+        title: "ACS Varsity & GST Special Private Programme 2025",
+        subject: "Physics",
+        grade: "Admission 25",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 85,
+        title: "ACS Engineering Admission Private Batch 2025",
+        subject: "Physics",
+        grade: "Admission 25",
+        courseType: "ACS",
+        link: ""
+    },
+    {
+        id: 86,
+        title: "ACS Medical Admission Private Batch 2025",
+        subject: "Biology",
+        grade: "Admission 25",
+        courseType: "",
+        link: ""
+    },
+    {
+        id: 87,
+        title: "Target DU 5.0",
+        subject: "Physics",
+        grade: "Admission 25",
+        courseType: "Bondi Pathshala",
+        link: ""
+    },
+    {
+        id: 88,
+        title: "BP ENGINEERING & Varsity Biology - HSC 2025",
+        subject: "Physics",
+        grade: "Admission 25",
+        courseType: "Bondi Pathshala",
+        link: ""
+    },
+    {
+        id: 89,
+        title: "Engneering Physics - HSC 2025",
+        subject: "Biology",
+        grade: "Admission 25",
+        courseType: "",
+        link: ""
+    },
+    {
+        id: 90,
+        title: "Engneering Chemistry - HSC 2025",
+        subject: "Chemistry",
+        grade: "Admission 25",
+        courseType: "",
+        link: ""
+    },
+    {
+        id: 91,
+        title: "Engneering Math - HSC 2025",
+        subject: "Mathematics",
+        grade: "Admission 25",
+        courseType: "",
+        link: ""
+    },
+    {
+        id: 92,
+        title: "Varsity Biology - HSC 2025",
+        subject: "Biology",
+        grade: "Admission 25",
+        courseType: "",
+        link: ""
+    },
+    {
+        id: 93,
+        title: "MediTroops - 1st Timer Medical Course (Avengers)",
+        subject: "Physics",
+        grade: "Admission 25",
+        courseType: "",
+        link: ""
+    }
+    ];
+
+    // Mobile menu toggle
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    // Check user access in Firestore and get allowed class IDs
+    async function getUserAccess(email) {
+        console.log("Fetching access for:", email);
+        try {
+            const userDoc = doc(db, 'whitelist', email);
+            const docSnap = await getDoc(userDoc);
+            
+            if (docSnap.exists()) {
+                const userData = docSnap.data();
+                console.log("Firestore document data:", userData);
+                
+                // Handle different access field formats
+                let accessArray = [];
+                if (userData.access) {
+                    if (Array.isArray(userData.access)) {
+                        // Convert all elements to numbers
+                        accessArray = userData.access.map(id => Number(id));
+                    } else if (typeof userData.access === 'string') {
+                        // Split comma-separated string and convert to numbers
+                        accessArray = userData.access.split(',')
+                            .map(id => id.trim())
+                            .map(id => Number(id));
+                    }
+                    // Filter out any NaN values
+                    accessArray = accessArray.filter(id => !isNaN(id));
+                }
+                console.log("Converted access array:", accessArray);
+                return accessArray;
+            }
+            console.log("No document found for:", email);
+            return [];
+        } catch (error) {
+            console.error('Firestore access error:', error);
+            return [];
+        }
+    }
+
+    // Render class cards that user has access to
+    function renderAccessibleClassCards(accessArray) {
+        console.log("Access array to filter classes:", accessArray);
+        console.log("Available class IDs:", mockClasses.map(c => c.id));
+        
+        classesGrid.innerHTML = '';
+        
+        const accessibleClasses = mockClasses.filter(classItem => 
+            accessArray.includes(classItem.id)
+        );
+        
+        console.log("Accessible classes after filtering:", accessibleClasses);
+
+        if (accessibleClasses.length === 0) {
+            classesGrid.innerHTML = `
+                <div class="col-span-full text-center py-12">
+                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto">
+                        <svg class="w-16 h-16 text-yellow-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-3">No Accessible Classes</h3>
+                        <p class="text-gray-600 mb-6">
+                            You have access to ${accessArray.length} class IDs, but none match our records.
+                            Please contact support with this information.
+                        </p>
+                        <a href="https://t.me/MYThymM" target="_blank" class="bg-cream-5 hover:bg-cream-6 text-gray-800 px-6 py-3 rounded-lg font-medium transition-colors duration-200 inline-block">
+                            Contact Support
+                        </a>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        accessibleClasses.forEach((classItem, index) => {
+            const card = document.createElement('div');
+            card.className = 'bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg card-hover fade-in';
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            card.innerHTML = `
+                <div class="flex items-start justify-between mb-4">
+                    <div class="bg-cream-5 px-3 py-1 rounded-full text-sm font-medium text-gray-700">
+                        ${classItem.courseType}
+                    </div>
+                    <div class="bg-blue-100 px-3 py-1 rounded-full text-sm font-medium text-blue-700">
+                        ${classItem.subject}
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-semibold text-gray-800 mb-3 leading-tight">
+                    ${classItem.title}
+                </h3>
+                
+                <div class="flex items-center justify-between mb-6">
+                    <span class="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                        ${classItem.grade}
+                    </span>
+                    <span class="text-sm text-gray-500">
+                        ID: ${classItem.id}
+                    </span>
+                </div>
+                
+                <button onclick="visitClass('${classItem.link}')" class="w-full bg-gradient-to-r from-cream-5 to-cream-6 hover:from-cream-6 hover:to-cream-5 text-gray-800 font-medium py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-md hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-cream-4">
+                    Visit Class Page
+                </button>
+            `;
+            
+            classesGrid.appendChild(card);
+        });
+    }
+
+    // Visit class function
+    window.visitClass = function(link) {
+        if (link) {
+            window.open(link, '_blank');
+        } else {
+            alert("Class link not available yet. Coming soon!");
+        }
+    };
+
+    // Handle authentication state changes
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            console.log("User signed in:", user);
+            
+            // Add null check for user.email
+            if (!user.email) {
+                console.error('User email is missing');
+                loadingSection.classList.add('hidden');
+                accessDeniedSection.classList.remove('hidden');
+                return;
+            }
+
+            // Normalize email to lowercase
+            const userEmail = user.email.toLowerCase();
+            console.log("Normalized user email:", userEmail);
+            
+            // Update UI
+            userPhoto.src = user.photoURL || 'https://via.placeholder.com/32';
+            userEmailElement.textContent = userEmail;
+            userInfo.classList.remove('hidden');
+            userInfo.classList.add('flex');
+            authButtonText.textContent = 'Logout';
+            
+            // Get access with normalized email
+            const accessArray = await getUserAccess(userEmail);
+            console.log("Final access array:", accessArray);
+            
+            loadingSection.classList.add('hidden');
+            
+            if (accessArray.length > 0) {
+                classesSection.classList.remove('hidden');
+                accessDeniedSection.classList.add('hidden');
+                renderAccessibleClassCards(accessArray);
+            } else {
+                accessDeniedSection.classList.remove('hidden');
+                classesSection.classList.add('hidden');
+            }
+            
+        } else {
+            console.log("No user signed in, redirecting to login");
+            // Redirect to login page
+            window.location.href = 'https://zeromapremium.github.io/webapp/login';
+        }
+    });
+
+    // Handle auth button click
+    authButton.addEventListener('click', async () => {
+        const user = auth.currentUser;
+        
+        authButtonSpinner.classList.remove('hidden');
+        authButton.disabled = true;
+        
+        try {
+            if (user) {
+                console.log("Signing out user");
+                await signOut(auth);
+            } else {
+                console.log("Signing in with Google");
+                await signInWithPopup(auth, provider);
+            }
+        } catch (error) {
+            console.error('Authentication error:', error);
+            alert('Authentication failed. Please try again.');
+        } finally {
+            authButtonSpinner.classList.add('hidden');
+            authButton.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>
