@@ -15,18 +15,21 @@ let securityCheckInterval;
 const YOUTUBE_SECURITY_CONFIG = {
     playerVars: {
         'autoplay': 0,
-        'controls': 0,           // Disable native controls
-        'disablekb': 1,         // Disable keyboard shortcuts  
-        'enablejsapi': 1,       // Enable our API control
-        'fs': 0,                // Disable native fullscreen
-        'iv_load_policy': 3,    // Disable annotations
-        'modestbranding': 1,    // Remove YouTube branding
-        'playsinline': 1,       // Inline playback
-        'rel': 0,               // No related videos
-        'showinfo': 0,          // No video info
-        'cc_load_policy': 0,    // No captions UI
+        'controls': 0,
+        'disablekb': 1,
+        'enablejsapi': 1,
+        'fs': 0,
+        'iv_load_policy': 3,
+        'modestbranding': 1,
+        'playsinline': 1,
+        'rel': 0,
+        'showinfo': 0,
+        'cc_load_policy': 0,
         'loop': 0,
-        'origin': window.location.origin
+        'origin': window.location.origin,
+        'widget_referrer': window.location.href,
+        'html5': 1,
+        'wmode': 'opaque'
     }
 };
 
@@ -327,26 +330,35 @@ function openDesktopVideo(videoData) {
 
 // Apply security after player loads
 function applySecurityMeasures(mode) {
-    const iframeSelector = mode === 'mobile' ? '#mobileVideoPlayer iframe' : '#videoPlayer iframe';
+    const iframeSelector = mode === 'mobile' 
+        ? '#mobileVideoPlayer iframe' 
+        : '#videoPlayer iframe';
+    
     const iframe = document.querySelector(iframeSelector);
     
     if (iframe) {
-        console.log('Applying security to iframe...');
+        console.log('Applying enhanced security to iframe...');
         
-        // Disable ONLY iframe interactions, NOT our controls
+        // Block all iframe interactions
         iframe.style.pointerEvents = 'none';
         iframe.style.userSelect = 'none';
+        iframe.style.webkitUserSelect = 'none';
+        iframe.style.touchAction = 'none';
         
-        // Remove event handlers from iframe
-        iframe.onclick = null;
-        iframe.ondblclick = null;
-        iframe.oncontextmenu = null;
+        // Remove all event handlers
+        const clone = iframe.cloneNode(true);
+        iframe.parentNode.replaceChild(clone, iframe);
         
-        // Add sandbox for extra security
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation');
-        iframe.removeAttribute('allowfullscreen');
+        // Add security attributes
+        clone.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        clone.setAttribute('allow', 'autoplay');
+        clone.removeAttribute('allowfullscreen');
         
-        console.log('Security applied successfully');
+        // Block YouTube event listeners
+        clone.contentWindow.addEventListener = function() {};
+        clone.contentDocument.addEventListener = function() {};
+        
+        console.log('Enhanced security applied!');
     }
 }
 
