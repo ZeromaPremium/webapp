@@ -176,31 +176,71 @@ button:hover {
     }
 }
 
-/* Desktop layout transitions */
-@media (min-width: 768px) {
-    .cards-sidebar {
-        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+/* FIXED: Desktop layout transitions with proper z-index management */
+@media (min-width: 1024px) {
+    /* Fixed cards sidebar positioning */
+    .video-playing #cardsGrid.lg\:fixed {
+        position: fixed !important;
+        right: 2rem !important;
+        top: 6rem !important;
+        bottom: 2rem !important;
+        width: 320px !important;
+        max-height: calc(100vh - 10rem) !important;
+        overflow-y: auto !important;
+        z-index: 45 !important;
+        background: rgba(244, 240, 224, 0.95) !important;
+        backdrop-filter: blur(10px) !important;
+        border-radius: 16px !important;
+        padding: 20px !important;
+        border: 1px solid #d4c8b8 !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
     }
     
-    .video-playing .cards-sidebar {
-        width: 300px;
-        position: static;
-        right: 2rem;
-        top: 50%;
-        transform: translateY(-50%);
-        max-height: 70vh;
-        overflow-y: auto;
-        z-index: 40;
-    }
-    
-    .video-playing .cards-sidebar .video-card {
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-    
+    /* Ensure proper video player positioning */
     .video-playing #videoPlayerContainer {
-        margin-right: 350px;
+        margin-right: 380px !important;
+        z-index: 30 !important;
     }
+    
+    /* Fix card scaling in sidebar */
+    .video-playing #cardsGrid .video-card {
+        transform: scale(0.85) !important;
+        margin-bottom: 1rem !important;
+        width: 100% !important;
+    }
+    
+    /* Smooth scroll behavior for sidebar */
+    .video-playing #cardsGrid {
+        scroll-behavior: smooth !important;
+    }
+    
+    /* Prevent header overlap */
+    .video-playing #cardsGrid.lg\:fixed {
+        top: 5rem !important; /* Ensure it's below the sticky header */
+    }
+}
+
+/* FIXED: Mobile video modal with highest z-index */
+#mobileVideoModal {
+    z-index: 9999 !important;
+    position: fixed !important;
+    inset: 0 !important;
+}
+
+#mobileVideoModal > div {
+    z-index: 10000 !important;
+    position: relative !important;
+}
+
+#closeMobileVideoBtn {
+    z-index: 10001 !important;
+    position: absolute !important;
+}
+
+/* Ensure mobile modal is above everything */
+#mobileVideoModal.show,
+#mobileVideoModal:not(.hidden) {
+    z-index: 9999 !important;
 }
 
 /* =============================================== */
@@ -419,6 +459,7 @@ input[type="range"] {
     opacity: 0 !important;
     pointer-events: none !important;
 }
+
 /* Add these rules to completely disable YouTube UI */
 .youtube-locked iframe {
     pointer-events: none !important;
