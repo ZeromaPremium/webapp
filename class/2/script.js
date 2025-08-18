@@ -244,7 +244,7 @@ function openVideo(videoData) {
     }
 }
 
-// Open mobile video
+// FIXED: Open mobile video with proper z-index
 function openMobileVideo(videoData) {
     console.log('Setting up mobile video player...');
     
@@ -260,6 +260,8 @@ function openMobileVideo(videoData) {
     title.textContent = videoData.title;
     description.textContent = videoData.description;
 
+    // FIXED: Ensure modal appears above everything
+    modal.style.zIndex = '9999';
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 
@@ -286,7 +288,7 @@ function openMobileVideo(videoData) {
     }, 100);
 }
 
-// Open desktop video
+// FIXED: Open desktop video with improved positioning
 function openDesktopVideo(videoData) {
     console.log('Setting up desktop video player...');
     
@@ -305,11 +307,14 @@ function openDesktopVideo(videoData) {
 
     container.classList.remove('hidden');
     
-    // Transform grid layout
+    // FIXED: Transform grid layout with proper positioning
     cardsGrid.classList.add('lg:grid-cols-2', 'lg:w-80', 'lg:fixed', 'lg:right-8', 'lg:top-1/2', 'lg:-translate-y-1/2', 'lg:z-40', 'lg:max-h-[70vh]', 'lg:overflow-y-auto');
     cardsGrid.classList.remove('lg:grid-cols-3');
     container.classList.add('lg:mr-96');
     document.body.classList.add('video-playing');
+
+    // FIXED: Scroll to top to prevent positioning issues
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Destroy existing player
     if (player) {
@@ -514,7 +519,7 @@ function addListener(elementOrId, event, handler) {
     }
 }
 
-// Close video and cleanup
+// FIXED: Close video with proper cleanup
 function closeVideo() {
     console.log('Closing video...');
     
@@ -533,7 +538,9 @@ function closeVideo() {
     }
 
     if (isMobile) {
-        document.getElementById('mobileVideoModal').classList.add('hidden');
+        const modal = document.getElementById('mobileVideoModal');
+        modal.classList.add('hidden');
+        modal.style.zIndex = '';
         document.body.style.overflow = '';
     } else {
         const container = document.getElementById('videoPlayerContainer');
