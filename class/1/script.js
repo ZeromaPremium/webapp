@@ -15,7 +15,7 @@ let securityCheckInterval;
 const YOUTUBE_LOCK_CONFIG = {
     // Ultra-secure iframe parameters
     playerVars: {
-        'autoplay': 0,
+        'autoplay': 1,
         'controls': 0,           // DISABLE all native controls
         'disablekb': 1,         // DISABLE all keyboard shortcuts
         'enablejsapi': 1,       // Enable ONLY our API control
