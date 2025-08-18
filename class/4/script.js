@@ -62,7 +62,12 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-    
+    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', function() {
+        if (Math.abs(window.orientation) > 0) {
+            handleOrientationChange();
+        }
+    });
     console.log('ZeroMA Premium Video Player initialized successfully!');
 });
 
@@ -877,7 +882,20 @@ function updateVideoInfo() {
         console.warn('Duration update error:', e);
     }
 }
-
+function handleOrientationChange() {
+    if (!isPlayerReady || !player || !isVideoPlaying) return;
+    
+    console.log('Orientation changed - updating player');
+    
+    // Destroy and recreate player
+    const tempVideoData = { ...currentVideoData };
+    closeVideo();
+    
+    setTimeout(() => {
+        openVideo(tempVideoData);
+        console.log('Player recreated after orientation change');
+    }, 300);
+}
 function formatTime(seconds) {
     if (!seconds || isNaN(seconds)) return '0:00';
     
