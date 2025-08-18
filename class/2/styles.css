@@ -184,7 +184,7 @@ button:hover {
     
     .video-playing .cards-sidebar {
         width: 300px;
-        position: fixed;
+        position: static;
         right: 2rem;
         top: 50%;
         transform: translateY(-50%);
