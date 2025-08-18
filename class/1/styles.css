@@ -338,51 +338,66 @@ button:hover {
     z-index: -9999 !important;
 }
 
-/* MAXIMUM SECURITY: Complete iframe isolation */
+/* BALANCED SECURITY: Block iframe but allow custom controls */
 .youtube-locked iframe {
-    pointer-events: none !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    -webkit-touch-callout: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-    border: none !important;
-    outline: none !important;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    border: none;
+    outline: none;
 }
 
-/* Security overlay to block all iframe interactions */
-#securityOverlay,
-#mobileSecurityOverlay {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    background: transparent !important;
-    z-index: 45 !important;
-    pointer-events: none !important;
-    user-select: none !important;
-}
-
-/* ONLY our custom controls work */
+/* Ensure ALL custom controls work perfectly */
 #customControls,
 #customControls *,
 #mobileCustomControls,
-#mobileCustomControls * {
-    pointer-events: auto !important;
-    user-select: auto !important;
-    z-index: 60 !important;
-}
-
-/* Force custom controls to be always accessible */
-.video-card button,
+#mobileCustomControls *,
+.video-card,
+.video-card *,
 .watch-btn,
 #closeVideoBtn,
-#closeMobileVideoBtn {
+#closeMobileVideoBtn,
+#playPauseBtn,
+#rewindBtn,
+#forwardBtn,
+#volumeBtn,
+#volumeSlider,
+#progressBar,
+#fullscreenBtn,
+#speedBtn,
+#qualityBtn,
+.speed-option,
+.quality-option,
+#mobilePlayPauseBtn,
+#mobileRewindBtn,
+#mobileForwardBtn,
+#mobileVolumeBtn,
+#mobileVolumeSlider,
+#mobileProgressBar,
+#mobileFullscreenBtn,
+#mobileSpeedBtn,
+#mobileQualityBtn,
+.mobile-speed-option,
+.mobile-quality-option {
     pointer-events: auto !important;
     user-select: auto !important;
-    z-index: 65 !important;
+    z-index: 100 !important;
+    cursor: pointer !important;
+}
+
+/* Ensure buttons are interactive */
+button {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+input[type="range"] {
+    pointer-events: auto !important;
+    cursor: pointer !important;
 }
 
 /* Disable drag and drop */
