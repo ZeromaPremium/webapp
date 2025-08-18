@@ -110,6 +110,12 @@
     opacity: 1;
 }
 
+/* Mobile custom controls - always visible */
+#mobileCustomControls {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
 /* Progress bar styling */
 #progressBar {
     transition: all 0.2s ease-in-out;
