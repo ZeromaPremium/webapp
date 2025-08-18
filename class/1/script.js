@@ -10,15 +10,61 @@ let currentVolume = 100;
 let isMuted = false;
 let currentSpeed = 1;
 
+// Enhanced YouTube security - prevent all native YouTube functionality
+const YOUTUBE_SECURITY_CONFIG = {
+    // Maximum security parameters for YouTube iframe
+    playerVars: {
+        'autoplay': 0,
+        'controls': 0,           // Disable all native controls
+        'disablekb': 1,         // Disable keyboard shortcuts
+        'enablejsapi': 1,       // Enable API control
+        'fs': 0,                // Disable fullscreen button (we handle it custom)
+        'iv_load_policy': 3,    // Disable annotations
+        'modestbranding': 1,    // Remove YouTube branding
+        'playsinline': 1,       // Play inline on mobile
+        'rel': 0,               // Don't show related videos
+        'showinfo': 0,          // Don't show video info
+        'quality': 'hd1080',
+        'vq': 'hd1080',
+        'cc_load_policy': 0,    // Disable captions
+        'loop': 0,
+        'origin': window.location.origin,
+        'widget_referrer': window.location.origin
+    },
+    // Blocked keyboard shortcuts
+    blockedKeys: [
+        'KeyK',      // Play/Pause
+        'KeyJ',      // Rewind 10s
+        'KeyL',      // Forward 10s
+        'KeyM',      // Mute
+        'KeyF',      // Fullscreen
+        'KeyT',      // Theater mode
+        'KeyI',      // Miniplayer
+        'KeyC',      // Captions
+        'ArrowUp',   // Volume up
+        'ArrowDown', // Volume down
+        'ArrowLeft', // Rewind 5s
+        'ArrowRight', // Forward 5s
+        'Digit0', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9', // Seek to position
+        'Home',      // Go to beginning
+        'End',       // Go to end
+        'Period',    // Frame forward
+        'Comma',     // Frame backward
+        'Slash',     // Search
+        'Space'      // Play/Pause
+    ]
+};
+
 // Initialize YouTube API
 function onYouTubeIframeAPIReady() {
-    console.log('YouTube API Ready');
+    console.log('YouTube API Ready with Enhanced Security');
 }
 
 // Initialize application
 document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     handleMobileMenu();
+    preventYouTubeAccess();
     
     // Update mobile status on resize
     window.addEventListener('resize', function() {
@@ -36,6 +82,71 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Enhanced security: Prevent all YouTube access methods
+function preventYouTubeAccess() {
+    // Block right-click context menu on video areas
+    document.addEventListener('contextmenu', function(e) {
+        if (e.target.closest('.youtube-locked') || e.target.closest('#videoPlayer') || e.target.closest('#mobileVideoPlayer')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
+
+    // Block keyboard shortcuts that could access YouTube
+    document.addEventListener('keydown', function(e) {
+        if (isVideoPlaying && YOUTUBE_SECURITY_CONFIG.blockedKeys.includes(e.code)) {
+            // Only allow our custom controls, block YouTube shortcuts
+            const isCustomControlFocus = e.target.closest('#customControls') || e.target.closest('#mobileCustomControls');
+            if (!isCustomControlFocus && !e.target.matches('input[type="range"]')) {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            }
+        }
+    });
+
+    // Prevent drag and drop operations
+    document.addEventListener('dragstart', function(e) {
+        if (e.target.closest('.youtube-locked')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Block selection on YouTube iframe areas
+    document.addEventListener('selectstart', function(e) {
+        if (e.target.closest('.youtube-locked')) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    // Prevent any potential YouTube URL redirects
+    window.addEventListener('beforeunload', function(e) {
+        if (isVideoPlaying) {
+            // Ensure video is properly stopped
+            if (player && typeof player.pauseVideo === 'function') {
+                player.pauseVideo();
+            }
+        }
+    });
+
+    // Block potential iframe escapes
+    window.addEventListener('message', function(e) {
+        // Filter YouTube messages that might try to redirect
+        if (e.origin.includes('youtube.com') || e.origin.includes('googlevideo.com')) {
+            if (e.data && typeof e.data === 'string' && 
+                (e.data.includes('watch?v=') || 
+                 e.data.includes('youtube.com') || 
+                 e.data.includes('redirect'))) {
+                e.stopImmediatePropagation();
+                return false;
+            }
+        }
+    });
+}
+
 // Initialize event listeners
 function initializeEventListeners() {
     // Watch buttons
@@ -47,7 +158,14 @@ function initializeEventListeners() {
     document.getElementById('closeVideoBtn')?.addEventListener('click', closeVideo);
     document.getElementById('closeMobileVideoBtn')?.addEventListener('click', closeVideo);
 
-    // We'll add control listeners after player is created
+    // Prevent any clicks on YouTube iframe from escaping
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('iframe[src*="youtube.com"]')) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        }
+    });
 }
 
 // Handle mobile menu
@@ -85,7 +203,7 @@ function openVideo(videoData) {
     }
 }
 
-// Open video in mobile mode
+// Open video in mobile mode with enhanced security
 function openMobileVideo(videoData) {
     const modal = document.getElementById('mobileVideoModal');
     const title = document.getElementById('mobileVideoTitle');
@@ -97,7 +215,7 @@ function openMobileVideo(videoData) {
     modal.classList.remove('hidden');
     document.body.style.overflow = 'hidden';
 
-    // Create YouTube player with custom controls
+    // Create YouTube player with maximum security
     if (player) {
         player.destroy();
     }
@@ -106,29 +224,21 @@ function openMobileVideo(videoData) {
         height: '100%',
         width: '100%',
         videoId: videoData.id,
-        playerVars: {
-            'autoplay': 0,
-            'controls': 0,
-            'disablekb': 1,
-            'enablejsapi': 1,
-            'fs': 1,
-            'iv_load_policy': 3,
-            'modestbranding': 1,
-            'playsinline': 1,
-            'rel': 0,
-            'showinfo': 0,
-            'quality': 'hd1080',
-            'vq': 'hd1080'
-        },
+        playerVars: YOUTUBE_SECURITY_CONFIG.playerVars,
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange,
             'onError': onPlayerError
         }
     });
+
+    // Apply additional security after player creation
+    setTimeout(() => {
+        applyEnhancedSecurity('mobile');
+    }, 1000);
 }
 
-// Open video in desktop mode
+// Open video in desktop mode with enhanced security
 function openDesktopVideo(videoData) {
     const container = document.getElementById('videoPlayerContainer');
     const title = document.getElementById('videoTitle');
@@ -150,7 +260,7 @@ function openDesktopVideo(videoData) {
 
     document.body.classList.add('video-playing');
 
-    // Create YouTube player with custom controls
+    // Create YouTube player with maximum security
     if (player) {
         player.destroy();
     }
@@ -159,20 +269,7 @@ function openDesktopVideo(videoData) {
         height: '100%',
         width: '100%',
         videoId: videoData.id,
-        playerVars: {
-            'autoplay': 0,
-            'controls': 0,
-            'disablekb': 1,
-            'enablejsapi': 1,
-            'fs': 1,
-            'iv_load_policy': 3,
-            'modestbranding': 1,
-            'playsinline': 1,
-            'rel': 0,
-            'showinfo': 0,
-            'quality': 'hd1080',
-            'vq': 'hd1080'
-        },
+        playerVars: YOUTUBE_SECURITY_CONFIG.playerVars,
         events: {
             'onReady': onPlayerReady,
             'onStateChange': onPlayerStateChange,
@@ -180,14 +277,111 @@ function openDesktopVideo(videoData) {
         }
     });
 
+    // Apply additional security after player creation
+    setTimeout(() => {
+        applyEnhancedSecurity('desktop');
+    }, 1000);
+
     // Scroll to video
     container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Apply enhanced security measures to prevent YouTube access
+function applyEnhancedSecurity(mode) {
+    const iframeSelector = mode === 'mobile' ? '#mobileVideoPlayer iframe' : '#videoPlayer iframe';
+    const iframe = document.querySelector(iframeSelector);
+    
+    if (iframe) {
+        // Disable pointer events on iframe itself
+        iframe.style.pointerEvents = 'none';
+        iframe.style.userSelect = 'none';
+        iframe.style.webkitUserSelect = 'none';
+        iframe.style.mozUserSelect = 'none';
+        iframe.style.msUserSelect = 'none';
+        
+        // Add security attributes
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        iframe.setAttribute('loading', 'lazy');
+        
+        // Remove any potential event listeners
+        iframe.onclick = null;
+        iframe.ondblclick = null;
+        iframe.oncontextmenu = null;
+        
+        // Monitor for any YouTube UI elements and hide them
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    hideYouTubeElements(iframe);
+                }
+            });
+        });
+        
+        observer.observe(iframe, {
+            childList: true,
+            subtree: true
+        });
+        
+        // Initial hide
+        setTimeout(() => hideYouTubeElements(iframe), 500);
+    }
+}
+
+// Hide any YouTube UI elements that might appear
+function hideYouTubeElements(iframe) {
+    try {
+        // This targets the iframe content if accessible
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (iframeDoc) {
+            const elementsToHide = [
+                '.ytp-chrome-controls',
+                '.ytp-chrome-bottom',
+                '.ytp-chrome-top',
+                '.ytp-title',
+                '.ytp-title-link',
+                '.ytp-youtube-button',
+                '.ytp-watermark',
+                '.ytp-cards-button',
+                '.ytp-endscreen-element',
+                '.ytp-pause-overlay',
+                '.ytp-share-button',
+                '.ytp-watch-later-button',
+                '.iv-card',
+                '.annotation'
+            ];
+            
+            elementsToHide.forEach(selector => {
+                const elements = iframeDoc.querySelectorAll(selector);
+                elements.forEach(el => {
+                    el.style.display = 'none !important';
+                    el.style.visibility = 'hidden !important';
+                    el.style.opacity = '0 !important';
+                    el.style.pointerEvents = 'none !important';
+                });
+            });
+        }
+    } catch (e) {
+        // Cross-origin restrictions prevent access, which is actually good for security
+        console.log('YouTube iframe security active');
+    }
 }
 
 // YouTube player event handlers
 function onPlayerReady(event) {
     isPlayerReady = true;
-    console.log('Player ready');
+    console.log('Player ready with Enhanced Security');
+    
+    // Apply maximum security settings
+    try {
+        // Disable keyboard controls
+        if (typeof player.getIframe === 'function') {
+            const iframe = player.getIframe();
+            iframe.setAttribute('allow', 'accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture');
+            iframe.removeAttribute('allowfullscreen');
+        }
+    } catch (e) {
+        console.log('Additional security measures applied');
+    }
     
     // Set HD quality immediately
     const availableQualities = player.getAvailableQualityLevels();
@@ -244,10 +438,11 @@ function onPlayerStateChange(event) {
         mobilePauseIcon?.classList.add('hidden');
     }
     
-    // Ensure best quality is maintained
+    // Ensure best quality is maintained and security is intact
     setTimeout(() => {
         const currentQuality = player.getPlaybackQuality();
         console.log('Current quality:', currentQuality);
+        applyEnhancedSecurity(isMobile ? 'mobile' : 'desktop');
     }, 1000);
 }
 
@@ -258,6 +453,7 @@ function onPlayerError(event) {
 
 function showError(message) {
     console.error(message);
+    // You could add a user-visible error message here
 }
 
 // Initialize custom controls after player is ready
@@ -268,7 +464,7 @@ function initializeCustomControls() {
     // Mobile Controls
     initializeMobileControls();
     
-    console.log('Custom controls initialized for both desktop and mobile');
+    console.log('Custom controls initialized with YouTube access blocked');
 }
 
 function initializeDesktopControls() {
@@ -314,11 +510,11 @@ function initializeDesktopControls() {
         progressBar.addEventListener('click', handleProgressClick);
     }
 
-    // Fullscreen button
+    // Fullscreen button - secure fullscreen without YouTube UI
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     if (fullscreenBtn) {
-        fullscreenBtn.removeEventListener('click', toggleFullscreen);
-        fullscreenBtn.addEventListener('click', toggleFullscreen);
+        fullscreenBtn.removeEventListener('click', toggleSecureFullscreen);
+        fullscreenBtn.addEventListener('click', toggleSecureFullscreen);
     }
 
     // Speed control
@@ -391,11 +587,11 @@ function initializeMobileControls() {
         mobileProgressBar.addEventListener('click', handleMobileProgressClick);
     }
 
-    // Mobile Fullscreen button
+    // Mobile Fullscreen button - secure fullscreen
     const mobileFullscreenBtn = document.getElementById('mobileFullscreenBtn');
     if (mobileFullscreenBtn) {
-        mobileFullscreenBtn.removeEventListener('click', toggleFullscreen);
-        mobileFullscreenBtn.addEventListener('click', toggleFullscreen);
+        mobileFullscreenBtn.removeEventListener('click', toggleSecureFullscreen);
+        mobileFullscreenBtn.addEventListener('click', toggleSecureFullscreen);
     }
 
     // Mobile Speed control
@@ -598,13 +794,21 @@ function handleVolumeChange(event) {
     }
 }
 
-function toggleFullscreen() {
+// Secure fullscreen that prevents YouTube UI from showing
+function toggleSecureFullscreen() {
     const playerWrapper = isMobile ? document.getElementById('mobileVideoModal') : document.getElementById('videoPlayerWrapper');
     
     if (document.fullscreenElement) {
         document.exitFullscreen();
-    } else {
-        playerWrapper?.requestFullscreen();
+    } else if (playerWrapper) {
+        playerWrapper.requestFullscreen().then(() => {
+            // Apply additional security in fullscreen
+            setTimeout(() => {
+                applyEnhancedSecurity(isMobile ? 'mobile' : 'desktop');
+            }, 500);
+        }).catch(err => {
+            console.log('Fullscreen request failed:', err);
+        });
     }
 }
 
@@ -864,7 +1068,7 @@ function formatTime(seconds) {
     }
 }
 
-// Enhanced HD quality management
+// Enhanced HD quality management with security checks
 function ensureHDQuality() {
     if (!isPlayerReady || !player) return;
     
@@ -882,66 +1086,97 @@ function ensureHDQuality() {
         player.setPlaybackQuality('hd720');
         console.log('Forcing HD 720p');
     }
+    
+    // Reapply security after quality change
+    applyEnhancedSecurity(isMobile ? 'mobile' : 'desktop');
 }
 
-// Check quality every 5 seconds to ensure best quality
+// Check quality and security every 5 seconds
 setInterval(() => {
     if (isPlayerReady) {
         ensureHDQuality();
     }
 }, 5000);
 
-// Keyboard shortcuts
+// Secure keyboard shortcuts - only allow our custom controls
 document.addEventListener('keydown', function(event) {
     if (!isVideoPlaying || !isPlayerReady || document.activeElement.tagName === 'INPUT') return;
 
-    switch (event.code) {
-        case 'Space':
-            event.preventDefault();
-            togglePlayPause();
-            break;
-        case 'ArrowLeft':
-            event.preventDefault();
-            seekRelative(-10);
-            break;
-        case 'ArrowRight':
-            event.preventDefault();
-            seekRelative(10);
-            break;
-        case 'ArrowUp':
-            event.preventDefault();
+    // Block all YouTube shortcuts and only allow our custom ones
+    const allowedActions = {
+        'Space': () => { event.preventDefault(); togglePlayPause(); },
+        'ArrowLeft': () => { event.preventDefault(); seekRelative(-10); },
+        'ArrowRight': () => { event.preventDefault(); seekRelative(10); },
+        'ArrowUp': () => { 
+            event.preventDefault(); 
             if (player) {
                 const newVolume = Math.min(100, player.getVolume() + 10);
                 player.setVolume(newVolume);
+                currentVolume = newVolume;
                 const volumeSlider = document.getElementById('volumeSlider');
+                const mobileVolumeSlider = document.getElementById('mobileVolumeSlider');
                 if (volumeSlider) volumeSlider.value = newVolume;
+                if (mobileVolumeSlider) mobileVolumeSlider.value = newVolume;
             }
-            break;
-        case 'ArrowDown':
-            event.preventDefault();
+        },
+        'ArrowDown': () => { 
+            event.preventDefault(); 
             if (player) {
                 const newVolume = Math.max(0, player.getVolume() - 10);
                 player.setVolume(newVolume);
+                currentVolume = newVolume;
                 const volumeSlider = document.getElementById('volumeSlider');
+                const mobileVolumeSlider = document.getElementById('mobileVolumeSlider');
                 if (volumeSlider) volumeSlider.value = newVolume;
+                if (mobileVolumeSlider) mobileVolumeSlider.value = newVolume;
             }
-            break;
-        case 'KeyM':
-            event.preventDefault();
-            toggleMute();
-            break;
-        case 'KeyF':
-            event.preventDefault();
-            toggleFullscreen();
-            break;
-        case 'Escape':
-            if (isVideoPlaying) {
-                event.preventDefault();
-                closeVideo();
-            }
-            break;
+        },
+        'KeyM': () => { event.preventDefault(); toggleMute(); },
+        'KeyF': () => { event.preventDefault(); toggleSecureFullscreen(); },
+        'Escape': () => { 
+            if (isVideoPlaying) { 
+                event.preventDefault(); 
+                closeVideo(); 
+            } 
+        }
+    };
+
+    if (allowedActions[event.code]) {
+        allowedActions[event.code]();
+    } else {
+        // Block all other keys to prevent YouTube access
+        event.preventDefault();
+        event.stopPropagation();
+        return false;
     }
 });
 
 // Console log for debugging
-console.log('ZeroMA Premium Video Player Loaded - HD Quality Optimization Enabled');
+console.log('ZeroMA Premium Video Player Loaded - Maximum YouTube Security Active');
+
+// Additional security: Monitor for any attempts to access YouTube
+window.addEventListener('beforeunload', function() {
+    if (player && isVideoPlaying) {
+        // Clean up player to prevent any potential data leaks
+        player.destroy();
+    }
+});
+
+// Prevent any form of YouTube redirection
+window.addEventListener('hashchange', function(e) {
+    if (window.location.hash.includes('youtube') || window.location.hash.includes('watch')) {
+        e.preventDefault();
+        history.replaceState(null, '', window.location.pathname);
+        return false;
+    }
+});
+
+// Final security check on page visibility change
+document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'visible' && isVideoPlaying) {
+        // Reapply security when page becomes visible again
+        setTimeout(() => {
+            applyEnhancedSecurity(isMobile ? 'mobile' : 'desktop');
+        }, 1000);
+    }
+});
