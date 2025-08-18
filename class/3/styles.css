@@ -99,6 +99,21 @@
     .mobile-card-content .video-card {
         margin-bottom: 0.75rem;
         border-radius: 12px;
+        background: linear-gradient(135deg, #F5F5F4 0%, #F6EEE3 100%) !important;
+        border: 1px solid #E8DACC !important;
+    }
+    
+    /* Enhanced mobile custom controls layout */
+    #mobileCustomControls .flex {
+        flex-wrap: wrap !important;
+        gap: 0.5rem !important;
+    }
+    
+    /* Move quality and fullscreen to second line */
+    #mobileCustomControls > .flex > .flex:last-child {
+        flex-basis: 100% !important;
+        justify-content: center !important;
+        margin-top: 0.5rem !important;
     }
 }
 
@@ -130,42 +145,65 @@
     .video-playing #cardsGrid {
         position: fixed !important;
         right: 1rem !important;
-        top: 6rem !important;
+        top: 5rem !important;
         bottom: 2rem !important;
-        width: 22rem !important;
-        max-height: calc(100vh - 8rem) !important;
+        width: 24rem !important;
+        max-height: calc(100vh - 7rem) !important;
         overflow-y: auto !important;
+        overflow-x: hidden !important;
         z-index: 45 !important;
-        background: rgba(244, 240, 224, 0.98) !important;
+        background: linear-gradient(135deg, #F4F0E0 0%, #F6EEE3 50%, #EBE8E2 100%) !important;
         backdrop-filter: blur(12px) !important;
-        border-radius: 16px !important;
+        border-radius: 20px !important;
         padding: 1.5rem !important;
-        border: 1px solid rgba(212, 200, 184, 0.8) !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+        border: 2px solid #E8DACC !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.3) !important;
         grid-template-columns: 1fr !important;
         gap: 1rem !important;
+        pointer-events: auto !important;
     }
     
     /* Ensure video player doesn't overlap */
     .video-playing #videoPlayerContainer {
-        margin-right: 24rem !important;
+        margin-right: 26rem !important;
         z-index: 30 !important;
     }
     
-    /* Cards in sidebar use mobile format but scaled appropriately */
+    /* Cards in sidebar show full mobile format with watch buttons */
     .video-playing #cardsGrid .video-card {
         width: 100% !important;
         transform: none !important;
         margin-bottom: 0 !important;
+        border-radius: 12px !important;
+        background: linear-gradient(135deg, #F5F5F4 0%, #E7E0D3 100%) !important;
+        border: 1px solid #E8DACC !important;
     }
     
     .video-playing #cardsGrid .mobile-card-content {
+        display: block !important;
+    }
+    
+    .video-playing #cardsGrid .mobile-card-content .p-6 {
         padding: 1rem !important;
     }
     
-    /* Ensure proper header clearance */
-    .video-playing #cardsGrid {
-        top: 5rem !important;
+    /* Enhanced sidebar scrolling */
+    .video-playing #cardsGrid::-webkit-scrollbar {
+        width: 6px;
+    }
+    
+    .video-playing #cardsGrid::-webkit-scrollbar-track {
+        background: #F4F0E0;
+        border-radius: 3px;
+    }
+    
+    .video-playing #cardsGrid::-webkit-scrollbar-thumb {
+        background: #E8DACC;
+        border-radius: 3px;
+    }
+    
+    .video-playing #cardsGrid::-webkit-scrollbar-thumb:hover {
+        background: #E7E0D3;
     }
     
     /* Hide the grid initially to prevent flash */
@@ -267,6 +305,7 @@ button:hover {
     inset: 0 !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch !important;
+    background: linear-gradient(135deg, #F4F0E0 0%, #F5F5F4 50%, #F6EEE3 100%) !important;
 }
 
 #mobileVideoModal > div {
@@ -280,6 +319,29 @@ button:hover {
     position: fixed !important;
     top: 1rem !important;
     right: 1rem !important;
+    background: linear-gradient(135deg, #EBE8E2 0%, #E7E0D3 100%) !important;
+}
+
+/* CRITICAL: Mobile fullscreen - only video player */
+@media (max-width: 767px) {
+    /* Target only the video container for fullscreen */
+    #mobileVideoModal .youtube-locked {
+        position: relative !important;
+    }
+    
+    /* When in fullscreen, hide everything except video */
+    #mobileVideoModal:fullscreen > div > *:not(.youtube-locked) {
+        display: none !important;
+    }
+    
+    #mobileVideoModal:fullscreen .youtube-locked {
+        width: 100vw !important;
+        height: 100vh !important;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 99999 !important;
+    }
 }
 
 /* =============================================== */
@@ -544,14 +606,39 @@ input[type="range"] {
 @media (max-width: 640px) {
     .mobile-card-content .p-6 {
         padding: 1rem !important;
+        background: linear-gradient(135deg, #F5F5F4 0%, #E7E0D3 100%) !important;
     }
     
     .mobile-card-content h3 {
         font-size: 0.9rem !important;
         line-height: 1.3 !important;
+        color: #374151 !important;
     }
     
     #mobileVideoModal .h-64 {
         height: 12rem !important;
+    }
+    
+    /* Improved mobile controls positioning */
+    #mobileCustomControls {
+        background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.5) 50%, transparent 100%) !important;
+        padding: 1rem !important;
+    }
+    
+    /* Two-line control layout for mobile */
+    #mobileCustomControls > .flex {
+        flex-direction: column !important;
+        gap: 0.75rem !important;
+    }
+    
+    /* First line: play controls and time */
+    #mobileCustomControls .flex:first-child {
+        justify-content: space-between !important;
+    }
+    
+    /* Second line: volume, speed, quality, fullscreen centered */
+    #mobileCustomControls .flex:last-child {
+        justify-content: center !important;
+        gap: 1rem !important;
     }
 }
