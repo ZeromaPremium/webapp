@@ -431,12 +431,111 @@
     <!-- Mobile Video Modal -->
     <div id="mobileVideoModal" class="fixed inset-0 z-50 hidden">
         <div class="absolute inset-0 bg-black">
-            <button id="closeMobileVideoBtn" class="absolute top-4 right-4 text-white z-10 bg-black/50 rounded-full p-2">
+            <button id="closeMobileVideoBtn" class="absolute top-4 right-4 text-white z-50 bg-black/50 rounded-full p-2">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
-            <div id="mobileVideoPlayer" class="w-full h-2/3"></div>
+            
+            <!-- Mobile Video Player with Custom Controls -->
+            <div class="relative w-full h-2/3">
+                <div id="mobileVideoPlayer" class="w-full h-full"></div>
+                
+                <!-- Mobile Custom Controls Overlay -->
+                <div id="mobileCustomControls" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4 z-40">
+                    <!-- Progress Bar -->
+                    <div class="mb-4">
+                        <div id="mobileProgressBar" class="w-full h-1 bg-gray-600 rounded-full cursor-pointer">
+                            <div id="mobileProgressFill" class="h-full bg-red-500 rounded-full transition-all duration-100"></div>
+                        </div>
+                    </div>
+
+                    <!-- Control Buttons -->
+                    <div class="flex items-center justify-between">
+                        <!-- Left Controls -->
+                        <div class="flex items-center space-x-4">
+                            <button id="mobilePlayPauseBtn" class="text-white hover:text-gray-300 transition-colors">
+                                <svg id="mobilePlayIcon" class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+                                </svg>
+                                <svg id="mobilePauseIcon" class="w-8 h-8 hidden" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                            </button>
+
+                            <button id="mobileRewindBtn" class="text-white hover:text-gray-300 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"/>
+                                </svg>
+                            </button>
+
+                            <button id="mobileForwardBtn" class="text-white hover:text-gray-300 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"/>
+                                </svg>
+                            </button>
+
+                            <div id="mobileTimeDisplay" class="text-white text-sm">
+                                <span id="mobileCurrentTime">0:00</span> / <span id="mobileDuration">0:00</span>
+                            </div>
+                        </div>
+
+                        <!-- Right Controls -->
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <button id="mobileVolumeBtn" class="text-white hover:text-gray-300 transition-colors">
+                                    <svg id="mobileVolumeOnIcon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M11 5L6 9H2v6h4l5 4V5z"/>
+                                    </svg>
+                                    <svg id="mobileVolumeOffIcon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H2v-6h3.586l5.707-5.707A1 1 0 0113 4v16a1 1 0 01-1.707.707L5.586 15z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+                                    </svg>
+                                </button>
+                                <input id="mobileVolumeSlider" type="range" min="0" max="100" value="100" class="w-16 h-1 bg-gray-600 rounded-full slider">
+                            </div>
+
+                            <div class="relative">
+                                <button id="mobileSpeedBtn" class="text-white hover:text-gray-300 transition-colors text-sm">
+                                    <span id="mobileSpeedText">1x</span>
+                                </button>
+                                <div id="mobileSpeedMenu" class="absolute bottom-8 right-0 bg-black/90 rounded-lg py-2 hidden">
+                                    <button class="mobile-speed-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-speed="0.25">0.25x</button>
+                                    <button class="mobile-speed-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-speed="0.5">0.5x</button>
+                                    <button class="mobile-speed-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-speed="0.75">0.75x</button>
+                                    <button class="mobile-speed-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm active" data-speed="1">1x</button>
+                                    <button class="mobile-speed-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-speed="1.25">1.25x</button>
+                                    <button class="mobile-speed-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-speed="1.5">1.5x</button>
+                                    <button class="mobile-speed-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-speed="2">2x</button>
+                                </div>
+                            </div>
+
+                            <div class="relative">
+                                <button id="mobileQualityBtn" class="text-white hover:text-gray-300 transition-colors">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    </svg>
+                                </button>
+                                <div id="mobileQualityMenu" class="absolute bottom-8 right-0 bg-black/90 rounded-lg py-2 hidden">
+                                    <button class="mobile-quality-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm active" data-quality="auto">Auto (HD)</button>
+                                    <button class="mobile-quality-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-quality="1080">1080p HD</button>
+                                    <button class="mobile-quality-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-quality="720">720p HD</button>
+                                    <button class="mobile-quality-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-quality="480">480p</button>
+                                    <button class="mobile-quality-option block w-full px-4 py-1 text-white hover:bg-white/20 text-sm" data-quality="360">360p</button>
+                                </div>
+                            </div>
+
+                            <button id="mobileFullscreenBtn" class="text-white hover:text-gray-300 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="p-6 text-white">
                 <h2 id="mobileVideoTitle" class="text-xl font-bold mb-2"></h2>
                 <p id="mobileVideoDescription" class="text-gray-300 leading-relaxed"></p>
