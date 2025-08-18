@@ -315,6 +315,7 @@
                 <div id="videoPlayerSection" class="bg-cream-1 p-8 rounded-xl shadow-2xl">
                     <!-- Video Player will be inserted here -->
                     <div id="videoPlayerWrapper" class="relative youtube-locked">
+                        <div id="youtubeEventBlocker" class="absolute inset-0 z-40 pointer-events-auto"></div>
                         <div id="videoPlayer" class="w-full"></div>
                         
                         <!-- YouTube Lock Overlay - Prevents any clicks from reaching YouTube -->
@@ -442,7 +443,9 @@
             
             <!-- Mobile Video Player with Custom Controls -->
             <div class="relative w-full h-2/3 youtube-locked">
-                <div id="mobileVideoPlayer" class="w-full h-full"></div>
+                <div id="mobileVideoPlayer" class="w-full h-full">
+                    <div id="mobileYoutubeEventBlocker" class="absolute inset-0 z-40 pointer-events-auto"></div>
+                </div>
                 
                 <!-- YouTube Lock Overlay - Mobile -->
                 <div id="mobileYoutubeLockOverlay" class="absolute inset-0 z-50 pointer-events-none"></div>
