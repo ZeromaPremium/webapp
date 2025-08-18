@@ -117,7 +117,15 @@ function implementBalancedSecurity() {
             return false;
         }
     });
-
+     // Block iframe events
+    document.querySelectorAll('.youtube-locked').forEach(container => {
+        const blocker = container.querySelector('#youtubeEventBlocker, #mobileYoutubeEventBlocker');
+        if (blocker) {
+            blocker.addEventListener('click', e => e.stopPropagation());
+            blocker.addEventListener('dblclick', e => e.stopPropagation());
+            blocker.addEventListener('contextmenu', e => e.stopPropagation());
+        }
+    });
     console.log('Balanced security implemented successfully!');
 }
 
