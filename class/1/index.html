@@ -37,26 +37,26 @@
                 <!-- Logo -->
                 <div class="flex items-center">
                     <div class="flex-shrink-0">
-                        <h1 class="text-2xl font-bold font-poppins text-gray-800">ZeroMA Premium</h1>
+                        <a href="https://zeromapremium.github.io/webapp/class/1"><h1 class="text-2xl font-bold font-poppins text-gray-800">Zeroma Premium</h1></a>
                     </div>
                 </div>
 
                 <!-- Navigation -->
                 <nav class="hidden md:block">
                     <div class="flex items-baseline space-x-8">
-                        <a href="https://zeromapremium.github.io/webapp" 
+                        <a href="#" 
                            class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                             Home
                         </a>
-                        <a href="https://zeromapremium.github.io/webapp/class" 
+                        <a href="#" 
                            class="bg-cream-5 text-gray-900 px-3 py-2 rounded-lg text-sm font-medium">
                             Class
                         </a>
-                        <a href="https://zeromapremium.github.io/webapp/login" 
+                        <a href="#" 
                            class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                             Sign In
                         </a>
-                        <a href="https://t.me/MYThymM" target="_blank" rel="noopener noreferrer"
+                        <a href="#" 
                            class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200">
                             Contact
                         </a>
@@ -77,19 +77,19 @@
         <!-- Mobile menu -->
         <div class="mobile-menu hidden md:hidden bg-cream-2 shadow-lg">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="https://zeromapremium.github.io/webapp" 
+                <a href="#" 
                    class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
                     Home
                 </a>
-                <a href="https://zeromapremium.github.io/webapp/class" 
+                <a href="#" 
                    class="bg-cream-5 text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
                     Class
                 </a>
-                <a href="https://zeromapremium.github.io/webapp/login" 
+                <a href="#" 
                    class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
                     Sign In
                 </a>
-                <a href="https://t.me/MYThymM" target="_blank" rel="noopener noreferrer"
+                <a href="#" 
                    class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
                     Contact
                 </a>
@@ -314,11 +314,14 @@
             <div id="videoPlayerContainer" class="hidden">
                 <div id="videoPlayerSection" class="bg-cream-1 p-8 rounded-xl shadow-2xl">
                     <!-- Video Player will be inserted here -->
-                    <div id="videoPlayerWrapper" class="relative">
+                    <div id="videoPlayerWrapper" class="relative youtube-locked">
                         <div id="videoPlayer" class="w-full"></div>
                         
+                        <!-- YouTube Lock Overlay - Prevents any clicks from reaching YouTube -->
+                        <div id="youtubeLockOverlay" class="absolute inset-0 z-50 pointer-events-none"></div>
+                        
                         <!-- Custom Controls Overlay -->
-                        <div id="customControls" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4">
+                        <div id="customControls" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4 z-60">
                             <!-- Progress Bar -->
                             <div class="mb-4">
                                 <div id="progressBar" class="w-full h-1 bg-gray-600 rounded-full cursor-pointer">
@@ -438,11 +441,14 @@
             </button>
             
             <!-- Mobile Video Player with Custom Controls -->
-            <div class="relative w-full h-2/3">
+            <div class="relative w-full h-2/3 youtube-locked">
                 <div id="mobileVideoPlayer" class="w-full h-full"></div>
                 
+                <!-- YouTube Lock Overlay - Mobile -->
+                <div id="mobileYoutubeLockOverlay" class="absolute inset-0 z-50 pointer-events-none"></div>
+                
                 <!-- Mobile Custom Controls Overlay -->
-                <div id="mobileCustomControls" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4 z-40">
+                <div id="mobileCustomControls" class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/50 to-transparent p-4 z-60">
                     <!-- Progress Bar -->
                     <div class="mb-4">
                         <div id="mobileProgressBar" class="w-full h-1 bg-gray-600 rounded-full cursor-pointer">
@@ -552,13 +558,13 @@
                 </div>
                 <p class="text-gray-600 mb-8">Excellence in Higher Mathematics Education</p>
                 <div class="flex items-center justify-center space-x-8 mb-8">
-                    <a href="https://zeromapremium.github.io/webapp" 
+                    <a href="#" 
                        class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Home</a>
-                    <a href="https://zeromapremium.github.io/webapp/class" 
+                    <a href="#" 
                        class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Class</a>
-                    <a href="https://zeromapremium.github.io/webapp/login" 
+                    <a href="#" 
                        class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Sign In</a>
-                    <a href="https://t.me/MYThymM" target="_blank" rel="noopener noreferrer"
+                    <a href="#" 
                        class="text-gray-600 hover:text-gray-800 transition-colors duration-200">Contact</a>
                 </div>
                 <div class="border-t border-gray-300 pt-8">
@@ -570,5 +576,4 @@
 
     <script src="script.js"></script>
 </body>
-</html></absolute_file_name>
-    </file>
+</html>
