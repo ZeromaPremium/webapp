@@ -956,31 +956,22 @@
     });
 
     // Check user access in Firestore and get allowed class IDs
-    async function getUserAccess(userEmail) {
-        try {
-            const userDoc = doc(db, 'whitelist', userEmail);
-            const docSnap = await getDoc(userDoc);
-            
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                let accessArray = [];
-                
-                if (userData && userData.access) {
-                    if (Array.isArray(userData.access)) {
-                        accessArray = userData.access;
-                    } else if (typeof userData.access === 'string') {
-                        accessArray = userData.access.split(',').map(s => s.trim());
-                    }
-                    // Convert to numbers if possible
-                    return accessArray.map(id => isNaN(id) ? id : Number(id));
-                }
-            }
-            return []; // No access if no document or access field
-        } catch (error) {
-            console.error('Error checking user access:', error);
-            return [];
+    async function getUserAccess(user) {
+    try {
+        const normalizedEmail = user.email.toLowerCase();
+        const userDoc = doc(db, 'whitelist', normalizedEmail);
+        const docSnap = await getDoc(userDoc);
+        
+        if (docSnap.exists()) {
+            const userData = docSnap.data();
+            return userData.access || []; // Handle missing access field
         }
+        return [];
+    } catch (error) {
+        console.error('Firestore access error:', error);
+        return [];
     }
+}
 
     // Render class cards that user has access to
     function renderAccessibleClassCards(accessArray) {
