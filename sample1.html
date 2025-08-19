@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZeroMA Premium - Class Videos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f4f0e0 0%, #f5f5f4 100%);
+            color: #2c2c2c;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #d4c8b8;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            color: #6b5b73;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: #6b5b73;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-bar input {
+            padding: 10px 15px;
+            border: 1px solid #d4c8b8;
+            border-radius: 30px;
+            min-width: 250px;
+            background: #f6eee3;
+        }
+        
+        .search-bar button {
+            background: #6b5b73;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar button:hover {
+            background: #584d5f;
+        }
+        
+        /* Main Content Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+        
+        /* Cards Container */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        /* Card Styles */
+        .card {
+            background: #f6eee3;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            border: 1px solid #d4c8b8;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+        
+        .card-id {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #6b5b73;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .card-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c2c2c;
+            height: 60px;
+            overflow: hidden;
+            font-size: 1.1rem;
+        }
+        
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #d4c8b8;
+        }
+        
+        .card-duration {
+            background: #e7e0d3;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .card-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .watch-btn, .note-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .watch-btn {
+            background: #6b5b73;
+            color: white;
+        }
+        
+        .watch-btn:hover {
+            background: #584d5f;
+        }
+        
+        .note-btn {
+            background: #e7e0d3;
+            color: #2c2c2c;
+        }
+        
+        .note-btn:hover {
+            background: #d4c8b8;
+        }
+        
+        /* Video Player Section */
+        .video-section {
+            background: #f6eee3;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid #d4c8b8;
+            display: none;
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .video-section.active {
+            display: block;
+        }
+        
+        .video-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .video-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c2c2c;
+        }
+        
+        .close-video-btn {
+            background: #6b5b73;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-video-btn:hover {
+            background: #584d5f;
+            transform: rotate(90deg);
+        }
+        
+        /* Custom Video Container */
+        .video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+        
+        .video-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 12px;
+        }
+        
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 10;
+        }
+        
+        .loading-state {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #EBE8E2;
+            border-top: 4px solid #6b5b73;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hd-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 25;
+        }
+        
+        /* Custom Controls */
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 15;
+        }
+        
+        .video-container:hover .custom-controls {
+            opacity: 1;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #6b5b73;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        .controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .controls-left, .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.05);
+        }
+        
+        .control-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .volume-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .volume-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .time-display {
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Dropdown Menus */
+        .dropdown-container {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: #EBE8E2;
+            border: 1px solid #d4c8b8;
+            border-radius: 8px;
+            padding: 8px;
+            min-width: 120px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 30;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-option {
+            background: none;
+            border: none;
+            color: #2c2c2c;
+            padding: 8px 12px;
+            width: 100%;
+            text-align: left;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .dropdown-option:hover {
+            background: #ddd0c0;
+        }
+        
+        .dropdown-option.active {
+            background: #6b5b73;
+            color: white;
+        }
+        
+        /* Video Actions */
+        .video-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .prev-btn, .next-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .prev-btn {
+            background: #e7e0d3;
+            color: #2c2c2c;
+        }
+        
+        .prev-btn:hover {
+            background: #d4c8b8;
+        }
+        
+        .next-btn {
+            background: #6b5b73;
+            color: white;
+        }
+        
+        .next-btn:hover {
+            background: #584d5f;
+        }
+        
+        /* Sidebar for Desktop */
+        .sidebar {
+            background: #e7e0d3;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid #d4c8b8;
+            display: none;
+        }
+        
+        .sidebar.active {
+            display: block;
+        }
+        
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 1024px) {
+            .main-content {
+                grid-template-columns: 2fr 1fr;
+            }
+            
+            .video-section.active {
+                display: block;
+                grid-column: 1;
+            }
+            
+            .sidebar.active {
+                display: block;
+                grid-column: 2;
+                grid-row: 1;
+                height: fit-content;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+            
+            .cards-container {
+                grid-column: 1 / span 2;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .card-title {
+                font-size: 1rem;
+                height: 50px;
+            }
+            
+            .card-actions {
+                flex-direction: column;
+            }
+            
+            .watch-btn, .note-btn {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .search-bar input {
+                flex: 1;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .custom-controls {
+                opacity: 1;
+                padding: 15px;
+            }
+            
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            
+            .controls-left, .controls-right {
+                justify-content: center;
+            }
+            
+            .volume-slider {
+                width: 60px;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title i {
+            color: #6b5b73;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <i class="fas fa-graduation-cap logo-icon"></i>
+                <h1>ZeroMA Premium Classes</h1>
+            </div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search classes...">
+                <button><i class="fas fa-search"></i> Search</button>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Video Player Section (Hidden by default) -->
+            <div class="video-section" id="videoSection">
+                <div class="video-header">
+                    <h2 class="video-title" id="videoTitle">Advanced Programming Concepts - HD Quality</h2>
+                    <button class="close-video-btn" id="closeVideoBtn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <!-- Custom Video Player Container -->
+                <div class="video-container" id="videoContainer">
+                    <!-- HD Badge -->
+                    <div class="hd-badge">HD</div>
+                    
+                    <!-- YouTube Player Iframe -->
+                    <iframe 
+                        id="youtube-player"
+                        class="video-iframe"
+                        src="https://www.youtube.com/embed/z8xEcK-unFs?enablejsapi=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&fs=1&autoplay=0&quality=hd1080"
+                        title="YouTube video player" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                    
+                    <!-- Video Overlay -->
+                    <div class="video-overlay" id="videoOverlay"></div>
+                    
+                    <!-- Loading State -->
+                    <div class="loading-state" id="loadingState">
+                        <div>
+                            <div class="loading-spinner"></div>
+                            <p style="margin-top: 15px; color: white;">Loading HD video...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Custom Controls -->
+                    <div class="custom-controls" id="customControls">
+                        <!-- Progress Bar -->
+                        <div class="progress-bar" id="progressBar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        
+                        <!-- Control Buttons -->
+                        <div class="controls-row">
+                            <!-- Left Controls -->
+                            <div class="controls-left">
+                                <!-- Play/Pause -->
+                                <button class="control-btn" id="playPauseBtn" title="Play/Pause">
+                                    <svg id="playIcon" fill="currentColor" viewBox="0 0 24 24">
+                                        <polygon points="6 3 20 12 6 21 6 3"></polygon>
+                                    </svg>
+                                    <svg id="pauseIcon" fill="currentColor" viewBox="0 0 24 24" style="display: none;">
+                                        <rect x="6" y="4" width="4" height="16"></rect>
+                                        <rect x="14" y="4" width="4" height="16"></rect>
+                                    </svg>
+                                </button>
+                                
+                                <!-- Backward 10s -->
+                                <button class="control-btn" id="backwardBtn" title="Rewind 10 seconds">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0019 16V8a1 1 0 00-1.6-.8l-5.334 4zM4.066 11.2a1 1 0 000 1.6l5.334 4A1 1 0 0011 16V8a1 1 0 00-1.6-.8l-5.334 4z"></path>
+                                    </svg>
+                                </button>
+                                
+                                <!-- Forward 10s -->
+                                <button class="control-btn" id="forwardBtn" title="Forward 10 seconds">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.933 12.8a1 1 0 000-1.6L6.6 7.2A1 1 0 005 8v8a1 1 0 001.6.8l5.333-4zM19.933 12.8a1 1 0 000-1.6l-5.333-4A1 1 0 0013 8v8a1 1 0 001.6.8l5.333-4z"></path>
+                                    </svg>
+                                </button>
+                                
+                                <!-- Volume Controls -->
+                                <div class="volume-controls">
+                                    <button class="control-btn" id="volumeBtn" title="Mute/Unmute">
+                                        <svg id="volumeOnIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                            <path d="m19.07 4.93-1.41 1.41A7.5 7.5 0 0 1 20 12a7.5 7.5 0 0 1-2.34 5.66l1.41 1.41A9.5 9.5 0 0 0 22 12a9.5 9.5 0 0 0-2.93-6.93z"></path>
+                                        </svg>
+                                        <svg id="volumeOffIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+                                            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                                            <line x1="23" y1="9" x2="17" y2="15"></line>
+                                            <line x1="17" y1="9" x2="23" y2="15"></line>
+                                        </svg>
+                                    </button>
+                                    <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100">
+                                </div>
+                                
+                                <!-- Time Display -->
+                                <div class="time-display">
+                                    <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+                                </div>
+                            </div>
+                            
+                            <!-- Right Controls -->
+                            <div class="controls-right">
+                                <!-- Speed Control -->
+                                <div class="dropdown-container">
+                                    <button class="control-btn" id="speedBtn" title="Playback Speed">
+                                        <span id="speedText">1x</span>
+                                    </button>
+                                    <div class="dropdown-menu" id="speedMenu">
+                                        <button class="dropdown-option" data-speed="0.25">0.25x</button>
+                                        <button class="dropdown-option" data-speed="0.5">0.5x</button>
+                                        <button class="dropdown-option" data-speed="0.75">0.75x</button>
+                                        <button class="dropdown-option active" data-speed="1">1x</button>
+                                        <button class="dropdown-option" data-speed="1.25">1.25x</button>
+                                        <button class="dropdown-option" data-speed="1.5">1.5x</button>
+                                        <button class="dropdown-option" data-speed="2">2x</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Quality Control -->
+                                <div class="dropdown-container">
+                                    <button class="control-btn" id="qualityBtn" title="Video Quality">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    </button>
+                                    <div class="dropdown-menu" id="qualityMenu">
+                                        <button class="dropdown-option active" data-quality="auto">Auto (HD)</button>
+                                        <button class="dropdown-option" data-quality="1080">1080p HD</button>
+                                        <button class="dropdown-option" data-quality="720">720p HD</button>
+                                        <button class="dropdown-option" data-quality="480">480p</button>
+                                        <button class="dropdown-option" data-quality="360">360p</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Fullscreen -->
+                                <button class="control-btn" id="fullscreenBtn" title="Fullscreen">
+                                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-actions">
+                    <button class="prev-btn" id="prevVideoBtn">
+                        <i class="fas fa-arrow-left"></i> Previous Class
+                    </button>
+                    <a href="#" class="note-btn" id="notePdfBtn">
+                        <i class="fas fa-file-pdf"></i> Note/PDF
+                    </a>
+                    <button class="next-btn" id="nextVideoBtn">
+                        Next Class <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Sidebar (Hidden by default) -->
+            <div class="sidebar" id="sidebar">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-list"></i> Class List
+                </h3>
+                <div class="cards-container" id="sidebarCards"></div>
+            </div>
+            
+            <!-- Cards Section -->
+            <div>
+                <h2 class="section-title">
+                    <i class="fas fa-video"></i> Available Classes
+                </h2>
+                <div class="cards-container" id="cardsContainer">
+                    <!-- Cards will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <script>
+        // Mock data for classes
+        const classes = [
+            {
+                id: "z8xEcK-unFs",
+                title: "Advanced Programming Concepts - Object-Oriented Programming Deep Dive",
+                duration: "25:42",
+                noteUrl: "#"
+            },
+            {
+                id: "dQw4w9WgXcQ",
+                title: "Data Structures and Algorithms - Efficient Sorting Techniques",
+                duration: "18:22",
+                noteUrl: "#"
+            },
+            {
+                id: "9bZkp7q19f0",
+                title: "Web Development Fundamentals - HTML5 and CSS3 Best Practices",
+                duration: "32:15",
+                noteUrl: "#"
+            },
+            {
+                id: "CevxZvSJLk8",
+                title: "JavaScript Mastery - Asynchronous Programming and Promises",
+                duration: "28:05",
+                noteUrl: "#"
+            },
+            {
+                id: "JGwWNGJdvx8",
+                title: "React Framework - Building Scalable Applications",
+                duration: "35:18",
+                noteUrl: "#"
+            },
+            {
+                id: "OPf0YbXqDm0",
+                title: "Database Design - Relational vs NoSQL Systems",
+                duration: "22:47",
+                noteUrl: "#"
+            },
+            {
+                id: "kXYiU_JCYtU",
+                title: "Cloud Computing - Deployment Strategies on AWS",
+                duration: "30:12",
+                noteUrl: "#"
+            },
+            {
+                id: "3tmd-ClpJxA",
+                title: "DevOps Fundamentals - CI/CD Pipelines and Automation",
+                duration: "26:33",
+                noteUrl: "#"
+            }
+        ];
+
+        // YouTube Player Setup with HD Quality Optimization
+        let player;
+        let isPlayerReady = false;
+        let currentVolume = 100;
+        let isMuted = false;
+        let currentSpeed = 1;
+        let currentVideoIndex = 0;
+
+        // Initialize YouTube Player
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-player', {
+                videoId: classes[0].id,
+                playerVars: {
+                    'autoplay': 0,
+                    'controls': 0,
+                    'disablekb': 1,
+                    'enablejsapi': 1,
+                    'fs': 1,
+                    'iv_load_policy': 3,
+                    'modestbranding': 1,
+                    'playsinline': 1,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'quality': 'hd1080', // Force HD quality
+                    'vq': 'hd1080' // Video quality parameter
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            isPlayerReady = true;
+            hideLoading();
+            
+            // Set HD quality immediately
+            const availableQualities = player.getAvailableQualityLevels();
+            if (availableQualities.includes('hd1080')) {
+                player.setPlaybackQuality('hd1080');
+            } else if (availableQualities.includes('hd720')) {
+                player.setPlaybackQuality('hd720');
+            } else if (availableQualities.includes('large')) {
+                player.setPlaybackQuality('large');
+            }
+            
+            // Update duration
+            updateDuration();
+            
+            // Start progress update interval
+            setInterval(updateProgress, 1000);
+            
+            // Set initial volume
+            player.setVolume(currentVolume);
+            
+            console.log('Player ready with quality:', player.getPlaybackQuality());
+        }
+
+        function onPlayerStateChange(event) {
+            const playIcon = document.getElementById('playIcon');
+            const pauseIcon = document.getElementById('pauseIcon');
+            
+            if (event.data === YT.PlayerState.PLAYING) {
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            }
+            
+            // Ensure best quality is maintained
+            setTimeout(() => {
+                const currentQuality = player.getPlaybackQuality();
+                console.log('Current quality:', currentQuality);
+            }, 1000);
+        }
+
+        function onPlayerError(event) {
+            console.error('YouTube Player Error:', event.data);
+            showError('Video failed to load. Please refresh the page.');
+        }
+
+        function hideLoading() {
+            const loadingState = document.getElementById('loadingState');
+            loadingState.style.display = 'none';
+        }
+
+        function showError(message) {
+            const loadingState = document.getElementById('loadingState');
+            loadingState.innerHTML = `<div style="text-align: center; color: white;"><p>⚠️ ${message}</p></div>`;
+        }
+
+        function updateProgress() {
+            if (!isPlayerReady) return;
+            
+            try {
+                const currentTime = player.getCurrentTime();
+                const duration = player.getDuration();
+                const progressPercent = (currentTime / duration) * 100;
+                
+                document.getElementById('progressFill').style.width = progressPercent + '%';
+                document.getElementById('currentTime').textContent = formatTime(currentTime);
+            } catch (e) {
+                console.warn('Progress update error:', e);
+            }
+        }
+
+        function updateDuration() {
+            if (!isPlayerReady) return;
+            
+            try {
+                const duration = player.getDuration();
+                document.getElementById('duration').textContent = formatTime(duration);
+            } catch (e) {
+                console.warn('Duration update error:', e);
+            }
+        }
+
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        // DOM Elements
+        const cardsContainer = document.getElementById('cardsContainer');
+        const sidebarCards = document.getElementById('sidebarCards');
+        const videoSection = document.getElementById('videoSection');
+        const sidebar = document.getElementById('sidebar');
+        const videoTitle = document.getElementById('videoTitle');
+        const closeVideoBtn = document.getElementById('closeVideoBtn');
+        const prevVideoBtn = document.getElementById('prevVideoBtn');
+        const nextVideoBtn = document.getElementById('nextVideoBtn');
+        const notePdfBtn = document.getElementById('notePdfBtn');
+
+        // Generate cards
+        function generateCards() {
+            cardsContainer.innerHTML = '';
+            sidebarCards.innerHTML = '';
+            
+            classes.forEach((cls, index) => {
+                // Truncate title for card display
+                const truncatedTitle = cls.title.length > 60 ? 
+                    cls.title.substring(0, 60) + '...' : cls.title;
+                
+                // Create card element
+                const card = document.createElement('div');
+                card.className = 'card fade-in';
+                card.innerHTML = `
+                    <div class="card-id">${index + 1}</div>
+                    <div class="card-title">${truncatedTitle}</div>
+                    <div class="card-meta">
+                        <span class="card-duration">${cls.duration}</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="watch-btn" data-index="${index}">
+                            <i class="fas fa-play"></i> Watch
+                        </button>
+                        <a href="${cls.noteUrl}" class="note-btn">
+                            <i class="fas fa-file-alt"></i> Note/PDF
+                        </a>
+                    </div>
+                `;
+                
+                cardsContainer.appendChild(card);
+                
+                // Create a compact version for sidebar
+                const sidebarCard = card.cloneNode(true);
+                sidebarCard.querySelector('.card-title').style.height = 'auto';
+                sidebarCard.querySelector('.card-actions').classList.add('hidden');
+                sidebarCards.appendChild(sidebarCard);
+                
+                // Add event listener to watch button
+                card.querySelector('.watch-btn').addEventListener('click', () => {
+                    openVideoPlayer(index);
+                });
+                
+                // Add event listener to sidebar card
+                sidebarCard.addEventListener('click', () => {
+                    openVideoPlayer(index);
+                });
+            });
+        }
+
+        // Open video player
+        function openVideoPlayer(index) {
+            currentVideoIndex = index;
+            const currentClass = classes[index];
+            
+            // Update video content
+            videoTitle.textContent = currentClass.title;
+            notePdfBtn.href = currentClass.noteUrl;
+            
+            // Load the video
+            if (player && player.loadVideoById) {
+                player.loadVideoById(currentClass.id);
+                // Show loading state until video is ready
+                document.getElementById('loadingState').style.display = 'flex';
+            }
+            
+            // Show video section
+            videoSection.classList.add('active');
+            
+            // For mobile: hide the main cards container
+            if (window.innerWidth < 1024) {
+                cardsContainer.classList.add('hidden');
+            } 
+            // For desktop: show sidebar with compact cards
+            else {
+                sidebar.classList.add('active');
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Close video player
+        function closeVideoPlayer() {
+            videoSection.classList.remove('active');
+            sidebar.classList.remove('active');
+            cardsContainer.classList.remove('hidden');
+            
+            // Pause the video
+            if (player && player.pauseVideo) {
+                player.pauseVideo();
+            }
+        }
+
+        // Navigate to next video
+        function nextVideo() {
+            currentVideoIndex = (currentVideoIndex + 1) % classes.length;
+            openVideoPlayer(currentVideoIndex);
+        }
+
+        // Navigate to previous video
+        function prevVideo() {
+            currentVideoIndex = (currentVideoIndex - 1 + classes.length) % classes.length;
+            openVideoPlayer(currentVideoIndex);
+        }
+
+        // Event Listeners
+        closeVideoBtn.addEventListener('click', closeVideoPlayer);
+        prevVideoBtn.addEventListener('click', prevVideo);
+        nextVideoBtn.addEventListener('click', nextVideo);
+
+        // Initialize the page
+        generateCards();
+
+        // Handle responsive behavior
+        window.addEventListener('resize', () => {
+            if (window.innerWidth < 1024 && videoSection.classList.contains('active')) {
+                cardsContainer.classList.add('hidden');
+            }
+        });
+
+        // Control Event Listeners
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            if (!isPlayerReady) return;
+            
+            const state = player.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        });
+
+        document.getElementById('backwardBtn').addEventListener('click', () => {
+            if (!isPlayerReady) return;
+            
+            const currentTime = player.getCurrentTime();
+            player.seekTo(Math.max(0, currentTime - 10), true);
+        });
+
+        document.getElementById('forwardBtn').addEventListener('click', () => {
+            if (!isPlayerReady) return;
+            
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            player.seekTo(Math.min(duration, currentTime + 10), true);
+        });
+
+        document.getElementById('volumeBtn').addEventListener('click', () => {
+            if (!isPlayerReady) return;
+            
+            const volumeOnIcon = document.getElementById('volumeOnIcon');
+            const volumeOffIcon = document.getElementById('volumeOffIcon');
+            
+            if (isMuted) {
+                player.unMute();
+                player.setVolume(currentVolume);
+                volumeOnIcon.style.display = 'block';
+                volumeOffIcon.style.display = 'none';
+                document.getElementById('volumeSlider').value = currentVolume;
+                isMuted = false;
+            } else {
+                player.mute();
+                volumeOnIcon.style.display = 'none';
+                volumeOffIcon.style.display = 'block';
+                document.getElementById('volumeSlider').value = 0;
+                isMuted = true;
+            }
+        });
+
+        document.getElementById('volumeSlider').addEventListener('input', (e) => {
+            if (!isPlayerReady) return;
+            
+            const volume = parseInt(e.target.value);
+            currentVolume = volume;
+            player.setVolume(volume);
+            
+            const volumeOnIcon = document.getElementById('volumeOnIcon');
+            const volumeOffIcon = document.getElementById('volumeOffIcon');
+            
+            if (volume === 0) {
+                volumeOnIcon.style.display = 'none';
+                volumeOffIcon.style.display = 'block';
+                isMuted = true;
+            } else {
+                volumeOnIcon.style.display = 'block';
+                volumeOffIcon.style.display = 'none';
+                isMuted = false;
+            }
+        });
+
+        document.getElementById('progressBar').addEventListener('click', (e) => {
+            if (!isPlayerReady) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const percentage = clickX / width;
+            const duration = player.getDuration();
+            const newTime = duration * percentage;
+            
+            player.seekTo(newTime, true);
+        });
+
+        document.getElementById('fullscreenBtn').addEventListener('click', () => {
+            const videoContainer = document.getElementById('videoContainer');
+            
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                videoContainer.requestFullscreen();
+            }
+        });
+
+        // Speed Control
+        document.getElementById('speedBtn').addEventListener('click', () => {
+            const speedMenu = document.getElementById('speedMenu');
+            speedMenu.classList.toggle('show');
+        });
+
+        document.querySelectorAll('.dropdown-option[data-speed]').forEach(option => {
+            option.addEventListener('click', (e) => {
+                if (!isPlayerReady) return;
+                
+                const speed = parseFloat(e.target.dataset.speed);
+                currentSpeed = speed;
+                player.setPlaybackRate(speed);
+                
+                document.getElementById('speedText').textContent = speed + 'x';
+                document.querySelectorAll('.dropdown-option[data-speed]').forEach(opt => opt.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById('speedMenu').classList.remove('show');
+            });
+        });
+
+        // Quality Control with HD Optimization
+        document.getElementById('qualityBtn').addEventListener('click', () => {
+            const qualityMenu = document.getElementById('qualityMenu');
+            qualityMenu.classList.toggle('show');
+        });
+
+        document.querySelectorAll('.dropdown-option[data-quality]').forEach(option => {
+            option.addEventListener('click', (e) => {
+                if (!isPlayerReady) return;
+                
+                const quality = e.target.dataset.quality;
+                let ytQuality;
+                
+                switch(quality) {
+                    case 'auto':
+                        // Select the highest available quality
+                        const availableQualities = player.getAvailableQualityLevels();
+                        if (availableQualities.includes('hd1080')) {
+                            ytQuality = 'hd1080';
+                        } else if (availableQualities.includes('hd720')) {
+                            ytQuality = 'hd720';
+                        } else if (availableQualities.includes('large')) {
+                            ytQuality = 'large';
+                        } else {
+                            ytQuality = 'medium';
+                        }
+                        break;
+                    case '1080':
+                        ytQuality = 'hd1080';
+                        break;
+                    case '720':
+                        ytQuality = 'hd720';
+                        break;
+                    case '480':
+                        ytQuality = 'large';
+                        break;
+                    case '360':
+                        ytQuality = 'medium';
+                        break;
+                    default:
+                        ytQuality = 'auto';
+                }
+                
+                player.setPlaybackQuality(ytQuality);
+                
+                document.querySelectorAll('.dropdown-option[data-quality]').forEach(opt => opt.classList.remove('active'));
+                e.target.classList.add('active');
+                document.getElementById('qualityMenu').classList.remove('show');
+                
+                console.log('Quality set to:', ytQuality);
+            });
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.dropdown-container')) {
+                document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (!isPlayerReady) return;
+            
+            switch(e.code) {
+                case 'Space':
+                    e.preventDefault();
+                    document.getElementById('playPauseBtn').click();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    document.getElementById('backwardBtn').click();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    document.getElementById('forwardBtn').click();
+                    break;
+                case 'KeyM':
+                    e.preventDefault();
+                    document.getElementById('volumeBtn').click();
+                    break;
+                case 'KeyF':
+                    e.preventDefault();
+                    document.getElementById('fullscreenBtn').click();
+                    break;
+            }
+        });
+
+        // Enhanced video loading and quality management
+        function ensureHDQuality() {
+            if (!isPlayerReady) return;
+            
+            const currentQuality = player.getPlaybackQuality();
+            const availableQualities = player.getAvailableQualityLevels();
+            
+            console.log('Available qualities:', availableQualities);
+            console.log('Current quality:', currentQuality);
+            
+            // Force HD if available
+            if (currentQuality !== 'hd1080' && availableQualities.includes('hd1080')) {
+                player.setPlaybackQuality('hd1080');
+                console.log('Forcing HD 1080p');
+            } else if (currentQuality !== 'hd720' && availableQualities.includes('hd720') && !availableQualities.includes('hd1080')) {
+                player.setPlaybackQuality('hd720');
+                console.log('Forcing HD 720p');
+            }
+        }
+
+        // Check quality every 5 seconds to ensure best quality
+        setInterval(ensureHDQuality, 5000);
+
+        // Optimize video container for better performance
+        const videoContainer = document.getElementById('videoContainer');
+        videoContainer.addEventListener('mouseenter', () => {
+            ensureHDQuality();
+        });
+
+        // Console log for debugging
+        console.log('ZeroMA Premium Video Player Loaded - HD Quality Optimization Enabled');
+    </script>
+</body>
+</html>
