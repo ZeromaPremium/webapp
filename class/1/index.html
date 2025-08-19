@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ZeroMA Premium - Classes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Prevent text selection and context menu */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        
+        /* Custom controls styling */
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+            overflow: hidden;
+        }
+        
+        .video-container iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            pointer-events: auto;
+        }
+        
+        /* Block YouTube native controls completely */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            z-index: 10;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            padding: 20px 15px 15px;
+        }
+        
+        .video-container.show-controls .custom-controls,
+        .custom-controls.show-controls {
+            transform: translateY(0);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #ff6b6b;
+            border-radius: 3px;
+            transition: width 0.1s ease;
+        }
+        
+        .control-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: rgba(0,0,0,0.9);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            min-width: 120px;
+            display: none;
+            z-index: 20;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 8px 12px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .quality-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255,107,107,0.9);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 5;
+        }
+        
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+        
+        /* Navigation buttons */
+        .nav-buttons {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            z-index: 5;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            background: rgba(0,0,0,0.7);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .nav-btn:hover {
+            background: rgba(0,0,0,0.9);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .nav-buttons {
+                position: static;
+                justify-content: center;
+                margin-top: 15px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .nav-buttons button {
+                width: 100%;
+            }
+            
+            .quality-badge {
+                top: 10px;
+                left: 10px;
+            }
+        }
+        
+        /* Fullscreen styles */
+        .video-container:-webkit-full-screen {
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        
+        .video-container:-moz-full-screen {
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        
+        .video-container:fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+        }
+        
+        /* Hide scrollbars in fullscreen */
+        .video-container:fullscreen {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="font-sans" style="background-color: #F4F0E0;">
+    <!-- Navigation Bar -->
+    <nav class="shadow-sm border-b" style="background-color: #F5F5F4; border-color: #E7E0D3;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="https://zeromapremium.github.io/webapp/class/1" class="text-2xl font-bold" style="color: #8B5A2B;">Zeroma Premium</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="https://zeromapremium.github.io/webapp" class="font-medium hover:opacity-75 transition-opacity" style="color: #8B5A2B;">Home</a>
+                    <a href="https://zeromapremium.github.io/webapp/class" class="font-medium hover:opacity-75 transition-opacity" style="color: #8B5A2B;">Classes</a>
+                    <a href="https://zeromapremium.github.io/webapp/login" class="font-medium hover:opacity-75 transition-opacity" style="color: #8B5A2B;">Sign In</a>
+                    <a href="https://t.me/MYThymM" class="font-medium hover:opacity-75 transition-opacity" style="color: #8B5A2B;">Contact</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="p-2 rounded-md" style="color: #8B5A2B;">
+                        <svg class="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                            <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
+            <a href="https://zeromapremium.github.io/webapp" class="block py-2 font-medium" style="color: #8B5A2B;">Home</a>
+            <a href="https://zeromapremium.github.io/webapp/class" class="block py-2 font-medium" style="color: #8B5A2B;">Classes</a>
+            <a href="https://zeromapremium.github.io/webapp/login" class="block py-2 font-medium" style="color: #8B5A2B;">Sign In</a>
+            <a href="https://t.me/MYThymM" class="block py-2 font-medium" style="color: #8B5A2B;">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <!-- Classes Grid -->
+        <div id="cards-container" class="space-y-6">
+            <h2 class="text-3xl font-bold mb-6" style="color: #8B5A2B;">HSC 27 ACS Physics Cycle 1</h2>
+            <div id="cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Video Player Container -->
+        <div id="video-player-container" class="hidden">
+            <div class="mb-4">
+                <h2 id="video-title" class="text-2xl font-bold" style="color: #8B5A2B;"></h2>
+            </div>
+            
+            <div class="video-container aspect-video bg-black rounded-lg overflow-hidden">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+                    <p class="text-white mt-2 text-sm">Loading HD video...</p>
+                </div>
+                
+                <!-- Quality Badge -->
+                <div id="qualityBadge" class="quality-badge">HD</div>
+                
+                <!-- YouTube Player -->
+                <div id="youtube-player"></div>
+                
+                <!-- Video Overlay for Click Detection -->
+                <div id="videoOverlay" class="video-overlay"></div>
+                
+                <!-- Custom Controls -->
+                <div id="customControls" class="custom-controls">
+                    <!-- Progress Bar -->
+                    <div id="progressBar" class="progress-bar">
+                        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    
+                    <!-- Control Buttons Row -->
+                    <div class="flex items-center justify-between">
+                        <!-- Left Side Controls -->
+                        <div class="flex items-center space-x-3">
+                            <!-- Play/Pause -->
+                            <button id="playPauseBtn" class="control-btn flex items-center justify-center w-10 h-10">
+                                <svg id="playIcon" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                                <svg id="pauseIcon" class="w-5 h-5 hidden" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                                </svg>
+                            </button>
+                            
+                            <!-- Skip Back -->
+                            <button id="skipBackBtn" class="control-btn">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                                </svg>
+                                <span class="ml-1">-10</span>
+                            </button>
+                            
+                            <!-- Skip Forward -->
+                            <button id="skipForwardBtn" class="control-btn">
+                                <span class="mr-1">+10</span>
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
+                                </svg>
+                            </button>
+                            
+                            <!-- Volume Controls -->
+                            <button id="muteBtn" class="control-btn">
+                                <svg id="volumeIcon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3z"/>
+                                </svg>
+                                <svg id="muteIcon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                </svg>
+                            </button>
+                            
+                            <input id="volumeSlider" type="range" min="0" max="100" value="100" class="w-20 h-1 bg-white bg-opacity-30 rounded-lg appearance-none cursor-pointer">
+                        </div>
+                        
+                        <!-- Center - Time Display -->
+                        <div id="timeDisplay" class="text-white text-sm font-mono">0:00 / 0:00</div>
+                        
+                        <!-- Right Side Controls -->
+                        <div class="flex items-center space-x-3 relative">
+                            <!-- Speed Control -->
+                            <div class="relative">
+                                <button id="speedBtn" class="control-btn">1x</button>
+                                <div id="speedDropdown" class="dropdown-menu">
+                                    <div class="dropdown-item" data-speed="0.25">0.25x</div>
+                                    <div class="dropdown-item" data-speed="0.5">0.5x</div>
+                                    <div class="dropdown-item" data-speed="0.75">0.75x</div>
+                                    <div class="dropdown-item" data-speed="1">1x</div>
+                                    <div class="dropdown-item" data-speed="1.25">1.25x</div>
+                                    <div class="dropdown-item" data-speed="1.5">1.5x</div>
+                                    <div class="dropdown-item" data-speed="2">2x</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Quality Control -->
+                            <div class="relative">
+                                <button id="qualityBtn" class="control-btn">Auto HD</button>
+                                <div id="qualityDropdown" class="dropdown-menu">
+                                    <div class="dropdown-item" data-quality="auto">Auto HD</div>
+                                    <div class="dropdown-item" data-quality="hd1080">1080p HD</div>
+                                    <div class="dropdown-item" data-quality="hd720">720p HD</div>
+                                    <div class="dropdown-item" data-quality="large">480p</div>
+                                    <div class="dropdown-item" data-quality="medium">360p</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Fullscreen -->
+                            <button id="fullscreenBtn" class="control-btn">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation Buttons (Mobile) -->
+                <div class="nav-buttons md:hidden">
+                    <button id="prevBtn" class="nav-btn">← Previous</button>
+                    <button id="nextBtn" class="nav-btn">Next →</button>
+                    <button id="notePdfBtn" class="nav-btn">📝 Note/PDF</button>
+                    <button id="closeVideoBtn" class="nav-btn">✕ Close Video</button>
+                </div>
+            </div>
+            
+            <!-- Navigation Buttons (Desktop) -->
+            <div class="hidden md:flex justify-center items-center space-x-4 mt-6">
+                <button id="prevBtnDesktop" class="nav-btn">← Previous</button>
+                <button id="nextBtnDesktop" class="nav-btn">Next →</button>
+                <button id="notePdfBtnDesktop" class="nav-btn">📝 Note/PDF</button>
+                <button id="closeVideoBtnDesktop" class="nav-btn">✕ Close Video</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 mt-12 border-t" style="background-color: #F5F5F4; border-color: #E7E0D3;">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-lg font-bold mb-4" style="color: #8B5A2B;">ZeroMA Premium</h3>
+                    <p class="text-sm" style="color: #8B5A2B;">Premium educational resources for competitive exams</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4" style="color: #8B5A2B;">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="https://zeromapremium.github.io/webapp" class="text-sm hover:opacity-75" style="color: #8B5A2B;">Home</a></li>
+                        <li><a href="https://zeromapremium.github.io/webapp/class" class="text-sm hover:opacity-75" style="color: #8B5A2B;">Classes</a></li>
+                        <li><a href="https://zeromapremium.github.io/webapp/login" class="text-sm hover:opacity-75" style="color: #8B5A2B;">Sign In</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4" style="color: #8B5A2B;">Resources</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-sm hover:opacity-75" style="color: #8B5A2B;">Study Materials</a></li>
+                        <li><a href="#" class="text-sm hover:opacity-75" style="color: #8B5A2B;">Practice Tests</a></li>
+                        <li><a href="#" class="text-sm hover:opacity-75" style="color: #8B5A2B;">Previous Papers</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4" style="color: #8B5A2B;">Contact Us</h4>
+                    <ul class="space-y-2">
+                        <li><a href="https://t.me/MYThymM" class="text-sm hover:opacity-75" style="color: #8B5A2B;">Telegram</a></li>
+                        <li class="text-sm" style="color: #8B5A2B;">Email: contact@zeroma.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t text-center" style="border-color: #E7E0D3;">
+                <p class="text-sm" style="color: #8B5A2B;">&copy; 2023 ZeroMA Premium. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+// Enhanced YouTube Player with Complete Custom Controls
+// Fixed all issues: desktop mode, navigation, controls blocking, cross-browser compatibility
+
+// Mock data for classes
+const classesData = [
+    {
+        id: 1,
+        videoId: 'e_I5nxZ8SCc',
+        title: 'HSC 27 Physics Cycle Orientation Class || Apurbo || Mashrur',
+        duration: '82:59',
+        noteLink: ''
+    },
+    {
+        id: 2,
+        videoId: 'wxrsT4bYkZA',
+        title: 'Vector ✘ Lecture : 02 ✘ ACS PHYSICS CYCLE 01 HSC 27',
+        duration: '94:55',
+        noteLink: 'https://drive.google.com/file/d/1glBxYKF1vAJGnqIVNNL_Ew0tlguUyfkT/view?usp=sharing'
+    },
+    {
+        id: 3,
+        videoId: 'BBa-fdTC33M',
+        title: 'Vector × Lecture : 03 × HSC 27',
+        duration: '109:19',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 4,
+        videoId: 'kxz86xVcx0w',
+        title: 'Vector × Lecture : 04 × ACS PHYSICS CYCLE 1 HSC 27',
+        duration: '72:44',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 5,
+        videoId: 'fQcwoY_RvdU',
+        title: 'HSC 27 ⊕ Vector ⊕ Lecture : 05 ⊕ ACS PHYSICS CYCLE - 01',
+        duration: '77:59',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 6,
+        videoId: 'zsQmjdAoEM4',
+        title: 'Vector ⊕ Lecture : 06 ⊕ Physics Cycle - 01',
+        duration: '89:47',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 7,
+        videoId: 'MYvhIArn374',
+        title: 'Vector × Lecture : 07',
+        duration: '93:00',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 8,
+        videoId: 'Lp2oWXMdbv8',
+        title: 'Vector × Lecture : 08',
+        duration: '87:14',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 9,
+        videoId: 'I7U3JSxC_C0',
+        title: 'Vector × Lecture : 09',
+        duration: '94:00',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 10,
+        videoId: 'ZQ5YgYMYlBk',
+        title: 'Vector × Lecture : 10',
+        duration: '59:17',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 11,
+        videoId: 'lVBCukwI2G4',
+        title: 'ভৌত জগত ও পরিমাপ | Lecture 01',
+        duration: '90:39',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 12,
+        videoId: '8nRBq2mjRLM',
+        title: 'Vector × Lecture : 11',
+        duration: '102:32',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 13,
+        videoId: 'tXVaP7q-hLk',
+        title: 'ভৌত জগৎ ও পরিমাপ ÷ Lecture : 02',
+        duration: '78:10',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 14,
+        videoId: '3xCvO5s23pg',
+        title: 'Vector × Lecture : 12 × ACS PHYSICS CYCLE - 01',
+        duration: '87:18',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 15,
+        videoId: 'gukxIVguXWA',
+        title: 'ভৌতজগত ও পরিমাপ × Lecture : 03 × ACS PHYSICS CYCLE - 01',
+        duration: '69:01',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    }
+];
+
+// Global variables
+let player = null;
+let currentVideoIndex = 0;
+let progressInterval = null;
+let controlsHideTimeout = null;
+let eventListeners = [];
+let qualityCheckInterval = null;
+let isPlayerReady = false;
+let isDestroying = false;
+
+// Device detection
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+const isDesktop = !isMobile && window.innerWidth > 768;
+
+// YouTube API ready callback
+function onYouTubeIframeAPIReady() {
+    console.log('YouTube API ready');
+}
+
+// Initialize application
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+    setupGlobalEventListeners();
+});
+
+function initializeApp() {
+    renderClassCards();
+    setupMobileMenu();
+}
+
+// Render class cards
+function renderClassCards() {
+    const cardsGrid = document.getElementById('cards-grid');
+    if (!cardsGrid) return;
+
+    const cardHTML = classesData.map((classItem, index) => `
+        <div class="class-card p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl" style="background-color: #F6EEE3;">
+            <div class="flex items-start justify-between mb-4">
+                <div class="flex-1">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-semibold px-3 py-1 rounded-full" style="background-color: #E7E0D3; color: #8B5A2B;">#${classItem.id}</span>
+                        <span class="text-sm" style="color: #8B5A2B;">${classItem.duration}</span>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-3 line-clamp-2" style="color: #8B5A2B;" title="${classItem.title}">
+                        ${classItem.title.length > 50 ? classItem.title.substring(0, 50) + '...' : classItem.title}
+                    </h3>
+                </div>
+            </div>
+            <div class="flex items-center justify-between">
+                <button onclick="playVideo(${index})" class="flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105" style="background-color: #EBE8E2; color: #8B5A2B;">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                    <span>Watch</span>
+                </button>
+                <button onclick="openNote('${classItem.noteLink}')" class="px-4 py-2 rounded-lg font-medium transition-all duration-200 hover:scale-105" style="background-color: #E8DACC; color: #8B5A2B;">
+                    📝 Note/PDF
+                </button>
+            </div>
+        </div>
+    `).join('');
+
+    cardsGrid.innerHTML = cardHTML;
+}
+
+// Setup mobile menu
+function setupMobileMenu() {
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    if (mobileMenuBtn && mobileMenu) {
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+}
+
+// Setup global event listeners
+function setupGlobalEventListeners() {
+    // Prevent context menu globally
+    document.addEventListener('contextmenu', preventContextMenu);
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+    
+    // Window resize
+    window.addEventListener('resize', handleWindowResize);
+    
+    // Fullscreen change events
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('msfullscreenchange', handleFullscreenChange);
+    
+    // Prevent text selection
+    document.addEventListener('selectstart', (e) => e.preventDefault());
+}
+
+// Prevent context menu
+function preventContextMenu(e) {
+    if (e.target.closest('.video-container') || e.target.closest('#youtube-player')) {
+        e.preventDefault();
+        return false;
+    }
+}
+
+// Clean up all event listeners
+function cleanupEventListeners() {
+    eventListeners.forEach(({ element, event, handler }) => {
+        if (element && element.removeEventListener) {
+            element.removeEventListener(event, handler);
+        }
+    });
+    eventListeners = [];
+}
+
+// Add tracked event listener
+function addTrackedEventListener(element, event, handler) {
+    if (element && element.addEventListener) {
+        element.addEventListener(event, handler);
+        eventListeners.push({ element, event, handler });
+    }
+}
+
+// Play video function
+function playVideo(index) {
+    if (isDestroying) return;
+    
+    currentVideoIndex = index;
+    const classItem = classesData[index];
+
+    // Show video player and hide cards
+    const cardsContainer = document.getElementById('cards-container');
+    const videoPlayerContainer = document.getElementById('video-player-container');
+
+    if (cardsContainer) cardsContainer.classList.add('hidden');
+    if (videoPlayerContainer) videoPlayerContainer.classList.remove('hidden');
+
+    // Set video title
+    const videoTitle = document.getElementById('video-title');
+    if (videoTitle) videoTitle.textContent = classItem.title;
+
+    // Clean up previous player completely
+    cleanupPlayer();
+
+    // Initialize new player
+    initYouTubePlayer(classItem.videoId);
+
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Complete player cleanup
+function cleanupPlayer() {
+    isDestroying = true;
+    isPlayerReady = false;
+
+    // Clear all intervals and timeouts
+    if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+    }
+    
+    if (controlsHideTimeout) {
+        clearTimeout(controlsHideTimeout);
+        controlsHideTimeout = null;
+    }
+    
+    if (qualityCheckInterval) {
+        clearInterval(qualityCheckInterval);
+        qualityCheckInterval = null;
+    }
+
+    // Clean up event listeners
+    cleanupEventListeners();
+
+    // Destroy existing player
+    if (player && typeof player.destroy === 'function') {
+        try {
+            player.destroy();
+        } catch (e) {
+            console.warn('Error destroying player:', e);
+        }
+    }
+    player = null;
+    
+    // Reset UI elements
+    resetProgressBar();
+    resetControlIcons();
+    
+    isDestroying = false;
+}
+
+// Reset progress bar
+function resetProgressBar() {
+    const progressFill = document.getElementById('progressFill');
+    const timeDisplay = document.getElementById('timeDisplay');
+    
+    if (progressFill) progressFill.style.width = '0%';
+    if (timeDisplay) timeDisplay.textContent = '0:00 / 0:00';
+}
+
+// Reset control icons
+function resetControlIcons() {
+    // Reset play/pause icons
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    
+    if (playIcon) playIcon.style.display = 'block';
+    if (pauseIcon) pauseIcon.style.display = 'none';
+    
+    // Reset volume icons
+    updateVolumeIcons(false);
+}
+
+// Initialize YouTube player with enhanced controls blocking
+function initYouTubePlayer(videoId) {
+    if (isDestroying) return;
+    
+    // Show loading spinner
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    if (loadingSpinner) loadingSpinner.style.display = 'block';
+
+    // Enhanced player configuration to block ALL native controls
+    player = new YT.Player('youtube-player', {
+        height: '100%',
+        width: '100%',
+        videoId: videoId,
+        playerVars: {
+            'controls': 0,              // Hide all controls
+            'disablekb': 1,             // Disable keyboard controls
+            'modestbranding': 1,        // Remove YouTube logo
+            'showinfo': 0,              // Hide video info
+            'rel': 0,                   // No related videos
+            'fs': 0,                    // Disable fullscreen button
+            'cc_load_policy': 0,        // No closed captions
+            'iv_load_policy': 3,        // Hide annotations
+            'autohide': 0,              // Never show controls
+            'playsinline': 1,           // Play inline on mobile
+            'enablejsapi': 1,           // Enable JS API
+            'origin': window.location.origin,
+            'widget_referrer': window.location.href
+        },
+        events: {
+            'onReady': onPlayerReady,
+            'onStateChange': onPlayerStateChange,
+            'onError': onPlayerError
+        }
+    });
+}
+
+// Player ready handler
+function onPlayerReady(event) {
+    if (isDestroying) return;
+    
+    isPlayerReady = true;
+    
+    // Hide loading spinner
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    if (loadingSpinner) loadingSpinner.style.display = 'none';
+
+    // Block native controls completely
+    blockNativeControls();
+    
+    // Setup all custom controls
+    setupAllCustomControls();
+    
+    // Show custom controls initially
+    showControls();
+    
+    // Start quality optimization
+    setTimeout(() => {
+        if (isPlayerReady && !isDestroying) {
+            startQualityOptimization();
+        }
+    }, 1000);
+}
+
+// Block native YouTube controls completely
+function blockNativeControls() {
+    if (!player || isDestroying) return;
+    
+    const iframe = player.getIframe();
+    if (iframe) {
+        // Prevent all mouse events on the iframe
+        iframe.style.pointerEvents = 'none';
+        
+        // Block keyboard events
+        iframe.setAttribute('tabindex', '-1');
+        
+        // Additional CSS to block interactions
+        iframe.style.webkitUserSelect = 'none';
+        iframe.style.mozUserSelect = 'none';
+        iframe.style.msUserSelect = 'none';
+        iframe.style.userSelect = 'none';
+    }
+}
+
+// Player state change handler
+function onPlayerStateChange(event) {
+    if (isDestroying) return;
+    
+    const isPlaying = event.data === YT.PlayerState.PLAYING;
+    
+    // Update play/pause icons
+    updatePlayPauseIcons(isPlaying);
+    
+    if (isPlaying) {
+        startProgressUpdate();
+    } else {
+        stopProgressUpdate();
+    }
+    
+    // Re-block controls after state change
+    setTimeout(blockNativeControls, 100);
+}
+
+// Player error handler
+function onPlayerError(event) {
+    console.error('YouTube Player Error:', event.data);
+    
+    const loadingSpinner = document.getElementById('loadingSpinner');
+    if (loadingSpinner) {
+        loadingSpinner.innerHTML = `
+            <div class="text-white text-center">
+                <p>Error loading video</p>
+                <p class="text-sm opacity-75">Error code: ${event.data}</p>
+            </div>
+        `;
+    }
+}
+
+// Update play/pause icons
+function updatePlayPauseIcons(isPlaying) {
+    const playIcon = document.getElementById('playIcon');
+    const pauseIcon = document.getElementById('pauseIcon');
+    
+    if (playIcon && pauseIcon) {
+        if (isPlaying) {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        } else {
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        }
+    }
+}
+
+// Setup all custom controls
+function setupAllCustomControls() {
+    if (isDestroying) return;
+    
+    setupControlsVisibility();
+    setupPlayPauseControls();
+    setupSeekControls();
+    setupProgressBar();
+    setupVolumeControls();
+    setupSpeedControls();
+    setupQualityControls();
+    setupFullscreenControls();
+    setupNavigationControls();
+}
+
+// Setup controls visibility
+function setupControlsVisibility() {
+    const videoContainer = document.querySelector('.video-container');
+    const customControls = document.getElementById('customControls');
+    const videoOverlay = document.getElementById('videoOverlay');
+
+    if (!videoContainer || !customControls || !videoOverlay) return;
+
+    // Show controls on overlay click
+    const overlayClickHandler = (e) => {
+        e.stopPropagation();
+        showControls();
+        
+        // Toggle play/pause on click
+        if (player && isPlayerReady) {
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        }
+    };
+    
+    addTrackedEventListener(videoOverlay, 'click', overlayClickHandler);
+
+    // Desktop hover behavior
+    if (!isMobile) {
+        const mouseEnterHandler = () => showControls();
+        const mouseMoveHandler = () => showControls();
+        
+        addTrackedEventListener(videoContainer, 'mouseenter', mouseEnterHandler);
+        addTrackedEventListener(videoContainer, 'mousemove', mouseMoveHandler);
+    }
+
+    // Hide controls when clicking outside
+    const documentClickHandler = (e) => {
+        if (!videoContainer.contains(e.target)) {
+            hideControls();
+        }
+    };
+    
+    addTrackedEventListener(document, 'click', documentClickHandler);
+
+    // Prevent controls from hiding when clicking on them
+    const controlsClickHandler = (e) => {
+        e.stopPropagation();
+    };
+    
+    addTrackedEventListener(customControls, 'click', controlsClickHandler);
+}
+
+// Show controls
+function showControls() {
+    const videoContainer = document.querySelector('.video-container');
+    const customControls = document.getElementById('customControls');
+
+    if (videoContainer && customControls) {
+        videoContainer.classList.add('show-controls');
+        customControls.classList.add('show-controls');
+    }
+
+    // Clear existing timeout
+    if (controlsHideTimeout) {
+        clearTimeout(controlsHideTimeout);
+    }
+
+    // Auto-hide after 4 seconds on desktop
+    if (!isMobile) {
+        controlsHideTimeout = setTimeout(() => {
+            hideControls();
+        }, 4000);
+    }
+}
+
+// Hide controls
+function hideControls() {
+    const videoContainer = document.querySelector('.video-container');
+    const customControls = document.getElementById('customControls');
+
+    // Don't hide if dropdown is open
+    if (document.querySelector('.dropdown-menu.show')) return;
+
+    if (videoContainer && customControls) {
+        videoContainer.classList.remove('show-controls');
+        customControls.classList.remove('show-controls');
+    }
+}
+
+// Setup play/pause controls
+function setupPlayPauseControls() {
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    
+    if (playPauseBtn) {
+        const clickHandler = () => {
+            if (!player || !isPlayerReady) return;
+            
+            if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                player.pauseVideo();
+            } else {
+                player.playVideo();
+            }
+        };
+        
+        addTrackedEventListener(playPauseBtn, 'click', clickHandler);
+    }
+}
+
+// Setup seek controls
+function setupSeekControls() {
+    const skipBackBtn = document.getElementById('skipBackBtn');
+    const skipForwardBtn = document.getElementById('skipForwardBtn');
+    
+    if (skipBackBtn) {
+        const backHandler = () => {
+            if (!player || !isPlayerReady) return;
+            
+            const currentTime = player.getCurrentTime();
+            player.seekTo(Math.max(0, currentTime - 10));
+        };
+        
+        addTrackedEventListener(skipBackBtn, 'click', backHandler);
+    }
+    
+    if (skipForwardBtn) {
+        const forwardHandler = () => {
+            if (!player || !isPlayerReady) return;
+            
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            player.seekTo(Math.min(duration, currentTime + 10));
+        };
+        
+        addTrackedEventListener(skipForwardBtn, 'click', forwardHandler);
+    }
+}
+
+// Setup progress bar
+function setupProgressBar() {
+    const progressBar = document.getElementById('progressBar');
+    
+    if (progressBar) {
+        const clickHandler = (e) => {
+            if (!player || !isPlayerReady) return;
+            
+            const rect = e.target.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            const duration = player.getDuration();
+            
+            if (duration > 0) {
+                player.seekTo(duration * percent);
+            }
+        };
+        
+        addTrackedEventListener(progressBar, 'click', clickHandler);
+    }
+}
+
+// Setup volume controls
+function setupVolumeControls() {
+    const muteBtn = document.getElementById('muteBtn');
+    const volumeSlider = document.getElementById('volumeSlider');
+    
+    if (muteBtn) {
+        const muteHandler = () => {
+            if (!player || !isPlayerReady) return;
+            
+            if (player.isMuted()) {
+                player.unMute();
+                updateVolumeIcons(false);
+            } else {
+                player.mute();
+                updateVolumeIcons(true);
+            }
+        };
+        
+        addTrackedEventListener(muteBtn, 'click', muteHandler);
+    }
+    
+    if (volumeSlider) {
+        const volumeHandler = (e) => {
+            if (!player || !isPlayerReady) return;
+            
+            player.setVolume(parseInt(e.target.value));
+            updateVolumeIcons(parseInt(e.target.value) === 0);
+        };
+        
+        addTrackedEventListener(volumeSlider, 'input', volumeHandler);
+    }
+}
+
+// Update volume icons
+function updateVolumeIcons(isMuted) {
+    const volumeIcon = document.getElementById('volumeIcon');
+    const muteIcon = document.getElementById('muteIcon');
+    
+    if (volumeIcon && muteIcon) {
+        if (isMuted) {
+            volumeIcon.style.display = 'none';
+            muteIcon.style.display = 'block';
+        } else {
+            volumeIcon.style.display = 'block';
+            muteIcon.style.display = 'none';
+        }
+    }
+}
+
+// Setup speed controls
+function setupSpeedControls() {
+    const speedBtn = document.getElementById('speedBtn');
+    const speedDropdown = document.getElementById('speedDropdown');
+    
+    if (speedBtn && speedDropdown) {
+        const toggleHandler = (e) => {
+            e.stopPropagation();
+            closeAllDropdowns();
+            speedDropdown.classList.toggle('show');
+            showControls(); // Keep controls visible when dropdown is open
+        };
+        
+        addTrackedEventListener(speedBtn, 'click', toggleHandler);
+        
+        // Handle speed selection
+        const speedItems = speedDropdown.querySelectorAll('.dropdown-item');
+        speedItems.forEach(item => {
+            const itemHandler = (e) => {
+                if (!player || !isPlayerReady) return;
+                
+                const speed = parseFloat(e.target.dataset.speed);
+                player.setPlaybackRate(speed);
+                speedBtn.textContent = speed + 'x';
+                speedDropdown.classList.remove('show');
+            };
+            
+            addTrackedEventListener(item, 'click', itemHandler);
+        });
+    }
+}
+
+// Setup quality controls
+function setupQualityControls() {
+    const qualityBtn = document.getElementById('qualityBtn');
+    const qualityDropdown = document.getElementById('qualityDropdown');
+    
+    if (qualityBtn && qualityDropdown) {
+        const toggleHandler = (e) => {
+            e.stopPropagation();
+            closeAllDropdowns();
+            qualityDropdown.classList.toggle('show');
+            showControls(); // Keep controls visible when dropdown is open
+        };
+        
+        addTrackedEventListener(qualityBtn, 'click', toggleHandler);
+        
+        // Handle quality selection
+        const qualityItems = qualityDropdown.querySelectorAll('.dropdown-item');
+        qualityItems.forEach(item => {
+            const itemHandler = (e) => {
+                if (!player || !isPlayerReady) return;
+                
+                const quality = e.target.dataset.quality;
+                
+                if (quality === 'auto') {
+                    startQualityOptimization();
+                    qualityBtn.textContent = 'Auto HD';
+                } else {
+                    if (qualityCheckInterval) {
+                        clearInterval(qualityCheckInterval);
+                        qualityCheckInterval = null;
+                    }
+                    player.setPlaybackQuality(quality);
+                    qualityBtn.textContent = e.target.textContent;
+                }
+                
+                qualityDropdown.classList.remove('show');
+            };
+            
+            addTrackedEventListener(item, 'click', itemHandler);
+        });
+    }
+}
+
+// Close all dropdowns
+function closeAllDropdowns() {
+    document.querySelectorAll('.dropdown-menu').forEach(dropdown => {
+        dropdown.classList.remove('show');
+    });
+}
+
+// Setup fullscreen controls
+function setupFullscreenControls() {
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    
+    if (fullscreenBtn) {
+        const fullscreenHandler = () => {
+            const videoContainer = document.querySelector('.video-container');
+            
+            if (document.fullscreenElement || 
+                document.webkitFullscreenElement || 
+                document.mozFullScreenElement || 
+                document.msFullscreenElement) {
+                exitFullscreen();
+            } else {
+                enterFullscreen(videoContainer);
+            }
+        };
+        
+        addTrackedEventListener(fullscreenBtn, 'click', fullscreenHandler);
+    }
+}
+
+// Enter fullscreen with cross-browser support
+function enterFullscreen(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen().catch(console.error);
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    } else if (element.mozRequestFullScreen) {
+        element.mozRequestFullScreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    }
+}
+
+// Exit fullscreen with cross-browser support
+function exitFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen().catch(console.error);
+    } else if (document.webkitExitFullscreen) {
+        document.webkitExitFullscreen();
+    } else if (document.mozCancelFullScreen) {
+        document.mozCancelFullScreen();
+    } else if (document.msExitFullscreen) {
+        document.msExitFullscreen();
+    }
+}
+
+// Handle fullscreen changes
+function handleFullscreenChange() {
+    // Re-block controls after fullscreen changes
+    setTimeout(blockNativeControls, 100);
+}
+
+// Setup navigation controls
+function setupNavigationControls() {
+    // Mobile buttons
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const closeVideoBtn = document.getElementById('closeVideoBtn');
+    const notePdfBtn = document.getElementById('notePdfBtn');
+    
+    // Desktop buttons
+    const prevBtnDesktop = document.getElementById('prevBtnDesktop');
+    const nextBtnDesktop = document.getElementById('nextBtnDesktop');
+    const closeVideoBtnDesktop = document.getElementById('closeVideoBtnDesktop');
+    const notePdfBtnDesktop = document.getElementById('notePdfBtnDesktop');
+    
+    // Previous video handlers
+    [prevBtn, prevBtnDesktop].forEach(btn => {
+        if (btn) {
+            addTrackedEventListener(btn, 'click', () => {
+                if (currentVideoIndex > 0) {
+                    playVideo(currentVideoIndex - 1);
+                }
+            });
+        }
+    });
+    
+    // Next video handlers
+    [nextBtn, nextBtnDesktop].forEach(btn => {
+        if (btn) {
+            addTrackedEventListener(btn, 'click', () => {
+                if (currentVideoIndex < classesData.length - 1) {
+                    playVideo(currentVideoIndex + 1);
+                }
+            });
+        }
+    });
+    
+    // Close video handlers
+    [closeVideoBtn, closeVideoBtnDesktop].forEach(btn => {
+        if (btn) {
+            addTrackedEventListener(btn, 'click', closeVideo);
+        }
+    });
+    
+    // Note/PDF handlers
+    [notePdfBtn, notePdfBtnDesktop].forEach(btn => {
+        if (btn) {
+            addTrackedEventListener(btn, 'click', () => {
+                openNote(classesData[currentVideoIndex].noteLink);
+            });
+        }
+    });
+}
+
+// Close video function
+function closeVideo() {
+    // Clean up player completely
+    cleanupPlayer();
+    
+    // Hide video player and show cards
+    const cardsContainer = document.getElementById('cards-container');
+    const videoPlayerContainer = document.getElementById('video-player-container');
+    
+    if (videoPlayerContainer) videoPlayerContainer.classList.add('hidden');
+    if (cardsContainer) cardsContainer.classList.remove('hidden');
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Open note function
+function openNote(noteLink) {
+    window.open(noteLink, '_blank', 'noopener,noreferrer');
+}
+
+// Progress update functions
+function startProgressUpdate() {
+    if (progressInterval) clearInterval(progressInterval);
+    
+    progressInterval = setInterval(() => {
+        if (!player || !isPlayerReady || isDestroying) return;
+        
+        try {
+            const currentTime = player.getCurrentTime();
+            const duration = player.getDuration();
+            
+            if (duration > 0) {
+                const percentage = (currentTime / duration) * 100;
+                
+                const progressFill = document.getElementById('progressFill');
+                const timeDisplay = document.getElementById('timeDisplay');
+                
+                if (progressFill) progressFill.style.width = percentage + '%';
+                
+                const timeString = formatTime(currentTime) + ' / ' + formatTime(duration);
+                if (timeDisplay) timeDisplay.textContent = timeString;
+            }
+        } catch (e) {
+            console.warn('Progress update error:', e);
+        }
+    }, 1000);
+}
+
+function stopProgressUpdate() {
+    if (progressInterval) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+    }
+}
+
+// Format time helper
+function formatTime(seconds) {
+    if (!seconds || seconds < 0) return '0:00';
+    
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    if (hours > 0) {
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    } else {
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
+    }
+}
+
+// Quality optimization
+function startQualityOptimization() {
+    if (qualityCheckInterval) {
+        clearInterval(qualityCheckInterval);
+    }
+    
+    qualityCheckInterval = setInterval(() => {
+        if (!player || !isPlayerReady || isDestroying) return;
+        
+        try {
+            const availableQualities = player.getAvailableQualityLevels();
+            
+            if (availableQualities && availableQualities.length > 0) {
+                let selectedQuality = 'large';
+                let badgeText = 'HD';
+                
+                if (availableQualities.includes('hd1080')) {
+                    selectedQuality = 'hd1080';
+                    badgeText = '1080p HD';
+                } else if (availableQualities.includes('hd720')) {
+                    selectedQuality = 'hd720';
+                    badgeText = '720p HD';
+                } else if (availableQualities.includes('large')) {
+                    selectedQuality = 'large';
+                    badgeText = '480p HD';
+                }
+                
+                player.setPlaybackQuality(selectedQuality);
+                updateQualityBadge(badgeText);
+            }
+        } catch (e) {
+            console.warn('Quality optimization error:', e);
+        }
+    }, 3000);
+}
+
+// Update quality badge
+function updateQualityBadge(text) {
+    const qualityBadge = document.getElementById('qualityBadge');
+    if (qualityBadge) {
+        qualityBadge.textContent = text;
+    }
+}
+
+// Keyboard shortcuts handler
+function handleKeyboardShortcuts(e) {
+    // Only handle shortcuts when video is playing
+    if (document.getElementById('video-player-container').classList.contains('hidden') || 
+        !player || !isPlayerReady || isDestroying) {
+        return;
+    }
+    
+    // Don't handle if user is typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+        return;
+    }
+    
+    try {
+        switch (e.code) {
+            case 'Space':
+                e.preventDefault();
+                if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                    player.pauseVideo();
+                } else {
+                    player.playVideo();
+                }
+                break;
+                
+            case 'ArrowLeft':
+                e.preventDefault();
+                const currentTime = player.getCurrentTime();
+                player.seekTo(Math.max(0, currentTime - 10));
+                break;
+                
+            case 'ArrowRight':
+                e.preventDefault();
+                const currentTimeRight = player.getCurrentTime();
+                const duration = player.getDuration();
+                player.seekTo(Math.min(duration, currentTimeRight + 10));
+                break;
+                
+            case 'KeyM':
+                e.preventDefault();
+                if (player.isMuted()) {
+                    player.unMute();
+                    updateVolumeIcons(false);
+                } else {
+                    player.mute();
+                    updateVolumeIcons(true);
+                }
+                break;
+                
+            case 'KeyF':
+                e.preventDefault();
+                const videoContainer = document.querySelector('.video-container');
+                if (document.fullscreenElement) {
+                    exitFullscreen();
+                } else {
+                    enterFullscreen(videoContainer);
+                }
+                break;
+                
+            case 'ArrowUp':
+                e.preventDefault();
+                if (currentVideoIndex > 0) {
+                    playVideo(currentVideoIndex - 1);
+                }
+                break;
+                
+            case 'ArrowDown':
+                e.preventDefault();
+                if (currentVideoIndex < classesData.length - 1) {
+                    playVideo(currentVideoIndex + 1);
+                }
+                break;
+                
+            case 'Escape':
+                e.preventDefault();
+                closeVideo();
+                break;
+        }
+    } catch (e) {
+        console.warn('Keyboard shortcut error:', e);
+    }
+}
+
+// Window resize handler
+function handleWindowResize() {
+    // Re-block controls after resize
+    setTimeout(blockNativeControls, 100);
+}
+
+// Global click handler to close dropdowns
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.dropdown-menu') && 
+        !e.target.closest('#speedBtn') && 
+        !e.target.closest('#qualityBtn')) {
+        closeAllDropdowns();
+    }
+});
+
+// Prevent drag and drop
+document.addEventListener('dragstart', (e) => e.preventDefault());
+
+// Enhanced mobile support
+if (isMobile) {
+    // Handle orientation changes
+    const handleOrientationChange = () => {
+        setTimeout(() => {
+            if (player && isPlayerReady && !document.getElementById('video-player-container').classList.contains('hidden')) {
+                const orientation = screen.orientation?.angle || window.orientation || 0;
+                
+                // Auto-fullscreen on landscape for better experience
+                if (Math.abs(orientation) === 90) {
+                    const videoContainer = document.querySelector('.video-container');
+                    if (!document.fullscreenElement) {
+                        enterFullscreen(videoContainer);
+                    }
+                }
+            }
+        }, 500);
+    };
+    
+    // Listen for orientation changes
+    if (screen.orientation) {
+        screen.orientation.addEventListener('change', handleOrientationChange);
+    } else {
+        window.addEventListener('orientationchange', handleOrientationChange);
+    }
+    
+    // Touch handling for better mobile experience
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+        touchStartY = e.touches[0].clientY;
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+        // Prevent scrolling when video is in fullscreen
+        if (document.fullscreenElement && e.target.closest('.video-container')) {
+            e.preventDefault();
+        }
+    });
+}
+
+// Page visibility change handler
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden && player && isPlayerReady) {
+        // Optionally pause when page is hidden
+        // player.pauseVideo();
+    }
+});
+
+console.log('Enhanced YouTube Player initialized with complete custom controls');
+    </script>
+</body>
+</html>
