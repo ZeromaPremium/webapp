@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Zeroma Premium - Classes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Custom Color Palette - Zeroma Premium */
+        :root {
+            --color-bg-primary: #F4F0E0;
+            --color-bg-secondary: #F5F5F4;
+            --color-bg-card: #F6EEE3;
+            --color-bg-button: #EBE8E2;
+            --color-bg-secondary-element: #E7E0D3;
+            --color-bg-accent: #E8DACC;
+            --color-text-primary: #8B5A2B;
+            --color-text-secondary: #A0522D;
+        }
+        
+        /* Prevent text selection and context menu */
+        * {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        
+        body {
+            background-color: var(--color-bg-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        /* Header Styles */
+        .header-shadow {
+            box-shadow: 0 2px 10px rgba(139, 90, 43, 0.1);
+        }
+        
+        .logo-text {
+            background: linear-gradient(135deg, var(--color-text-primary), var(--color-text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-text:hover {
+            transform: scale(1.05);
+        }
+        
+        .nav-link {
+            color: var(--color-text-primary);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-link:hover {
+            color: var(--color-text-secondary);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 50%;
+            background: linear-gradient(90deg, var(--color-text-primary), var(--color-text-secondary));
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Mobile Menu */
+        .mobile-menu {
+            background: var(--color-bg-secondary);
+            border-top: 1px solid var(--color-bg-secondary-element);
+        }
+        
+        /* Class Cards */
+        .class-card {
+            background: var(--color-bg-card);
+            border: 2px solid var(--color-bg-secondary-element);
+            transition: all 0.3s ease;
+        }
+        
+        .class-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(139, 90, 43, 0.2);
+            border-color: var(--color-bg-accent);
+        }
+        
+        /* Video Container Styles */
+        .video-container {
+            position: relative;
+            width: 100%;
+            background: #000;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+        
+        .video-container iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            pointer-events: auto;
+        }
+        
+        /* Video Overlay */
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            background: transparent;
+            cursor: pointer;
+        }
+        
+        /* Custom Controls */
+        .custom-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            z-index: 10;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            padding: 20px 15px 15px;
+        }
+        
+        .video-container.show-controls .custom-controls,
+        .custom-controls.show-controls {
+            transform: translateY(0);
+        }
+        
+        /* Mobile Video Controls - Enhanced 2-Row Layout */
+        .mobile-video-controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,0.95));
+            z-index: 50;
+            padding: 15px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .mobile-video-controls.show {
+            transform: translateY(0);
+        }
+        
+        .mobile-control-btn {
+            background: var(--color-bg-button);
+            color: var(--color-text-primary);
+            border: 2px solid var(--color-bg-secondary-element);
+            padding: 12px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(139, 90, 43, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 50px;
+        }
+        
+        .mobile-control-btn:hover, .mobile-control-btn:active {
+            background: var(--color-bg-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(139, 90, 43, 0.3);
+        }
+        
+        .mobile-control-btn.close-btn {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+        
+        .mobile-control-btn.close-btn:hover {
+            background-color: #fecaca;
+        }
+        
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+            border-radius: 3px;
+            transition: width 0.1s ease;
+        }
+        
+        /* Control Buttons */
+        .control-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+            transform: scale(1.05);
+        }
+        
+        /* Dropdown Menus */
+        .dropdown-menu {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: rgba(0,0,0,0.95);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            min-width: 120px;
+            display: none;
+            z-index: 20;
+            backdrop-filter: blur(10px);
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+            animation: slideUp 0.2s ease;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dropdown-item {
+            padding: 12px 16px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 14px;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* Quality Badge */
+        .quality-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 5;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            text-align: center;
+        }
+        
+        /* Desktop Navigation Buttons */
+        .desktop-nav-controls {
+            background: var(--color-bg-secondary);
+            border: 2px solid var(--color-bg-secondary-element);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .desktop-nav-btn {
+            background: var(--color-bg-button);
+            color: var(--color-text-primary);
+            border: 2px solid var(--color-bg-secondary-element);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(139, 90, 43, 0.15);
+        }
+        
+        .desktop-nav-btn:hover {
+            background: var(--color-bg-accent);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139, 90, 43, 0.25);
+        }
+        
+        .desktop-nav-btn.close-btn {
+            background: #fee2e2;
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+        
+        .desktop-nav-btn.close-btn:hover {
+            background: #fecaca;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--color-bg-secondary);
+            border-top: 2px solid var(--color-bg-secondary-element);
+            margin-top: 60px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .custom-controls {
+                padding-bottom: 120px; /* Space for mobile controls */
+            }
+        }
+        
+        /* Fullscreen Styles */
+        .video-container:-webkit-full-screen,
+        .video-container:-moz-full-screen,
+        .video-container:fullscreen {
+            width: 100vw !important;
+            height: 100vh !important;
+            border-radius: 0;
+        }
+        
+        /* Volume Slider Styling */
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.3);
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ff6b6b;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white header-shadow sticky top-0 z-40" style="background-color: var(--color-bg-secondary);">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <h1 class="logo-text text-2xl md:text-3xl font-bold" onclick="location.reload()">
+                        Zeroma Premium
+                    </h1>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="https://zeromapremium.github.io/webapp" class="nav-link font-semibold">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="https://zeromapremium.github.io/webapp/class" class="nav-link font-semibold">
+                        <i class="fas fa-graduation-cap mr-2"></i>Class
+                    </a>
+                    <a href="https://zeromapremium.github.io/webapp/login" class="nav-link font-semibold">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                    </a>
+                    <a href="https://t.me/MYThymM" target="_blank" class="nav-link font-semibold">
+                        <i class="fab fa-telegram mr-2"></i>Contact
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="p-2 rounded-lg" style="color: var(--color-text-primary);">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden mobile-menu">
+            <div class="px-4 py-4 space-y-3">
+                <a href="https://zeromapremium.github.io/webapp" class="nav-link block py-2 font-semibold">
+                    <i class="fas fa-home mr-3"></i>Home
+                </a>
+                <a href="https://zeromapremium.github.io/webapp/class" class="nav-link block py-2 font-semibold">
+                    <i class="fas fa-graduation-cap mr-3"></i>Class
+                </a>
+                <a href="https://zeromapremium.github.io/webapp/login" class="nav-link block py-2 font-semibold">
+                    <i class="fas fa-sign-in-alt mr-3"></i>Sign In
+                </a>
+                <a href="https://t.me/MYThymM" target="_blank" class="nav-link block py-2 font-semibold">
+                    <i class="fab fa-telegram mr-3"></i>Contact
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8 min-h-screen">
+        <!-- Classes Grid -->
+        <div id="cards-container" class="space-y-8">
+            <div class="text-center mb-8">
+                <h2 class="text-4xl font-bold mb-4" style="color: var(--color-text-primary);">
+                    Premium Classes
+                </h2>
+                <p class="text-lg" style="color: var(--color-text-secondary);">
+                    Access high-quality educational content designed for excellence
+                </p>
+            </div>
+            
+            <div id="cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Cards will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Video Player Container -->
+        <div id="video-player-container" class="hidden space-y-6">
+            <!-- Video Title -->
+            <div class="text-center">
+                <h2 id="video-title" class="text-3xl font-bold mb-2" style="color: var(--color-text-primary);"></h2>
+                <div class="w-24 h-1 mx-auto rounded-full" style="background: linear-gradient(90deg, var(--color-text-primary), var(--color-text-secondary));"></div>
+            </div>
+            
+            <!-- Video Player -->
+            <div class="video-container aspect-video bg-black">
+                <!-- Loading Spinner -->
+                <div id="loadingSpinner" class="loading-spinner">
+                    <div class="animate-spin rounded-full h-16 w-16 border-4 border-white border-t-transparent"></div>
+                    <p class="text-white mt-4 text-lg font-semibold">Loading Premium Video...</p>
+                </div>
+                
+                <!-- Quality Badge -->
+                <div id="qualityBadge" class="quality-badge">HD</div>
+                
+                <!-- YouTube Player -->
+                <div id="youtube-player"></div>
+                
+                <!-- Video Overlay for Click Detection -->
+                <div id="videoOverlay" class="video-overlay"></div>
+                
+                <!-- Custom Controls -->
+                <div id="customControls" class="custom-controls">
+                    <!-- Progress Bar -->
+                    <div id="progressBar" class="progress-bar">
+                        <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    
+                    <!-- Control Buttons Row -->
+                    <div class="flex items-center justify-between">
+                        <!-- Left Side Controls -->
+                        <div class="flex items-center space-x-3">
+                            <!-- Play/Pause -->
+                            <button id="playPauseBtn" class="control-btn flex items-center justify-center w-12 h-12">
+                                <i id="playIcon" class="fas fa-play text-lg"></i>
+                                <i id="pauseIcon" class="fas fa-pause text-lg hidden"></i>
+                            </button>
+                            
+                            <!-- Skip Back -->
+                            <button id="skipBackBtn" class="control-btn flex items-center">
+                                <i class="fas fa-backward mr-1"></i>
+                                <span class="hidden sm:inline">10s</span>
+                            </button>
+                            
+                            <!-- Skip Forward -->
+                            <button id="skipForwardBtn" class="control-btn flex items-center">
+                                <span class="hidden sm:inline">10s</span>
+                                <i class="fas fa-forward ml-1"></i>
+                            </button>
+                            
+                            <!-- Volume Controls -->
+                            <button id="muteBtn" class="control-btn">
+                                <i id="volumeIcon" class="fas fa-volume-up"></i>
+                                <i id="muteIcon" class="fas fa-volume-mute hidden"></i>
+                            </button>
+                            
+                            <input id="volumeSlider" type="range" min="0" max="100" value="100" class="w-16 sm:w-20 hidden sm:block">
+                        </div>
+                        
+                        <!-- Center - Time Display -->
+                        <div id="timeDisplay" class="text-white text-xs sm:text-sm font-mono bg-black bg-opacity-50 px-2 sm:px-3 py-1 rounded">
+                            0:00 / 0:00
+                        </div>
+                        
+                        <!-- Right Side Controls -->
+                        <div class="flex items-center space-x-2 sm:space-x-3 relative">
+                            <!-- Speed Control -->
+                            <div class="relative hidden sm:block">
+                                <button id="speedBtn" class="control-btn text-xs">1x</button>
+                                <div id="speedDropdown" class="dropdown-menu">
+                                    <div class="dropdown-item" data-speed="0.25">0.25x</div>
+                                    <div class="dropdown-item" data-speed="0.5">0.5x</div>
+                                    <div class="dropdown-item" data-speed="0.75">0.75x</div>
+                                    <div class="dropdown-item" data-speed="1">1x</div>
+                                    <div class="dropdown-item" data-speed="1.25">1.25x</div>
+                                    <div class="dropdown-item" data-speed="1.5">1.5x</div>
+                                    <div class="dropdown-item" data-speed="2">2x</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Quality Control -->
+                            <div class="relative hidden sm:block">
+                                <button id="qualityBtn" class="control-btn text-xs">Auto</button>
+                                <div id="qualityDropdown" class="dropdown-menu">
+                                    <div class="dropdown-item" data-quality="auto">Auto HD</div>
+                                    <div class="dropdown-item" data-quality="hd1080">1080p HD</div>
+                                    <div class="dropdown-item" data-quality="hd720">720p HD</div>
+                                    <div class="dropdown-item" data-quality="large">480p</div>
+                                    <div class="dropdown-item" data-quality="medium">360p</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Fullscreen -->
+                            <button id="fullscreenBtn" class="control-btn">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Desktop Navigation Controls -->
+            <div class="hidden md:block">
+                <div class="desktop-nav-controls">
+                    <div class="flex justify-center items-center space-x-6">
+                        <button id="prevBtnDesktop" class="desktop-nav-btn flex items-center">
+                            <i class="fas fa-chevron-left mr-2"></i>
+                            Previous
+                        </button>
+                        
+                        <button id="nextBtnDesktop" class="desktop-nav-btn flex items-center">
+                            Next
+                            <i class="fas fa-chevron-right ml-2"></i>
+                        </button>
+                        
+                        <button id="notePdfBtnDesktop" class="desktop-nav-btn flex items-center">
+                            <i class="fas fa-file-pdf mr-2"></i>
+                            Note/PDF
+                        </button>
+                        
+                        <button id="closeVideoBtnDesktop" class="desktop-nav-btn close-btn flex items-center">
+                            <i class="fas fa-times mr-2"></i>
+                            Close Video
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Video Controls (Fixed Bottom) - Enhanced 2-Row Layout -->
+        <div id="mobileVideoControls" class="mobile-video-controls md:hidden">
+            <!-- First Row - Navigation Controls -->
+            <div class="grid grid-cols-2 gap-3 mb-3">
+                <button id="prevBtn" class="mobile-control-btn flex flex-col items-center justify-center">
+                    <i class="fas fa-chevron-left text-lg mb-1"></i>
+                    <span class="text-xs">Previous</span>
+                </button>
+                
+                <button id="nextBtn" class="mobile-control-btn flex flex-col items-center justify-center">
+                    <i class="fas fa-chevron-right text-lg mb-1"></i>
+                    <span class="text-xs">Next</span>
+                </button>
+            </div>
+            
+            <!-- Second Row - Action Controls -->
+            <div class="grid grid-cols-2 gap-3">
+                <button id="notePdfBtn" class="mobile-control-btn flex flex-col items-center justify-center">
+                    <i class="fas fa-file-pdf text-lg mb-1"></i>
+                    <span class="text-xs">Note/PDF</span>
+                </button>
+                
+                <button id="closeVideoBtn" class="mobile-control-btn close-btn flex flex-col items-center justify-center">
+                    <i class="fas fa-times text-lg mb-1"></i>
+                    <span class="text-xs">Close Video</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- Brand -->
+                <div class="col-span-1 md:col-span-2">
+                    <h3 class="text-xl font-bold mb-4" style="color: var(--color-text-primary);">
+                        Zeroma Premium
+                    </h3>
+                    <p class="text-sm leading-relaxed" style="color: var(--color-text-secondary);">
+                        Your gateway to premium educational content. Access high-quality classes, expert instruction, and comprehensive learning materials designed to help you excel in your academic journey.
+                    </p>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--color-text-primary);">
+                        Quick Links
+                    </h4>
+                    <ul class="space-y-2">
+                        <li><a href="https://zeromapremium.github.io/webapp" class="text-sm hover:opacity-75 transition-opacity" style="color: var(--color-text-secondary);">Home</a></li>
+                        <li><a href="https://zeromapremium.github.io/webapp/class" class="text-sm hover:opacity-75 transition-opacity" style="color: var(--color-text-secondary);">Classes</a></li>
+                        <li><a href="https://zeromapremium.github.io/webapp/login" class="text-sm hover:opacity-75 transition-opacity" style="color: var(--color-text-secondary);">Sign In</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Contact -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4" style="color: var(--color-text-primary);">
+                        Get in Touch
+                    </h4>
+                    <div class="space-y-2">
+                        <a href="https://t.me/MYThymM" target="_blank" class="flex items-center text-sm hover:opacity-75 transition-opacity" style="color: var(--color-text-secondary);">
+                            <i class="fab fa-telegram mr-2"></i>
+                            Telegram Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bottom Bar -->
+            <div class="mt-8 pt-6 border-t" style="border-color: var(--color-bg-secondary-element);">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-sm" style="color: var(--color-text-secondary);">
+                        © 2024 Zeroma Premium. All rights reserved.
+                    </p>
+                    <div class="mt-4 md:mt-0 flex space-x-6">
+                        <a href="#" class="text-sm hover:opacity-75 transition-opacity" style="color: var(--color-text-secondary);">Privacy Policy</a>
+                        <a href="#" class="text-sm hover:opacity-75 transition-opacity" style="color: var(--color-text-secondary);">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
