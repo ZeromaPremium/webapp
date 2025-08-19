@@ -37,14 +37,16 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
+        /* Video Overlay - Must block YouTube controls */
         .video-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 10;
+            z-index: 12;
             background: transparent;
+            cursor: pointer;
         }
 
         /* Custom Controls Styling */
@@ -59,62 +61,41 @@
             z-index: 15;
             opacity: 0;
             transition: opacity 0.3s ease;
+            pointer-events: auto;
         }
 
+        /* Show controls */
         .video-container:hover .custom-controls,
         .video-container.show-controls .custom-controls,
         .custom-controls.show-controls {
             opacity: 1;
         }
 
-        /* Desktop and Mobile specific control behavior */
-        @media (min-width: 769px) {
-            .custom-controls {
-                opacity: 0;
-                transition: opacity 0.3s ease;
-            }
-            
-            .video-container:hover .custom-controls,
-            .video-container.show-controls .custom-controls {
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .custom-controls {
-                opacity: 0.9;
-            }
-            
-            .video-container.show-controls .custom-controls,
-            .custom-controls.show-controls {
-                opacity: 1;
-            }
-        }
-
-        /* Mobile Controls Layout */
+        /* Mobile specific styles */
         @media (max-width: 768px) {
             .custom-controls {
                 padding: 10px;
+                opacity: 0.95;
             }
             
             .mobile-controls-layout {
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 8px;
             }
             
             .mobile-controls-row {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                flex-wrap: wrap;
-                gap: 8px;
+                flex-wrap: nowrap;
+                gap: 6px;
             }
             
             .mobile-controls-left {
                 display: flex;
                 align-items: center;
-                gap: 6px;
+                gap: 4px;
                 flex: 1;
                 min-width: 0;
             }
@@ -122,18 +103,43 @@
             .mobile-controls-right {
                 display: flex;
                 align-items: center;
-                gap: 4px;
+                gap: 3px;
                 flex-shrink: 0;
             }
             
             .mobile-time-display {
                 font-size: 10px;
                 white-space: nowrap;
-                min-width: 70px;
+                min-width: 60px;
                 text-align: center;
-                background: rgba(0,0,0,0.5);
-                padding: 2px 6px;
-                border-radius: 4px;
+                background: rgba(0,0,0,0.6);
+                padding: 2px 4px;
+                border-radius: 3px;
+            }
+            
+            .control-button {
+                padding: 6px;
+                min-width: 32px;
+                min-height: 32px;
+            }
+        }
+
+        /* Desktop specific styles */
+        @media (min-width: 769px) {
+            .custom-controls {
+                opacity: 0;
+            }
+            
+            .desktop-controls-layout {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            
+            .control-button {
+                padding: 8px;
+                min-width: 36px;
+                min-height: 36px;
             }
         }
 
@@ -370,28 +376,29 @@
                         <!-- Quality Badge -->
                         <div class="quality-badge" id="qualityBadge">HD</div>
 
-                        <!-- Custom Controls -->
+                        <!-- Custom Controls - Unified for All Devices -->
                         <div class="custom-controls" id="customControls">
                             <div class="progress-bar" id="progressBar">
                                 <div class="progress-fill" id="progressFill"></div>
                             </div>
+                            
                             <!-- Mobile Layout: Two Rows -->
                             <div class="mobile-controls-layout md:hidden">
                                 <!-- First Row: Play controls and time -->
                                 <div class="mobile-controls-row">
                                     <div class="mobile-controls-left">
-                                        <button class="control-button" id="playPauseBtn">
+                                        <button class="control-button" id="playPauseBtn" title="Play/Pause">
                                             <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
                                                 <path id="playIcon" d="M8 5v14l11-7z"/>
                                                 <path id="pauseIcon" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" style="display: none;"/>
                                             </svg>
                                         </button>
-                                        <button class="control-button" id="skipBackBtn">
+                                        <button class="control-button" id="skipBackBtn" title="Skip Back 10s">
                                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
                                             </svg>
                                         </button>
-                                        <button class="control-button" id="skipForwardBtn">
+                                        <button class="control-button" id="skipForwardBtn" title="Skip Forward 10s">
                                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M12.01 19V15l5-5-5-5v4C8.7 9 6.01 11.69 6.01 15s2.69 6 6 6z"/>
                                             </svg>
@@ -402,17 +409,17 @@
                                 <!-- Second Row: Volume, Speed, Quality, Fullscreen -->
                                 <div class="mobile-controls-row">
                                     <div class="mobile-controls-left">
-                                        <button class="control-button" id="muteBtn">
+                                        <button class="control-button" id="muteBtn" title="Mute/Unmute">
                                             <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                                                 <path id="volumeIcon" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                                                 <path id="muteIcon" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" style="display: none;"/>
                                             </svg>
                                         </button>
-                                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100" style="width: 60px;">
+                                        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="100" value="100" style="width: 50px;" title="Volume">
                                     </div>
                                     <div class="mobile-controls-right">
                                         <div class="relative">
-                                            <button class="control-button" id="speedBtn" style="font-size: 12px;">1x</button>
+                                            <button class="control-button" id="speedBtn" style="font-size: 11px;" title="Playback Speed">1x</button>
                                             <div class="dropdown-menu" id="speedDropdown">
                                                 <div class="dropdown-item" data-speed="0.25">0.25x</div>
                                                 <div class="dropdown-item" data-speed="0.5">0.5x</div>
@@ -424,7 +431,7 @@
                                             </div>
                                         </div>
                                         <div class="relative">
-                                            <button class="control-button" id="qualityBtn" style="font-size: 11px;">HD</button>
+                                            <button class="control-button" id="qualityBtn" style="font-size: 10px;" title="Video Quality">HD</button>
                                             <div class="dropdown-menu" id="qualityDropdown">
                                                 <div class="dropdown-item" data-quality="auto">Auto HD</div>
                                                 <div class="dropdown-item" data-quality="hd1080">1080p HD</div>
@@ -433,29 +440,30 @@
                                                 <div class="dropdown-item" data-quality="medium">360p</div>
                                             </div>
                                         </div>
-                                        <button class="control-button" id="fullscreenBtn">
-                                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                                        <button class="control-button" id="fullscreenBtn" title="Fullscreen">
+                                            <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
                                                 <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
                                             </svg>
                                         </button>
                                     </div>
                                 </div>
                             </div>
+                            
                             <!-- Desktop Layout: Single Row -->
-                            <div class="hidden md:flex items-center justify-between">
+                            <div class="desktop-controls-layout hidden md:flex">
                                 <div class="flex items-center space-x-3">
-                                    <button class="control-button" id="playPauseBtnDesktop">
+                                    <button class="control-button" id="playPauseBtnDesktop" title="Play/Pause">
                                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                             <path id="playIconDesktop" d="M8 5v14l11-7z"/>
                                             <path id="pauseIconDesktop" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" style="display: none;"/>
                                         </svg>
                                     </button>
-                                    <button class="control-button" id="skipBackBtnDesktop">
+                                    <button class="control-button" id="skipBackBtnDesktop" title="Skip Back 10s">
                                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
                                         </svg>
                                     </button>
-                                    <button class="control-button" id="skipForwardBtnDesktop">
+                                    <button class="control-button" id="skipForwardBtnDesktop" title="Skip Forward 10s">
                                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12.01 19V15l5-5-5-5v4C8.7 9 6.01 11.69 6.01 15s2.69 6 6 6z"/>
                                         </svg>
@@ -463,15 +471,15 @@
                                     <span id="timeDisplayDesktop" class="text-sm">0:00 / 0:00</span>
                                 </div>
                                 <div class="flex items-center space-x-3">
-                                    <button class="control-button" id="muteBtnDesktop">
+                                    <button class="control-button" id="muteBtnDesktop" title="Mute/Unmute">
                                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                             <path id="volumeIconDesktop" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                                             <path id="muteIconDesktop" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" style="display: none;"/>
                                         </svg>
                                     </button>
-                                    <input type="range" class="volume-slider" id="volumeSliderDesktop" min="0" max="100" value="100">
+                                    <input type="range" class="volume-slider" id="volumeSliderDesktop" min="0" max="100" value="100" title="Volume">
                                     <div class="relative">
-                                        <button class="control-button" id="speedBtnDesktop">1x</button>
+                                        <button class="control-button" id="speedBtnDesktop" title="Playback Speed">1x</button>
                                         <div class="dropdown-menu" id="speedDropdownDesktop">
                                             <div class="dropdown-item" data-speed="0.25">0.25x</div>
                                             <div class="dropdown-item" data-speed="0.5">0.5x</div>
@@ -483,7 +491,7 @@
                                         </div>
                                     </div>
                                     <div class="relative">
-                                        <button class="control-button" id="qualityBtnDesktop">Auto HD</button>
+                                        <button class="control-button" id="qualityBtnDesktop" title="Video Quality">Auto HD</button>
                                         <div class="dropdown-menu" id="qualityDropdownDesktop">
                                             <div class="dropdown-item" data-quality="auto">Auto HD</div>
                                             <div class="dropdown-item" data-quality="hd1080">1080p HD</div>
@@ -492,7 +500,7 @@
                                             <div class="dropdown-item" data-quality="medium">360p</div>
                                         </div>
                                     </div>
-                                    <button class="control-button" id="fullscreenBtnDesktop">
+                                    <button class="control-button" id="fullscreenBtnDesktop" title="Fullscreen">
                                         <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
                                         </svg>
@@ -530,82 +538,21 @@
             <div class="desktop-layout space-x-8">
                 <!-- Left: Video Player -->
                 <div class="flex-1">
+                    <!-- Use the same video container for both mobile and desktop -->
                     <div class="video-container relative" style="aspect-ratio: 16/9;">
-                        <div id="youtube-player-desktop"></div>
-                        <div class="video-overlay" id="videoOverlayDesktop"></div>
+                        <div id="youtube-player"></div>
+                        <div class="video-overlay" id="videoOverlay"></div>
                         
                         <!-- Loading Spinner -->
-                        <div class="loading-spinner" id="loadingSpinnerDesktop">
+                        <div class="loading-spinner" id="loadingSpinner">
                             <div class="spinner"></div>
                             <p class="text-sm">Loading HD video...</p>
                         </div>
 
                         <!-- Quality Badge -->
-                        <div class="quality-badge" id="qualityBadgeDesktop">HD</div>
+                        <div class="quality-badge" id="qualityBadge">HD</div>
 
-                        <!-- Custom Controls - Desktop only uses single row layout -->
-                        <div class="custom-controls" id="customControlsDesktop">
-                            <div class="progress-bar" id="progressBarDesktop">
-                                <div class="progress-fill" id="progressFillDesktop"></div>
-                            </div>
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center space-x-3">
-                                    <button class="control-button" id="playPauseBtnDesktop">
-                                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                            <path id="playIconDesktop" d="M8 5v14l11-7z"/>
-                                            <path id="pauseIconDesktop" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" style="display: none;"/>
-                                        </svg>
-                                    </button>
-                                    <button class="control-button" id="skipBackBtnDesktop">
-                                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
-                                        </svg>
-                                    </button>
-                                    <button class="control-button" id="skipForwardBtnDesktop">
-                                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12.01 19V15l5-5-5-5v4C8.7 9 6.01 11.69 6.01 15s2.69 6 6 6z"/>
-                                        </svg>
-                                    </button>
-                                    <span id="timeDisplayDesktop" class="text-sm">0:00 / 0:00</span>
-                                </div>
-                                <div class="flex items-center space-x-3">
-                                    <button class="control-button" id="muteBtnDesktop">
-                                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                            <path id="volumeIconDesktop" d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                                            <path id="muteIconDesktop" d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" style="display: none;"/>
-                                        </svg>
-                                    </button>
-                                    <input type="range" class="volume-slider" id="volumeSliderDesktop" min="0" max="100" value="100">
-                                    <div class="relative">
-                                        <button class="control-button" id="speedBtnDesktop">1x</button>
-                                        <div class="dropdown-menu" id="speedDropdownDesktop">
-                                            <div class="dropdown-item" data-speed="0.25">0.25x</div>
-                                            <div class="dropdown-item" data-speed="0.5">0.5x</div>
-                                            <div class="dropdown-item" data-speed="0.75">0.75x</div>
-                                            <div class="dropdown-item" data-speed="1">1x</div>
-                                            <div class="dropdown-item" data-speed="1.25">1.25x</div>
-                                            <div class="dropdown-item" data-speed="1.5">1.5x</div>
-                                            <div class="dropdown-item" data-speed="2">2x</div>
-                                        </div>
-                                    </div>
-                                    <div class="relative">
-                                        <button class="control-button" id="qualityBtnDesktop">Auto HD</button>
-                                        <div class="dropdown-menu" id="qualityDropdownDesktop">
-                                            <div class="dropdown-item" data-quality="auto">Auto HD</div>
-                                            <div class="dropdown-item" data-quality="hd1080">1080p HD</div>
-                                            <div class="dropdown-item" data-quality="hd720">720p HD</div>
-                                            <div class="dropdown-item" data-quality="large">480p</div>
-                                            <div class="dropdown-item" data-quality="medium">360p</div>
-                                        </div>
-                                    </div>
-                                    <button class="control-button" id="fullscreenBtnDesktop">
-                                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- The unified controls are already defined above -->
                     </div>
                     
                     <!-- Video Info & Controls -->
