@@ -168,20 +168,6 @@
             background: rgba(0,0,0,0.9);
         }
         
-        /* Platform badge */
-        .platform-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-            z-index: 5;
-        }
-        
         /* Responsive design */
         @media (max-width: 768px) {
             .nav-buttons {
@@ -198,14 +184,9 @@
                 width: 100%;
             }
             
-            .quality-badge, .platform-badge {
+            .quality-badge {
                 top: 10px;
                 left: 10px;
-            }
-            
-            .platform-badge {
-                left: auto;
-                right: 10px;
             }
         }
         
@@ -229,32 +210,19 @@
         .video-container:fullscreen {
             overflow: hidden;
         }
-        
-        /* Source selector */
-        .source-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-        
-        .source-btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            border: 1px solid #E7E0D3;
-        }
-        
-        .source-btn.active {
-            background-color: #8B5A2B;
+
+        /* Platform badge */
+        .platform-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.7);
             color: white;
-        }
-        
-        .source-btn:not(.active) {
-            background-color: #F6EEE3;
-            color: #8B5A2B;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 5;
         }
     </style>
 </head>
@@ -291,12 +259,6 @@
 
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <!-- Source Selector -->
-        <div class="source-selector">
-            <button id="youtubeSourceBtn" class="source-btn active">YouTube Videos</button>
-            <button id="dailymotionSourceBtn" class="source-btn">Dailymotion Videos</button>
-        </div>
-        
         <!-- Classes Grid -->
         <div id="cards-container" class="space-y-6">
             <h2 class="text-3xl font-bold mb-6" style="color: #8B5A2B;">HSC 27 ACS Physics Cycle 1</h2>
@@ -324,11 +286,8 @@
                 <!-- Platform Badge -->
                 <div id="platformBadge" class="platform-badge">YouTube</div>
                 
-                <!-- YouTube Player -->
-                <div id="youtube-player" class="hidden"></div>
-                
-                <!-- Dailymotion Player -->
-                <div id="dailymotion-player" class="hidden"></div>
+                <!-- Player Container -->
+                <div id="player-container"></div>
                 
                 <!-- Video Overlay for Click Detection -->
                 <div id="videoOverlay" class="video-overlay"></div>
@@ -407,10 +366,10 @@
                                 <button id="qualityBtn" class="control-btn">Auto HD</button>
                                 <div id="qualityDropdown" class="dropdown-menu">
                                     <div class="dropdown-item" data-quality="auto">Auto HD</div>
-                                    <div class="dropdown-item" data-quality="hd1080">1080p HD</div>
-                                    <div class="dropdown-item" data-quality="hd720">720p HD</div>
-                                    <div class="dropdown-item" data-quality="large">480p</div>
-                                    <div class="dropdown-item" data-quality="medium">360p</div>
+                                    <div class="dropdown-item" data-quality="1080">1080p HD</div>
+                                    <div class="dropdown-item" data-quality="720">720p HD</div>
+                                    <div class="dropdown-item" data-quality="480">480p</div>
+                                    <div class="dropdown-item" data-quality="360">360p</div>
                                 </div>
                             </div>
                             
@@ -487,79 +446,88 @@
 
     <!-- Custom JavaScript -->
     <script>
-// Enhanced Unified Player with YouTube and Dailymotion Support
+// Unified Video Player with YouTube and Dailymotion Support
 
-// Mock data for classes - updated with both YouTube and Dailymotion video IDs
-const youtubeClassesData = [
+// Mock data for classes - updated with both YouTube and Dailymotion videos
+const classesData = [
+    // Dailymotion videos
     {
         id: 1,
+        type: 'dailymotion',
+        videoId: 'x9orywe',
+        title: 'HSC 27 Physics Cycle Orientation Class || Apurbo || Mashrur',
+        duration: '82:59',
+        noteLink: ''
+    },
+    {
+        id: 2,
+        type: 'dailymotion',
+        videoId: 'x9orywe',
+        title: 'Vector ✘ Lecture : 02 ✘ ACS PHYSICS CYCLE 01 HSC 27',
+        duration: '94:55',
+        noteLink: 'https://drive.google.com/file/d/1glBxYKF1vAJGnqIVNNL_Ew0tlguUyfkT/view?usp=sharing'
+    },
+    {
+        id: 3,
+        type: 'dailymotion',
+        videoId: 'x9orywe',
+        title: 'Vector × Lecture : 03 × HSC 27',
+        duration: '109:19',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 4,
+        type: 'dailymotion',
+        videoId: 'x9orywe',
+        title: 'Vector × Lecture : 04 × ACS PHYSICS CYCLE 1 HSC 27',
+        duration: '72:44',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    {
+        id: 5,
+        type: 'dailymotion',
+        videoId: 'x9orywe',
+        title: 'HSC 27 ⊕ Vector ⊕ Lecture : 05 ⊕ ACS PHYSICS CYCLE - 01',
+        duration: '77:59',
+        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
+    },
+    // YouTube videos
+    {
+        id: 6,
+        type: 'youtube',
         videoId: 'e_I5nxZ8SCc',
         title: 'HSC 27 Physics Cycle Orientation Class || Apurbo || Mashrur',
         duration: '82:59',
         noteLink: ''
     },
     {
-        id: 2,
+        id: 7,
+        type: 'youtube',
         videoId: 'wxrsT4bYkZA',
         title: 'Vector ✘ Lecture : 02 ✘ ACS PHYSICS CYCLE 01 HSC 27',
         duration: '94:55',
         noteLink: 'https://drive.google.com/file/d/1glBxYKF1vAJGnqIVNNL_Ew0tlguUyfkT/view?usp=sharing'
     },
     {
-        id: 3,
+        id: 8,
+        type: 'youtube',
         videoId: 'BBa-fdTC33M',
         title: 'Vector × Lecture : 03 × HSC 27',
         duration: '109:19',
         noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
     },
     {
-        id: 4,
+        id: 9,
+        type: 'youtube',
         videoId: 'kxz86xVcx0w',
         title: 'Vector × Lecture : 04 × ACS PHYSICS CYCLE 1 HSC 27',
         duration: '72:44',
         noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
     },
     {
-        id: 5,
+        id: 10,
+        type: 'youtube',
         videoId: 'fQcwoY_RvdU',
-        title: 'HSC 27 ⊕ Vector ⊕ Lecture : 05 ⊕ ACS PHYSICS CYCLE - 01',
-        duration: '77:59',
-        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
-    }
-];
-
-const dailymotionClassesData = [
-    {
-        id: 1,
-        videoId: 'x9orywe',
-        title: 'HSC 27 Physics Cycle Orientation Class || Apurbo || Mashrur',
-        duration: '82:59',
-        noteLink: ''
-    },
-    {
-        id: 2,
-        videoId: 'x9orywe',
-        title: 'Vector ✘ Lecture : 02 ✘ ACS PHYSICS CYCLE 01 HSC 27',
-        duration: '94:55',
-        noteLink: 'https://drive.google.com/file/d/1glBxYKF1vAJGnqIVNNL_Ew0tlguUyfkT/view?usp=sharing'
-    },
-    {
-        id: 3,
-        videoId: 'x9orywe',
-        title: 'Vector × Lecture : 03 × HSC 27',
-        duration: '109:19',
-        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
-    },
-    {
-        id: 4,
-        videoId: 'x9orywe',
-        title: 'Vector × Lecture : 04 × ACS PHYSICS CYCLE 1 HSC 27',
-        duration: '72:44',
-        noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
-    },
-    {
-        id: 5,
-        videoId: 'x9orywe',
         title: 'HSC 27 ⊕ Vector ⊕ Lecture : 05 ⊕ ACS PHYSICS CYCLE - 01',
         duration: '77:59',
         noteLink: 'https://docs.google.com/spreadsheets/u/0/d/e/2PACX-1vRSsEgW-P5Gu5ZBH_KH_LXmEk_ZLlYjOPjAwSvC3QnZMLgpmE9KNJhrYSBVxQTwxBYuEez4vpui00k_/pubhtml?fbclid=IwQ0xDSwLHIYNleHRuA2FlbQIxMAABHtNaauq3lbbNAQ7QRJGfKsD57Mu7lB0Duh3Y-z4lM9Za8ualsVoXQPoX6clf_aem_e29d59Am0VdpmRHKQrFL7g&pli=1'
@@ -568,6 +536,7 @@ const dailymotionClassesData = [
 
 // Global variables
 let player = null;
+let currentPlayerType = null;
 let currentVideoIndex = 0;
 let progressInterval = null;
 let controlsHideTimeout = null;
@@ -575,8 +544,6 @@ let eventListeners = [];
 let qualityCheckInterval = null;
 let isPlayerReady = false;
 let isDestroying = false;
-let currentSource = 'youtube'; // 'youtube' or 'dailymotion'
-let currentClassesData = youtubeClassesData;
 
 // Device detection
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -596,33 +563,6 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeApp() {
     renderClassCards();
     setupMobileMenu();
-    setupSourceSelector();
-}
-
-// Setup source selector
-function setupSourceSelector() {
-    const youtubeBtn = document.getElementById('youtubeSourceBtn');
-    const dailymotionBtn = document.getElementById('dailymotionSourceBtn');
-    
-    youtubeBtn.addEventListener('click', () => {
-        if (currentSource !== 'youtube') {
-            currentSource = 'youtube';
-            currentClassesData = youtubeClassesData;
-            youtubeBtn.classList.add('active');
-            dailymotionBtn.classList.remove('active');
-            renderClassCards();
-        }
-    });
-    
-    dailymotionBtn.addEventListener('click', () => {
-        if (currentSource !== 'dailymotion') {
-            currentSource = 'dailymotion';
-            currentClassesData = dailymotionClassesData;
-            dailymotionBtn.classList.add('active');
-            youtubeBtn.classList.remove('active');
-            renderClassCards();
-        }
-    });
 }
 
 // Render class cards
@@ -630,7 +570,7 @@ function renderClassCards() {
     const cardsGrid = document.getElementById('cards-grid');
     if (!cardsGrid) return;
 
-    const cardHTML = currentClassesData.map((classItem, index) => `
+    const cardHTML = classesData.map((classItem, index) => `
         <div class="class-card p-6 rounded-lg shadow-lg transition-all duration-300 hover:shadow-xl" style="background-color: #F6EEE3;">
             <div class="flex items-start justify-between mb-4">
                 <div class="flex-1">
@@ -695,9 +635,7 @@ function setupGlobalEventListeners() {
 
 // Prevent context menu
 function preventContextMenu(e) {
-    if (e.target.closest('.video-container') || 
-        e.target.closest('#youtube-player') || 
-        e.target.closest('#dailymotion-player')) {
+    if (e.target.closest('.video-container') || e.target.closest('#player-container')) {
         e.preventDefault();
         return false;
     }
@@ -726,7 +664,7 @@ function playVideo(index) {
     if (isDestroying) return;
     
     currentVideoIndex = index;
-    const classItem = currentClassesData[index];
+    const classItem = classesData[index];
 
     // Show video player and hide cards
     const cardsContainer = document.getElementById('cards-container');
@@ -738,18 +676,19 @@ function playVideo(index) {
     // Set video title
     const videoTitle = document.getElementById('video-title');
     if (videoTitle) videoTitle.textContent = classItem.title;
-    
-    // Update platform badge
+
+    // Set platform badge
     const platformBadge = document.getElementById('platformBadge');
-    if (platformBadge) platformBadge.textContent = currentSource.charAt(0).toUpperCase() + currentSource.slice(1);
+    if (platformBadge) platformBadge.textContent = classItem.type.charAt(0).toUpperCase() + classItem.type.slice(1);
 
     // Clean up previous player completely
     cleanupPlayer();
 
-    // Initialize new player based on source
-    if (currentSource === 'youtube') {
+    // Initialize new player based on type
+    currentPlayerType = classItem.type;
+    if (classItem.type === 'youtube') {
         initYouTubePlayer(classItem.videoId);
-    } else {
+    } else if (classItem.type === 'dailymotion') {
         initDailymotionPlayer(classItem.videoId);
     }
 
@@ -782,29 +721,24 @@ function cleanupPlayer() {
     cleanupEventListeners();
 
     // Destroy existing player
-    if (player) {
-        if (currentSource === 'youtube' && typeof player.destroy === 'function') {
-            try {
-                player.destroy();
-            } catch (e) {
-                console.warn('Error destroying YouTube player:', e);
-            }
-        } else if (currentSource === 'dailymotion' && typeof player.destroy === 'function') {
-            try {
-                player.destroy();
-            } catch (e) {
-                console.warn('Error destroying Dailymotion player:', e);
-            }
+    if (player && currentPlayerType === 'youtube' && typeof player.destroy === 'function') {
+        try {
+            player.destroy();
+        } catch (e) {
+            console.warn('Error destroying YouTube player:', e);
+        }
+    } else if (player && currentPlayerType === 'dailymotion' && typeof player.destroy === 'function') {
+        try {
+            player.destroy();
+        } catch (e) {
+            console.warn('Error destroying Dailymotion player:', e);
         }
     }
     player = null;
     
-    // Hide both player containers
-    const youtubePlayer = document.getElementById('youtube-player');
-    const dailymotionPlayer = document.getElementById('dailymotion-player');
-    
-    if (youtubePlayer) youtubePlayer.classList.add('hidden');
-    if (dailymotionPlayer) dailymotionPlayer.classList.add('hidden');
+    // Clear the player container
+    const playerContainer = document.getElementById('player-container');
+    if (playerContainer) playerContainer.innerHTML = '';
     
     // Reset UI elements
     resetProgressBar();
@@ -843,12 +777,14 @@ function initYouTubePlayer(videoId) {
     const loadingSpinner = document.getElementById('loadingSpinner');
     if (loadingSpinner) loadingSpinner.style.display = 'block';
 
-    // Show YouTube player container
-    const youtubePlayer = document.getElementById('youtube-player');
-    if (youtubePlayer) youtubePlayer.classList.remove('hidden');
-
-    // Enhanced player configuration to block ALL native controls
-    player = new YT.Player('youtube-player', {
+    // Create player container
+    const playerContainer = document.getElementById('player-container');
+    if (!playerContainer) return;
+    
+    playerContainer.innerHTML = '<div id="yt-player"></div>';
+    
+    // Initialize YouTube player
+    player = new YT.Player('yt-player', {
         height: '100%',
         width: '100%',
         videoId: videoId,
@@ -883,12 +819,11 @@ function initDailymotionPlayer(videoId) {
     const loadingSpinner = document.getElementById('loadingSpinner');
     if (loadingSpinner) loadingSpinner.style.display = 'block';
 
-    // Show Dailymotion player container
-    const dailymotionPlayer = document.getElementById('dailymotion-player');
-    if (dailymotionPlayer) {
-        dailymotionPlayer.classList.remove('hidden');
-        dailymotionPlayer.innerHTML = '<div id="dm-player"></div>';
-    }
+    // Create player container
+    const playerContainer = document.getElementById('player-container');
+    if (!playerContainer) return;
+    
+    playerContainer.innerHTML = '<div id="dm-player"></div>';
     
     // Initialize Dailymotion player
     player = DM.player('dm-player', {
@@ -974,12 +909,11 @@ function onDailymotionPlayerReady() {
 function blockNativeControls() {
     if (!player || isDestroying) return;
     
-    let iframe = null;
-    
-    if (currentSource === 'youtube') {
-        iframe = player.getIframe();
-    } else if (currentSource === 'dailymotion') {
-        iframe = document.querySelector('#dailymotion-player iframe');
+    let iframe;
+    if (currentPlayerType === 'youtube') {
+        iframe = document.querySelector('#player-container iframe');
+    } else if (currentPlayerType === 'dailymotion') {
+        iframe = document.querySelector('#player-container iframe');
     }
     
     if (iframe) {
@@ -1039,7 +973,7 @@ function onPlayerEnded() {
     if (isDestroying) return;
     
     // Auto-play next video if available
-    if (currentVideoIndex < currentClassesData.length - 1) {
+    if (currentVideoIndex < classesData.length - 1) {
         setTimeout(() => {
             playVideo(currentVideoIndex + 1);
         }, 2000);
@@ -1117,13 +1051,13 @@ function setupControlsVisibility() {
         
         // Toggle play/pause on click
         if (player && isPlayerReady) {
-            if (currentSource === 'youtube') {
+            if (currentPlayerType === 'youtube') {
                 if (player.getPlayerState() === YT.PlayerState.PLAYING) {
                     player.pauseVideo();
                 } else {
                     player.playVideo();
                 }
-            } else if (currentSource === 'dailymotion') {
+            } else if (currentPlayerType === 'dailymotion') {
                 if (player.paused) {
                     player.play();
                 } else {
@@ -1206,13 +1140,13 @@ function setupPlayPauseControls() {
         const clickHandler = () => {
             if (!player || !isPlayerReady) return;
             
-            if (currentSource === 'youtube') {
+            if (currentPlayerType === 'youtube') {
                 if (player.getPlayerState() === YT.PlayerState.PLAYING) {
                     player.pauseVideo();
                 } else {
                     player.playVideo();
                 }
-            } else if (currentSource === 'dailymotion') {
+            } else if (currentPlayerType === 'dailymotion') {
                 if (player.paused) {
                     player.play();
                 } else {
@@ -1235,10 +1169,10 @@ function setupSeekControls() {
             if (!player || !isPlayerReady) return;
             
             let currentTime;
-            if (currentSource === 'youtube') {
+            if (currentPlayerType === 'youtube') {
                 currentTime = player.getCurrentTime();
                 player.seekTo(Math.max(0, currentTime - 10));
-            } else if (currentSource === 'dailymotion') {
+            } else if (currentPlayerType === 'dailymotion') {
                 currentTime = player.currentTime;
                 player.seek(Math.max(0, currentTime - 10));
             }
@@ -1252,11 +1186,11 @@ function setupSeekControls() {
             if (!player || !isPlayerReady) return;
             
             let currentTime, duration;
-            if (currentSource === 'youtube') {
+            if (currentPlayerType === 'youtube') {
                 currentTime = player.getCurrentTime();
                 duration = player.getDuration();
                 player.seekTo(Math.min(duration, currentTime + 10));
-            } else if (currentSource === 'dailymotion') {
+            } else if (currentPlayerType === 'dailymotion') {
                 currentTime = player.currentTime;
                 duration = player.duration;
                 player.seek(Math.min(duration, currentTime + 10));
@@ -1278,12 +1212,12 @@ function setupProgressBar() {
             const rect = e.target.getBoundingClientRect();
             const percent = (e.clientX - rect.left) / rect.width;
             
-            if (currentSource === 'youtube') {
+            if (currentPlayerType === 'youtube') {
                 const duration = player.getDuration();
                 if (duration > 0) {
                     player.seekTo(duration * percent);
                 }
-            } else if (currentSource === 'dailymotion') {
+            } else if (currentPlayerType === 'dailymotion') {
                 const duration = player.duration;
                 if (duration > 0) {
                     player.seek(duration * percent);
@@ -1304,7 +1238,7 @@ function setupVolumeControls() {
         const muteHandler = () => {
             if (!player || !isPlayerReady) return;
             
-            if (currentSource === 'youtube') {
+            if (currentPlayerType === 'youtube') {
                 if (player.isMuted()) {
                     player.unMute();
                     updateVolumeIcons(false);
@@ -1312,7 +1246,7 @@ function setupVolumeControls() {
                     player.mute();
                     updateVolumeIcons(true);
                 }
-            } else if (currentSource === 'dailymotion') {
+            } else if (currentPlayerType === 'dailymotion') {
                 if (player.muted) {
                     player.setMute(false);
                     updateVolumeIcons(false);
@@ -1330,14 +1264,13 @@ function setupVolumeControls() {
         const volumeHandler = (e) => {
             if (!player || !isPlayerReady) return;
             
-            const volumeValue = parseInt(e.target.value);
-            
-            if (currentSource === 'youtube') {
-                player.setVolume(volumeValue);
-                updateVolumeIcons(volumeValue === 0);
-            } else if (currentSource === 'dailymotion') {
-                player.setVolume(volumeValue / 100);
-                updateVolumeIcons(volumeValue === 0);
+            const volume = parseInt(e.target.value);
+            if (currentPlayerType === 'youtube') {
+                player.setVolume(volume);
+                updateVolumeIcons(volume === 0);
+            } else if (currentPlayerType === 'dailymotion') {
+                player.setVolume(volume / 100);
+                updateVolumeIcons(volume === 0);
             }
         };
         
@@ -1383,13 +1316,11 @@ function setupSpeedControls() {
                 if (!player || !isPlayerReady) return;
                 
                 const speed = parseFloat(e.target.dataset.speed);
-                
-                if (currentSource === 'youtube') {
+                if (currentPlayerType === 'youtube') {
                     player.setPlaybackRate(speed);
-                } else if (currentSource === 'dailymotion') {
+                } else if (currentPlayerType === 'dailymotion') {
                     player.setPlaybackRate(speed);
                 }
-                
                 speedBtn.textContent = speed + 'x';
                 speedDropdown.classList.remove('show');
             };
@@ -1431,9 +1362,16 @@ function setupQualityControls() {
                         qualityCheckInterval = null;
                     }
                     
-                    if (currentSource === 'youtube') {
-                        player.setPlaybackQuality(quality);
-                    } else if (currentSource === 'dailymotion') {
+                    if (currentPlayerType === 'youtube') {
+                        // Map quality values for YouTube
+                        const qualityMap = {
+                            '1080': 'hd1080',
+                            '720': 'hd720',
+                            '480': 'large',
+                            '360': 'medium'
+                        };
+                        player.setPlaybackQuality(qualityMap[quality] || 'auto');
+                    } else if (currentPlayerType === 'dailymotion') {
                         player.setQuality(quality);
                     }
                     
@@ -1538,7 +1476,7 @@ function setupNavigationControls() {
     [nextBtn, nextBtnDesktop].forEach(btn => {
         if (btn) {
             addTrackedEventListener(btn, 'click', () => {
-                if (currentVideoIndex < currentClassesData.length - 1) {
+                if (currentVideoIndex < classesData.length - 1) {
                     playVideo(currentVideoIndex + 1);
                 }
             });
@@ -1556,7 +1494,7 @@ function setupNavigationControls() {
     [notePdfBtn, notePdfBtnDesktop].forEach(btn => {
         if (btn) {
             addTrackedEventListener(btn, 'click', () => {
-                openNote(currentClassesData[currentVideoIndex].noteLink);
+                openNote(classesData[currentVideoIndex].noteLink);
             });
         }
     });
@@ -1596,11 +1534,10 @@ function startProgressUpdate() {
         
         try {
             let currentTime, duration;
-            
-            if (currentSource === 'youtube') {
+            if (currentPlayerType === 'youtube') {
                 currentTime = player.getCurrentTime();
                 duration = player.getDuration();
-            } else if (currentSource === 'dailymotion') {
+            } else if (currentPlayerType === 'dailymotion') {
                 currentTime = player.currentTime;
                 duration = player.duration;
             }
@@ -1650,7 +1587,8 @@ function startQualityOptimization() {
         clearInterval(qualityCheckInterval);
     }
     
-    if (currentSource === 'youtube') {
+    // For YouTube, we need to check available qualities
+    if (currentPlayerType === 'youtube') {
         qualityCheckInterval = setInterval(() => {
             if (!player || !isPlayerReady || isDestroying) return;
             
@@ -1679,7 +1617,7 @@ function startQualityOptimization() {
                 console.warn('Quality optimization error:', e);
             }
         }, 3000);
-    } else if (currentSource === 'dailymotion') {
+    } else if (currentPlayerType === 'dailymotion') {
         // Dailymotion automatically selects the best quality, so we just set it to auto
         if (player && isPlayerReady) {
             player.setQuality('auto');
@@ -1713,13 +1651,13 @@ function handleKeyboardShortcuts(e) {
         switch (e.code) {
             case 'Space':
                 e.preventDefault();
-                if (currentSource === 'youtube') {
+                if (currentPlayerType === 'youtube') {
                     if (player.getPlayerState() === YT.PlayerState.PLAYING) {
                         player.pauseVideo();
                     } else {
                         player.playVideo();
                     }
-                } else if (currentSource === 'dailymotion') {
+                } else if (currentPlayerType === 'dailymotion') {
                     if (player.paused) {
                         player.play();
                     } else {
@@ -1731,10 +1669,10 @@ function handleKeyboardShortcuts(e) {
             case 'ArrowLeft':
                 e.preventDefault();
                 let currentTime;
-                if (currentSource === 'youtube') {
+                if (currentPlayerType === 'youtube') {
                     currentTime = player.getCurrentTime();
                     player.seekTo(Math.max(0, currentTime - 10));
-                } else if (currentSource === 'dailymotion') {
+                } else if (currentPlayerType === 'dailymotion') {
                     currentTime = player.currentTime;
                     player.seek(Math.max(0, currentTime - 10));
                 }
@@ -1743,11 +1681,11 @@ function handleKeyboardShortcuts(e) {
             case 'ArrowRight':
                 e.preventDefault();
                 let currentTimeRight, duration;
-                if (currentSource === 'youtube') {
+                if (currentPlayerType === 'youtube') {
                     currentTimeRight = player.getCurrentTime();
                     duration = player.getDuration();
                     player.seekTo(Math.min(duration, currentTimeRight + 10));
-                } else if (currentSource === 'dailymotion') {
+                } else if (currentPlayerType === 'dailymotion') {
                     currentTimeRight = player.currentTime;
                     duration = player.duration;
                     player.seek(Math.min(duration, currentTimeRight + 10));
@@ -1756,7 +1694,7 @@ function handleKeyboardShortcuts(e) {
                 
             case 'KeyM':
                 e.preventDefault();
-                if (currentSource === 'youtube') {
+                if (currentPlayerType === 'youtube') {
                     if (player.isMuted()) {
                         player.unMute();
                         updateVolumeIcons(false);
@@ -1764,7 +1702,7 @@ function handleKeyboardShortcuts(e) {
                         player.mute();
                         updateVolumeIcons(true);
                     }
-                } else if (currentSource === 'dailymotion') {
+                } else if (currentPlayerType === 'dailymotion') {
                     if (player.muted) {
                         player.setMute(false);
                         updateVolumeIcons(false);
@@ -1794,7 +1732,7 @@ function handleKeyboardShortcuts(e) {
                 
             case 'ArrowDown':
                 e.preventDefault();
-                if (currentVideoIndex < currentClassesData.length - 1) {
+                if (currentVideoIndex < classesData.length - 1) {
                     playVideo(currentVideoIndex + 1);
                 }
                 break;
@@ -1872,15 +1810,12 @@ if (isMobile) {
 document.addEventListener('visibilitychange', () => {
     if (document.hidden && player && isPlayerReady) {
         // Optionally pause when page is hidden
-        if (currentSource === 'youtube') {
-            // player.pauseVideo();
-        } else if (currentSource === 'dailymotion') {
-            // player.pause();
-        }
+        // if (currentPlayerType === 'youtube') player.pauseVideo();
+        // else if (currentPlayerType === 'dailymotion') player.pause();
     }
 });
 
-console.log('Enhanced Unified Player initialized with YouTube and Dailymotion support');
+console.log('Unified Video Player initialized with YouTube and Dailymotion support');
     </script>
     <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
