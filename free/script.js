@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const navItems = document.querySelectorAll('.navigation .list');
     const pages = document.querySelectorAll('.page');
     const mainIndicator = document.querySelector('.navigation .indicator');
-    const subjectIndicator = document.querySelector('.subject-indicator');
 
     // Typing animation messages
     const messages = [
@@ -117,13 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateIndicatorBorder() {
         const isDarkMode = document.documentElement.classList.contains('dark');
         const navIndicator = document.querySelector('.navigation .indicator');
-        const subjectIndicator = document.querySelector('.subject-indicator');
         const newColor = isDarkMode ? '#0D1117' : '#F4F0E0';
         navIndicator.style.borderColor = newColor;
         navIndicator.style.boxShadow = `1px -10px 0 0 ${newColor}, -1px -10px 0 0 ${newColor}`;
-        
-        subjectIndicator.style.borderColor = newColor;
-        subjectIndicator.style.boxShadow = `1px -10px 0 0 ${newColor}, -1px -10px 0 0 ${newColor}`;
     }
 
     function updateThemeButtonIcon(isDarkMode) {
@@ -208,7 +203,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             filterVideosBySubject(subject);
             activeSubject = subject;
-            updateSubjectIndicator(this);
         });
     });
     
@@ -431,15 +425,6 @@ document.addEventListener('DOMContentLoaded', function() {
         indicator.style.transform = `translateX(${indicatorLeft}px)`;
     }
 
-    function updateSubjectIndicator(target) {
-        const indicator = document.querySelector('.subject-indicator');
-        const navRect = document.querySelector('.subject-filter-nav').getBoundingClientRect();
-        const targetRect = target.getBoundingClientRect();
-
-        const indicatorLeft = targetRect.left - navRect.left + (targetRect.width / 2) - (indicator.offsetWidth / 2);
-        indicator.style.transform = `translateX(${indicatorLeft}px)`;
-    }
-
     // Add click event listeners to main navigation items
     navItems.forEach(item => {
         item.addEventListener('click', function(e) {
@@ -460,11 +445,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const activeNav = document.querySelector('.navigation .list.active');
     if(activeNav) {
         updateMainIndicator(activeNav);
-    }
-
-    const activeSubjectButton = document.querySelector('.subject-filter-nav .list.active');
-    if(activeSubjectButton) {
-        updateSubjectIndicator(activeSubjectButton);
     }
     
     // Initialize classes page with videos when page loads
