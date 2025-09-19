@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeroma Free - Educational Video Content Library</title>
+    <meta name="description" content="Access free educational videos from ACS and other platforms. Filter by subject to find the perfect learning content for your needs.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        highmount: ['High Mount', 'serif'],
+                        matey: ['Matey', 'sans-serif'],
+                        redgois: ['Redgois', 'sans-serif'],
+                    },
+                    colors: {
+                        'primary-light': '#92400e',
+                        'secondary-light': '#FEF3C7',
+                        'accent-light': '#f59e0b',
+                        'bg-light': '#F4F0E0',
+                        'text-light': '#1e1c16',
+                        'primary-dark': '#0f4d36',
+                        'secondary-dark': '#1e1c16',
+                        'accent-dark': '#4CAF50',
+                        'bg-dark': '#0D1117',
+                        'text-dark': '#e2e8f0',
+                    },
+                    animation: {
+                        'scroll': 'scroll 40s linear infinite',
+                    },
+                    keyframes: {
+                        scroll: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/css">
+        /* Font face definitions */
+        @font-face {
+            font-family: 'High Mount';
+            src: url('https://fonts.gstatic.com/s/playfairdisplay/v30/nuFvD-vYSZviVYUb_rj3ij__anPXJzDwcbmjWBN2PKdFvXDXbtY.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Matey';
+            src: url('https://fonts.gstatic.com/s/opensans/v35/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVQUwaEQbjA.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+        
+        @font-face {
+            font-family: 'Redgois';
+            src: url('https://fonts.gstatic.com/s/raleway/v29/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVvaorCFPrEHJA.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Custom styles */
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* Light Theme */
+        .gradient-bg {
+            background: linear-gradient(135deg, #F4F0E0 0%, #F5F5F4 25%, #F6EEE3 50%, #EBE8E2 75%, #E7E0D3 100%);
+        }
+        
+        /* Dark Theme */
+        .dark .gradient-bg {
+            background: linear-gradient(135deg, #1e1c16 0%, #1e1c16 25%, #1e1c16 50%, #1e1c16 75%, #1e1c16 100%);
+        }
+        
+        .icon-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .icon-hover:hover {
+            transform: scale(1.1);
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+        
+        .scrolling-icons {
+            animation: scroll 40s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        .pause-animation:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Video card styles */
+        .video-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .play-button {
+            transition: all 0.2s ease;
+        }
+        
+        .video-card:hover .play-button {
+            transform: scale(1.1);
+        }
+        
+        /* SEO content styles */
+        .video-summary {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+        
+        .video-summary.expanded {
+            max-height: 500px;
+        }
+        
+        .toggle-summary {
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        /* Subject filter styles */
+        .subject-filter {
+            scrollbar-width: thin;
+            scrollbar-color: #92400e #FEF3C7;
+        }
+        
+        .subject-filter::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .subject-filter::-webkit-scrollbar-track {
+            background: #FEF3C7;
+            border-radius: 3px;
+        }
+        
+        .subject-filter::-webkit-scrollbar-thumb {
+            background-color: #92400e;
+            border-radius: 3px;
+        }
+        
+        /* Dark mode scrollbar styles */
+        .dark .subject-filter {
+            scrollbar-color: #4CAF50 #1e1c16;
+        }
+        
+        .dark .subject-filter::-webkit-scrollbar-track {
+            background: #1e1c16;
+        }
+        
+        .dark .subject-filter::-webkit-scrollbar-thumb {
+            background-color: #4CAF50;
+        }
+        
+        /* Modal styles */
+        .modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-content {
+            transition: transform 0.3s ease;
+            transform: scale(0.9);
+        }
+        
+        .modal.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal.open .modal-content {
+            transform: scale(1);
+        }
+        
+        /* Typing animation container */
+        .typing-container {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (min-width: 768px) {
+            .typing-container {
+                min-height: 350px;
+            }
+        }
+        
+        /* Scrolling icons styling */
+        .icon-scroll-container {
+            overflow: hidden;
+            position: relative;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1.5rem 0;
+        }
+        
+        .dark .icon-scroll-container {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        
+        .icon-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 2rem;
+        }
+        
+        .icon-item i {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .icon-item .icon-label {
+            font-size: 0.75rem;
+            text-align: center;
+        }
+        
+        /* Preloader Styles */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #F4F0E0 0%, #F5F5F4 25%, #F6EEE3 50%, #EBE8E2 75%, #E7E0D3 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .dark .preloader {
+            background: linear-gradient(135deg, #1e1c16 0%, #1e1c16 25%, #1e1c16 50%, #1e1c16 75%, #1e1c16 100%);
+        }
+        
+        .preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .symbol-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 300px;
+        }
+        
+        .symbol {
+            width: 30px;
+            height: 30px;
+            margin: 10px;
+            border-radius: 50%;
+            position: relative;
+            animation: preloaderAnim 1.8s infinite ease-in-out;
+        }
+        
+        .symbol-1 {
+            background-color: #92400e;
+            animation-delay: -0.32s;
+        }
+        
+        .symbol-2 {
+            background-color: #b45309;
+            animation-delay: -0.16s;
+        }
+        
+        .symbol-3 {
+            background-color: #d97706;
+        }
+        
+        .symbol-4 {
+            background-color: #f59e0b;
+            animation-delay: -0.48s;
+        }
+        
+        .symbol-5 {
+            background-color: #fbbf24;
+            animation-delay: -0.64s;
+        }
+        
+        .preloader-text {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Redgois', sans-serif;
+            color: #92400e;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+        
+        .dark .preloader-text {
+            color: #4CAF50;
+        }
+        
+        @keyframes preloaderAnim {
+            0%, 80%, 100% { 
+                transform: scale(0);
+                opacity: 0.5;
+            } 
+            40% { 
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite ease-in-out;
+        }
+        
+        /* NEW NAVIGATION STYLES */
+        body {
+            padding-bottom: 80px; /* Space for fixed navigation */
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* Bottom Navigation Bar */
+        .navigation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+        
+        .dark .navigation {
+            background: #222327;
+            box-shadow: 0 -2px 10px rgba(255,255,255,0.1);
+        }
+        
+        .navigation ul {
+            display: flex;
+            width: 100%;
+            max-width: 500px;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .navigation ul li {
+            position: relative;
+            list-style: none;
+            width: 20%;
+            height: 70px;
+            z-index: 1;
+        }
+        
+        .navigation ul li a {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .navigation ul li a .icon {
+            position: relative;
+            display: block;
+            line-height: 75px;
+            font-size: 1.5em;
+            text-align: center;
+            transition: 0.5s;
+            color: #222327;
+        }
+        
+        .dark .navigation ul li a .icon {
+            color: #fff;
+        }
+        
+        .navigation ul li.active a .icon {
+            transform: translateY(-32px);
+        }
+        
+        .navigation ul li a .text {
+            position: absolute;
+            color: #222327;
+            font-weight: 400;
+            font-size: 0.75em;
+            letter-spacing: 0.05em;
+            transition: 0.5s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .dark .navigation ul li a .text {
+            color: #fff;
+        }
+        
+        .navigation ul li.active a .text {
+            opacity: 1;
+            transform: translateY(10px);
+        }
+        
+        .indicator {
+            position: absolute;
+            top: -50%;
+            width: 70px;
+            height: 70px;
+            background: #f59e0b;
+            border-radius: 50%;
+            border: 6px solid #F4F0E0; /* Use body background color for cutout effect */
+            transition: 0.5s;
+            z-index: 0;
+            left: 0;
+        }
+        
+        .dark .indicator {
+            background: #4CAF50;
+            border: 6px solid #0D1117; /* Use dark body background color for cutout effect */
+        }
+        
+        .indicator::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: -22px;
+            width: 20px;
+            height: 20px;
+            background: transparent;
+            border-top-right-radius: 20px;
+            box-shadow: 1px -10px 0 0 #F4F0E0; /* Match body background */
+        }
+        
+        .dark .indicator::before {
+            box-shadow: 1px -10px 0 0 #0D1117; /* Match dark body background */
+        }
+        
+        .indicator::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            right: -22px;
+            width: 20px;
+            height: 20px;
+            background: transparent;
+            border-top-left-radius: 20px;
+            box-shadow: -1px -10px 0 0 #F4F0E0; /* Match body background */
+        }
+        
+        .dark .indicator::after {
+            box-shadow: -1px -10px 0 0 #0D1117; /* Match dark body background */
+        }
+        
+        /* NEW SUBJECT FILTER STYLES */
+        .subject-filter-nav {
+            display: flex;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            position: relative;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            gap: 1.5rem; /* Add spacing between buttons */
+            justify-content: start; /* Align items to the start */
+            padding-bottom: 2rem;
+        }
+        
+        .subject-filter-nav::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .subject-filter-nav .list {
+            position: relative;
+            width: auto;
+            min-width: 70px;
+            height: 70px;
+            z-index: 1;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        
+        .subject-filter-nav .list a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+            padding: 0 10px;
+            height: 100%;
+        }
+        
+        .subject-filter-nav .list a .icon {
+            font-size: 1.5em;
+            color: #222327;
+            transition: 0.5s;
+        }
+        
+        .dark .subject-filter-nav .list a .icon {
+            color: #fff;
+        }
+        
+        .subject-filter-nav .list.active a .icon {
+            transform: translateY(-32px);
+        }
+        
+        .subject-filter-nav .list a .text {
+            font-weight: 400;
+            font-size: 0.75em;
+            letter-spacing: 0.05em;
+            transition: 0.5s;
+            opacity: 0;
+            transform: translateY(20px);
+            color: #222327;
+        }
+        
+        .dark .subject-filter-nav .list a .text {
+            color: #fff;
+        }
+        
+        .subject-filter-nav .list.active a .text {
+            opacity: 1;
+            transform: translateY(10px);
+        }
+        
+        .subject-indicator {
+            position: absolute;
+            top: -50%;
+            width: 70px;
+            height: 70px;
+            background: #f59e0b;
+            border-radius: 50%;
+            border: 6px solid #F4F0E0; /* Match body background */
+            transition: 0.5s;
+            z-index: 0;
+            left: 0;
+        }
+        
+        .dark .subject-indicator {
+            background: #4CAF50;
+            border: 6px solid #0D1117; /* Match dark body background */
+        }
+        
+        .subject-indicator::before, .subject-indicator::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 20px;
+            height: 20px;
+            background: transparent;
+        }
+        
+        .subject-indicator::before {
+            left: -22px;
+            border-top-right-radius: 20px;
+            box-shadow: 1px -10px 0 0 #F4F0E0; /* Match body background */
+        }
+        
+        .subject-indicator::after {
+            right: -22px;
+            border-top-left-radius: 20px;
+            box-shadow: -1px -10px 0 0 #F4F0E0; /* Match body background */
+        }
+        
+        .dark .subject-indicator::before, .dark .subject-indicator::after {
+            box-shadow: 1px -10px 0 0 #0D1117; /* Match dark body background */
+        }
+    </style>
+</head>
+<body class="min-h-screen gradient-bg flex flex-col transition-colors duration-500">
+    <div class="preloader" id="preloader">
+        <div class="symbol-container">
+            <div class="symbol symbol-1"></div>
+            <div class="symbol symbol-2"></div>
+            <div class="symbol symbol-3"></div>
+            <div class="symbol symbol-4"></div>
+            <div class="symbol symbol-5"></div>
+            <div class="preloader-text pulse">Zeroma Free</div>
+        </div>
+    </div>
+
+    <div id="pages-container">
+        <div id="home-page" class="page active">
+            <header class="py-6 px-4 sm:px-8 relative">
+                <div class="container mx-auto flex justify-center items-center relative">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-highmount text-center text-primary-light dark:text-accent-dark transition-colors duration-500">Zeroma Free</h1>
+                    <button id="theme-toggle" aria-label="Toggle theme" class="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full text-text-light dark:text-text-dark bg-secondary-light dark:bg-secondary-dark hover:bg-opacity-80 transition-colors duration-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <main class="flex-grow px-4 py-8">
+                <div class="max-w-6xl w-full mx-auto">
+                    <div class="bg-white/70 dark:bg-secondary-dark/70 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-lg border border-white/80 dark:border-secondary-dark/80 mb-12 transition-colors duration-500">
+                        <div class="typing-container">
+                            <div class="text-center w-full">
+                                <p id="typing-text" class="text-2xl sm:text-3xl md:text-4xl font-highmount text-primary-light dark:text-text-dark mb-4 min-h-[180px] md:min-h-[200px] transition-colors duration-500"></p>
+                                <span id="cursor" class="cursor-blink text-primary-light dark:text-text-dark text-3xl md:text-4xl transition-colors duration-500">|</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="icon-scroll-container rounded-2xl mb-12 transition-colors duration-500">
+                        <div class="scrolling-icons flex whitespace-nowrap">
+                            <div class="icon-item">
+                                <i class="fas fa-book text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Education</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-graduation-cap text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Learning</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-school text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">School</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-chalkboard-teacher text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Teaching</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-microscope text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Science</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-calculator text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Math</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-flask text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Chemistry</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-atom text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Physics</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-dna text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Biology</span>
+                            </div>
+                            
+                            <div class="icon-item">
+                                <i class="fab fa-facebook text-blue-600 dark:text-blue-400"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Facebook</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-youtube text-red-600 dark:text-red-400"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">YouTube</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-whatsapp text-green-500 dark:text-green-300"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">WhatsApp</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-twitter text-blue-400 dark:text-blue-200"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Twitter</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-instagram text-pink-600 dark:text-pink-400"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Instagram</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-linkedin text-blue-700 dark:text-blue-500"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">LinkedIn</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-telegram text-blue-500 dark:text-blue-300"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Telegram</span>
+                            </div>
+                            
+                            <div class="icon-item">
+                                <i class="fas fa-book text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Education</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-graduation-cap text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Learning</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-school text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">School</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-chalkboard-teacher text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Teaching</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-microscope text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Science</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-calculator text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Math</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-flask text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Chemistry</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-atom text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Physics</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fas fa-dna text-primary-light dark:text-accent-dark"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Biology</span>
+                            </div>
+                            
+                            <div class="icon-item">
+                                <i class="fab fa-facebook text-blue-600 dark:text-blue-400"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Facebook</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-youtube text-red-600 dark:text-red-400"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">YouTube</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-whatsapp text-green-500 dark:text-green-300"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">WhatsApp</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-twitter text-blue-400 dark:text-blue-200"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Twitter</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-instagram text-pink-600 dark:text-pink-400"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Instagram</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-linkedin text-blue-700 dark:text-blue-500"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">LinkedIn</span>
+                            </div>
+                            <div class="icon-item">
+                                <i class="fab fa-telegram text-blue-500 dark:text-blue-300"></i>
+                                <span class="icon-label font-redgois text-primary-light dark:text-text-dark">Telegram</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="classes-page" class="page">
+            <header class="py-6 px-4 sm:px-8">
+                <div class="container mx-auto flex justify-center">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-highmount text-center text-primary-light dark:text-accent-dark transition-colors duration-500">Classes</h1>
+                </div>
+            </header>
+
+            <main class="flex-grow px-4 py-8">
+                <div class="max-w-6xl w-full mx-auto">
+                    <section aria-labelledby="subject-filter-heading" class="mb-8 relative">
+                        <h2 id="subject-filter-heading" class="sr-only">Subject Filter</h2>
+                        <ul class="subject-filter-nav" role="tablist" aria-label="Select subject to filter videos">
+                            <li class="list active" data-subject="all" role="tab" aria-selected="true" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-th-large"></i></span>
+                                    <span class="text">All Classes</span>
+                                </a>
+                            </li>
+                            <li class="list" data-subject="physics" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-atom"></i></span>
+                                    <span class="text">Physics</span>
+                                </a>
+                            </li>
+                            <li class="list" data-subject="math" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-calculator"></i></span>
+                                    <span class="text">Math</span>
+                                </a>
+                            </li>
+                            <li class="list" data-subject="chemistry" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-flask"></i></span>
+                                    <span class="text">Chemistry</span>
+                                </a>
+                            </li>
+                            <li class="list" data-subject="ict" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-desktop"></i></span>
+                                    <span class="text">ICT</span>
+                                </a>
+                            </li>
+                            <li class="list" data-subject="bangla" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-globe-asia"></i></span>
+                                    <span class="text">Bangla</span>
+                                </a>
+                            </li>
+                            <li class="list" data-subject="biology" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-dna"></i></span>
+                                    <span class="text">Biology</span>
+                                </a>
+                            </li>
+                            <li class="list" data-subject="english" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <a href="#">
+                                    <span class="icon"><i class="fas fa-language"></i></span>
+                                    <span class="text">English</span>
+                                </a>
+                            </li>
+                            <div class="subject-indicator"></div>
+                        </ul>
+                    </section>
+
+                    <section aria-labelledby="video-grid-heading" class="mb-12" id="video-grid-section">
+                        <h2 id="video-grid-heading" class="text-2xl md:text-3xl font-highmount text-primary-light dark:text-accent-dark text-center mb-8 transition-colors duration-500">Educational Content</h2>
+                        
+                        <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            </div>
+                    </section>
+                </div>
+            </main>
+        </div>
+
+        <div id="pdf-page" class="page">
+            <header class="py-6 px-4 sm:px-8">
+                <div class="container mx-auto flex justify-center">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-highmount text-center text-primary-light dark:text-accent-dark transition-colors duration-500">PDF Resources</h1>
+                </div>
+            </header>
+            <main class="flex-grow px-4 py-8">
+                <div class="max-w-6xl w-full mx-auto">
+                    <div class="bg-white/70 dark:bg-secondary-dark/70 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-lg border border-white/80 dark:border-secondary-dark/80 mb-12 transition-colors duration-500">
+                        <div class="text-center">
+                            <p class="text-2xl sm:text-3xl md:text-4xl font-highmount text-primary-light dark:text-text-dark mb-4 transition-colors duration-500">PDF Resources Coming Soon</p>
+                            <p class="font-redgois text-primary-light dark:text-text-dark transition-colors duration-500">We're working on compiling the best PDF resources for your studies. Check back later!</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="youtube-page" class="page">
+            <header class="py-6 px-4 sm:px-8">
+                <div class="container mx-auto flex justify-center">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-highmount text-center text-primary-light dark:text-accent-dark transition-colors duration-500">YouTube Channel</h1>
+                </div>
+            </header>
+            <main class="flex-grow px-4 py-8">
+                <div class="max-w-6xl w-full mx-auto">
+                    <div class="bg-white/70 dark:bg-secondary-dark/70 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-lg border border-white/80 dark:border-secondary-dark/80 mb-12 transition-colors duration-500">
+                        <div class="text-center">
+                            <p class="text-2xl sm:text-3xl md:text-4xl font-highmount text-primary-light dark:text-text-dark mb-4 transition-colors duration-500">Visit Our YouTube Channel</p>
+                            <p class="font-redgois text-primary-light dark:text-text-dark mb-6 transition-colors duration-500">Subscribe to our YouTube channel for more educational content and updates.</p>
+                            <a href="https://www.youtube.com/@acsudvash" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-matey transition-colors inline-flex items-center">
+                                <i class="fab fa-youtube mr-2"></i> Visit YouTube
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <div id="share-page" class="page">
+            <header class="py-6 px-4 sm:px-8">
+                <div class="container mx-auto flex justify-center">
+                    <h1 class="text-3xl sm:text-4xl md:text-5xl font-highmount text-center text-primary-light dark:text-accent-dark transition-colors duration-500">Share with Friends</h1>
+                </div>
+            </header>
+            <main class="flex-grow px-4 py-8">
+                <div class="max-w-6xl w-full mx-auto">
+                    <div class="bg-white/70 dark:bg-secondary-dark/70 backdrop-blur-sm rounded-2xl p-6 md:p-10 shadow-lg border border-white/80 dark:border-secondary-dark/80 mb-12 transition-colors duration-500">
+                        <div class="text-center">
+                            <p class="text-2xl sm:text-3xl md:text-4xl font-highmount text-primary-light dark:text-text-dark mb-4 transition-colors duration-500">Share This Platform</p>
+                            <p class="font-redgois text-primary-light dark:text-text-dark mb-6 transition-colors duration-500">Help your friends access free educational resources by sharing this platform.</p>
+                            <div class="flex justify-center gap-4">
+                                <button class="p-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full transition-colors">
+                                    <i class="fab fa-facebook-f text-xl"></i>
+                                </button>
+                                <button class="p-4 bg-blue-400 hover:bg-blue-500 text-white rounded-full transition-colors">
+                                    <i class="fab fa-twitter text-xl"></i>
+                                </button>
+                                <button class="p-4 bg-green-500 hover:bg-green-600 text-white rounded-full transition-colors">
+                                    <i class="fab fa-whatsapp text-xl"></i>
+                                </button>
+                                <button class="p-4 bg-red-500 hover:bg-red-600 text-white rounded-full transition-colors">
+                                    <i class="fab fa-youtube text-xl"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="video-modal" class="modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 opacity-0 invisible" aria-modal="true" role="dialog">
+        <div class="modal-content bg-white dark:bg-secondary-dark rounded-xl w-full max-w-4xl aspect-video relative transition-colors duration-500">
+            <button id="close-modal" class="absolute -top-10 right-0 text-white text-2xl p-2" aria-label="Close video modal">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            <div class="p-2 bg-primary-light dark:bg-accent-dark text-white font-redgois text-sm px-4 rounded-t-xl transition-colors duration-500">
+                <span id="modal-title">Video Title</span>
+            </div>
+            <div class="aspect-video bg-black" id="video-player-container">
+                </div>
+        </div>
+    </div>
+
+    <footer class="py-6 px-4">
+        <div class="container mx-auto text-center">
+            <p class="font-redgois text-primary-light dark:text-text-dark transition-colors duration-500">© Zeroma Free – Learn. Share. Grow.</p>
+        </div>
+    </footer>
+
+    <div class="navigation">
+        <ul>
+            <li class="list active" data-page="home-page">
+                <a href="#">
+                    <span class="icon">
+                        <ion-icon name="home-outline"></ion-icon>
+                    </span>
+                    <span class="text">Home</span>
+                </a>
+            </li>
+            <li class="list" data-page="classes-page">
+                <a href="#">
+                    <span class="icon">
+                        <ion-icon name="book-outline"></ion-icon>
+                    </span>
+                    <span class="text">Class</span>
+                </a>
+            </li>
+            <li class="list" data-page="pdf-page">
+                <a href="#">
+                    <span class="icon">
+                        <ion-icon name="document-text-outline"></ion-icon>
+                    </span>
+                    <span class="text">PDF</span>
+                </a>
+            </li>
+            <li class="list" data-page="youtube-page">
+                <a href="#">
+                    <span class="icon">
+                        <ion-icon name="logo-youtube"></ion-icon>
+                    </span>
+                    <span class="text">YouTube</span>
+                </a>
+            </li>
+            <li class="list" data-page="share-page">
+                <a href="#">
+                    <span class="icon">
+                        <ion-icon name="share-social-outline"></ion-icon>
+                    </span>
+                    <span class="text">Share</span>
+                </a>
+            </li>
+            <div class="indicator"></div>
+        </ul>
+    </div>
+
+    <script type="application/ld+json" id="structured-data">
+    {
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      "itemListElement": []
+    }
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+    <script src="script.js"></script>
+</body>
+</html>
