@@ -147,37 +147,37 @@
             gap: 0.5rem;
         }
         
-        /* Subject filter styles */
-        .subject-filter {
-            scrollbar-width: thin;
-            scrollbar-color: #92400e #FEF3C7;
+        /* NEW Subject filter styles */
+        .subject-filter-btn {
+            color: #92400e; /* primary-light */
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
         }
-        
-        .subject-filter::-webkit-scrollbar {
-            height: 6px;
+        .dark .subject-filter-btn {
+            color: #e2e8f0; /* text-dark */
         }
-        
-        .subject-filter::-webkit-scrollbar-track {
-            background: #FEF3C7;
-            border-radius: 3px;
+        .subject-filter-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
         }
-        
-        .subject-filter::-webkit-scrollbar-thumb {
-            background-color: #92400e;
-            border-radius: 3px;
+        .subject-filter-btn.active {
+            background-color: #92400e !important; /* primary-light */
+            color: white !important;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 8px 16px rgba(146, 64, 14, 0.2);
         }
-        
-        /* Dark mode scrollbar styles */
-        .dark .subject-filter {
-            scrollbar-color: #4CAF50 #1e1c16;
+        .subject-filter-btn.active .icon,
+        .subject-filter-btn.active .text {
+            color: white !important;
         }
-        
-        .dark .subject-filter::-webkit-scrollbar-track {
-            background: #1e1c16;
+        .dark .subject-filter-btn.active {
+            background-color: #4CAF50 !important; /* accent-dark */
+            color: #1e1c16 !important; /* secondary-dark */
+            box-shadow: 0 8px 16px rgba(76, 175, 80, 0.2);
         }
-        
-        .dark .subject-filter::-webkit-scrollbar-thumb {
-            background-color: #4CAF50;
+        .dark .subject-filter-btn.active .icon,
+        .dark .subject-filter-btn.active .text {
+            color: #1e1c16 !important;
         }
         
         /* Modal styles */
@@ -490,121 +490,6 @@
         .dark .indicator::after {
             box-shadow: -1px -10px 0 0 #0D1117; /* Match dark body background */
         }
-        
-        /* NEW SUBJECT FILTER STYLES */
-        .subject-filter-nav {
-            display: flex;
-            width: 100%;
-            padding: 0;
-            margin: 0;
-            list-style: none;
-            position: relative;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            gap: 1.5rem; /* Add spacing between buttons */
-            justify-content: start; /* Align items to the start */
-            padding-bottom: 2rem;
-        }
-        
-        .subject-filter-nav::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .subject-filter-nav .list {
-            position: relative;
-            width: auto;
-            min-width: 70px;
-            height: 70px;
-            z-index: 1;
-            flex-shrink: 0;
-            text-align: center;
-        }
-        
-        .subject-filter-nav .list a {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            text-align: center;
-            padding: 0 10px;
-            height: 100%;
-        }
-        
-        .subject-filter-nav .list a .icon {
-            font-size: 1.5em;
-            color: #222327;
-            transition: 0.5s;
-        }
-        
-        .dark .subject-filter-nav .list a .icon {
-            color: #fff;
-        }
-        
-        .subject-filter-nav .list.active a .icon {
-            transform: translateY(-32px);
-        }
-        
-        .subject-filter-nav .list a .text {
-            font-weight: 400;
-            font-size: 0.75em;
-            letter-spacing: 0.05em;
-            transition: 0.5s;
-            opacity: 0;
-            transform: translateY(20px);
-            color: #222327;
-        }
-        
-        .dark .subject-filter-nav .list a .text {
-            color: #fff;
-        }
-        
-        .subject-filter-nav .list.active a .text {
-            opacity: 1;
-            transform: translateY(10px);
-        }
-        
-        .subject-indicator {
-            position: absolute;
-            top: -50%;
-            width: 70px;
-            height: 70px;
-            background: #f59e0b;
-            border-radius: 50%;
-            border: 6px solid #F4F0E0; /* Match body background */
-            transition: 0.5s;
-            z-index: 0;
-            left: 0;
-        }
-        
-        .dark .subject-indicator {
-            background: #4CAF50;
-            border: 6px solid #0D1117; /* Match dark body background */
-        }
-        
-        .subject-indicator::before, .subject-indicator::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 20px;
-            height: 20px;
-            background: transparent;
-        }
-        
-        .subject-indicator::before {
-            left: -22px;
-            border-top-right-radius: 20px;
-            box-shadow: 1px -10px 0 0 #F4F0E0; /* Match body background */
-        }
-        
-        .subject-indicator::after {
-            right: -22px;
-            border-top-left-radius: 20px;
-            box-shadow: -1px -10px 0 0 #F4F0E0; /* Match body background */
-        }
-        
-        .dark .subject-indicator::before, .dark .subject-indicator::after {
-            box-shadow: 1px -10px 0 0 #0D1117; /* Match dark body background */
-        }
     </style>
 </head>
 <body class="min-h-screen gradient-bg flex flex-col transition-colors duration-500">
@@ -791,59 +676,42 @@
 
             <main class="flex-grow px-4 py-8">
                 <div class="max-w-6xl w-full mx-auto">
-                    <section aria-labelledby="subject-filter-heading" class="mb-8 relative">
-                        <h2 id="subject-filter-heading" class="sr-only">Subject Filter</h2>
-                        <ul class="subject-filter-nav" role="tablist" aria-label="Select subject to filter videos">
-                            <li class="list active" data-subject="all" role="tab" aria-selected="true" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-th-large"></i></span>
-                                    <span class="text">All Classes</span>
-                                </a>
-                            </li>
-                            <li class="list" data-subject="physics" role="tab" aria-selected="false" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-atom"></i></span>
-                                    <span class="text">Physics</span>
-                                </a>
-                            </li>
-                            <li class="list" data-subject="math" role="tab" aria-selected="false" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-calculator"></i></span>
-                                    <span class="text">Math</span>
-                                </a>
-                            </li>
-                            <li class="list" data-subject="chemistry" role="tab" aria-selected="false" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-flask"></i></span>
-                                    <span class="text">Chemistry</span>
-                                </a>
-                            </li>
-                            <li class="list" data-subject="ict" role="tab" aria-selected="false" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-desktop"></i></span>
-                                    <span class="text">ICT</span>
-                                </a>
-                            </li>
-                            <li class="list" data-subject="bangla" role="tab" aria-selected="false" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-globe-asia"></i></span>
-                                    <span class="text">Bangla</span>
-                                </a>
-                            </li>
-                            <li class="list" data-subject="biology" role="tab" aria-selected="false" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-dna"></i></span>
-                                    <span class="text">Biology</span>
-                                </a>
-                            </li>
-                            <li class="list" data-subject="english" role="tab" aria-selected="false" aria-controls="video-grid">
-                                <a href="#">
-                                    <span class="icon"><i class="fas fa-language"></i></span>
-                                    <span class="text">English</span>
-                                </a>
-                            </li>
-                            <div class="subject-indicator"></div>
-                        </ul>
+                    <section aria-labelledby="subject-filter-heading" class="mb-12">
+                        <h2 id="subject-filter-heading" class="text-2xl md:text-3xl font-highmount text-primary-light dark:text-accent-dark text-center mb-8 transition-colors duration-500">Filter by Subject</h2>
+                        <div class="subject-filter-nav grid grid-cols-4 sm:grid-cols-4 md:grid-cols-8 gap-4" role="tablist" aria-label="Select subject to filter videos">
+                            <button class="list subject-filter-btn active flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="all" role="tab" aria-selected="true" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-th-large"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">All</span>
+                            </button>
+                            <button class="list subject-filter-btn flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="physics" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-atom"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">Physics</span>
+                            </button>
+                            <button class="list subject-filter-btn flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="math" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-calculator"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">Math</span>
+                            </button>
+                            <button class="list subject-filter-btn flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="chemistry" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-flask"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">Chemistry</span>
+                            </button>
+                            <button class="list subject-filter-btn flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="ict" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-desktop"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">ICT</span>
+                            </button>
+                            <button class="list subject-filter-btn flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="bangla" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-globe-asia"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">Bangla</span>
+                            </button>
+                            <button class="list subject-filter-btn flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="biology" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-dna"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">Biology</span>
+                            </button>
+                            <button class="list subject-filter-btn flex flex-col items-center justify-center p-2 rounded-xl bg-secondary-light dark:bg-secondary-dark aspect-square" data-subject="english" role="tab" aria-selected="false" aria-controls="video-grid">
+                                <span class="icon text-2xl mb-1 text-primary-light dark:text-text-dark"><i class="fas fa-language"></i></span>
+                                <span class="text text-xs font-redgois text-primary-light dark:text-text-dark">English</span>
+                            </button>
+                        </div>
                     </section>
 
                     <section aria-labelledby="video-grid-heading" class="mb-12" id="video-grid-section">
