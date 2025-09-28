@@ -1726,36 +1726,7 @@ document.addEventListener('visibilitychange', () => {
 
 console.log('Enhanced YouTube Player initialized with complete custom controls');
     </script>
-    <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDE3NgCRddjLGL_dfd3eHREqngfDwUNpXo",
-        authDomain: "course-auth-f4165.firebaseapp.com",
-        projectId: "course-auth-f4165",
-        storageBucket: "course-auth-f4165.firebasestorage.app",
-        messagingSenderId: "287739198986",
-        appId: "1:287739198986:web:9c32348cad210c15b4e9f3"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // 🔒 Check if user is logged in
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            // 🚪 Not logged in, redirect to login page with returnTo URL
-            const currentUrl = window.location.href;
-            const loginUrl = `https://zeromapremium.github.io/webapp/login/?returnTo=${encodeURIComponent(currentUrl)}`;
-            console.log("⛔ Not logged in, redirecting to:", loginUrl);
-            window.location.href = loginUrl;
-        } else {
-            console.log("✅ Logged in as:", user.email);
-            // You can allow page content to load here
-        }
-    });
 </script>
 </body>
 </html>
